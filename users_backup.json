@@ -1,0 +1,141 @@
+[
+    {
+        "first": "Lawrence",
+        "last": "Francisco",
+        "email": "lawrence.dhaniel@gmail.com",
+        "phone": "09694309741",
+        "password": "$2y$10$c5FYnr6tKtbM7ZrMGwQmIuxuhXmCq\/31H487tH3A2HyXZApQbiQMK",
+        "points": 0,
+        "verified": 1
+    },
+    {
+        "first": "VRAKE",
+        "last": "IT",
+        "email": "vrakeit@gmail.com",
+        "phone": "09694309741",
+        "password": "$2y$10$IOewp462exDBreDYbomj5.6J1fRH5tmG.oHyWwj66EajZQaDB\/ERu",
+        "points": 0,
+        "verified": 1,
+        "role": "enforcer"
+    },
+    {
+        "first": "Marcus",
+        "last": "Rivera",
+        "email": "marcusaureliusrivera@gmail.com",
+        "phone": "09971532406",
+        "password": "$2y$10$Fa990d.2t30XP7yEfUqaN.nuqXjbdkis.yo5aJ\/QcK8tQ6ciGU0BS",
+        "points": 0,
+        "verified": 1,
+        "role": "user"
+    },
+    {
+        "first": "Mark",
+        "last": "Salario",
+        "email": "salariomark123@gmail.com",
+        "phone": "09694309741",
+        "password": "$2y$10$u9M2lvLaUpN.4UrUO3Bte.xROvMIVygoF7H61MuckRftXbHm3w5zu",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    },
+    {
+        "first": "jefferson",
+        "last": "tuparan",
+        "email": "jeffersontuparan@gmail.com",
+        "phone": "09760529311",
+        "password": "$2y$10$Av8dZ8l.aRW08Vg9eI4t7ueZ821PtFTd\/84he3rMGNkhuzaXO9tgq",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    },
+    {
+        "first": "carl",
+        "last": "lauz",
+        "email": "lauzcarlstephen@gmail.com",
+        "phone": "09323252321",
+        "password": "$2y$10$V8gPcf.wAlqWHrnfJVFFBuZR\/7aKe8awvD86ErBqZ24j.LV5NOx3W",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    },
+    {
+        "first": "frank",
+        "last": "azon",
+        "email": "asphaltrock77@gmail.com",
+        "phone": "09208089412",
+        "password": "$2y$10$Hfe0MMiLhB8EVo5QNi7.QeghtcJnkKlB1owpxlksPgPyIGJPldYOS",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    },
+    {
+        "first": "jehrome",
+        "last": "Martin",
+        "email": "martinjehrome72@gmail.com",
+        "phone": "09760325344",
+        "password": "$2y$10$q2UAGDmu6t\/yzxf8NZlhPu\/d0v01vUU5Iess9BR8bep20XrpwTiQ.",
+        "points": 0,
+        "verified": 0,
+        "role": "enforcer"
+    },
+    {
+        "first": "Gerald Bryan",
+        "last": "Esquillo",
+        "email": "geraldbryanesquillo27@gmail.com",
+        "phone": "09549954543",
+        "password": "$2y$10$IjVIiVSKS.zcD1KxXnzchuDREy2kxT5GLuP8Nvuo8vHiU1FB\/NP5e",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    },
+    {
+        "first": "Gerald Bryan",
+        "last": "Esquilo",
+        "email": "geraldbryanesquillo27@gmail.com",
+        "phone": "09549954543",
+        "password": "$2y$10$q1AnQHBhDtEIbXSxk1ZDoe827BrQiO5RsEriHzKYFhRB07jFJTrpm",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    },
+    {
+        "first": "Gerald",
+        "last": "Esquillo",
+        "email": "geraldbryanesquillo27@gmail.com",
+        "phone": "09549954543",
+        "password": "$2y$10$j6.zLCfBAcYrBSpQoQZHCOWgHM3taoP3vWM49\/BWCOqnh\/kGTWcmS",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    },
+    {
+        "first": "Marcus Aurelius",
+        "last": "Rivera",
+        "email": "marcusaureliusriv@gmail.com",
+        "phone": "09971532406",
+        "password": "$2y$10$vtbyBxxdmli5\/xbVA\/.OwuPEktvEMNkqjG1T51ptlwCaJwkv.7tfi",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    },
+    {
+        "first": "Marcus Aurelius",
+        "last": "Rivera",
+        "email": "marcusaureliusriv@gmail.com",
+        "phone": "09971532406",
+        "password": "$2y$10$WGmEXtEucMWFE\/isiEog5OIngfQUfnXTxnicu9CZJ6LQFeXDGQ0jG",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    },
+    {
+        "first": "Marcus Aurelius",
+        "last": "Rivera",
+        "email": "marcusaureliusriv@gmail.com",
+        "phone": "09971532406",
+        "password": "$2y$10$ZvczQ2Rsv67\/6o..9q3hJuJXSby7FSSiMVmzI1lYGEUOzozEXKuZu",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    }
+]

@@ -1,0 +1,7 @@
+.env
+private/id_uploads/*
+!private/id_uploads/.htaccess
+!private/id_uploads/index.php
+.vscode/
+.DS_Store
+error_log
