@@ -654,6 +654,140 @@ $justRegistered = !empty($_SESSION['just_registered']);
       .vfy-hero h1 { font-size: 19px; }
       .ocr-field-label { min-width: 70px; }
     }
+
+    /* ═════════════════════════════════════════════════════════
+       CAMERA SYSTEM — MOBILE GUIDE + DESKTOP SCANNER
+    ═════════════════════════════════════════════════════════ */
+    /* Full-screen scanner (desktop) */
+    .cam-scanner-overlay {
+      position: fixed; inset: 0; z-index: 1300;
+      background: #000;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.22s;
+    }
+    .cam-scanner-overlay.open { opacity: 1; pointer-events: all; }
+    #camVideo {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .cam-top-bar {
+      position: absolute; top: 0; left: 0; right: 0;
+      padding: 12px 16px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(to bottom,rgba(0,0,0,0.75),transparent);
+      z-index: 10;
+    }
+    .cam-top-title { font-size:15px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; }
+    .cam-close-btn {
+      width:40px; height:40px; border-radius:50%;
+      background:rgba(0,0,0,0.45); border:1.5px solid rgba(255,255,255,0.2);
+      color:#fff; font-size:16px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition: background 0.2s;
+    }
+    .cam-close-btn:hover { background:rgba(220,53,69,0.55); }
+    .cam-bottom-bar {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px 32px max(env(safe-area-inset-bottom,0px),28px);
+      display: flex; align-items: center; justify-content: center; gap: 28px;
+      background: linear-gradient(to top,rgba(0,0,0,0.8),transparent);
+      z-index: 10;
+    }
+    .cam-spacer { width:52px; height:52px; }
+    .cam-flash-btn {
+      width:52px; height:52px; border-radius:50%;
+      background:rgba(255,255,255,0.12); border:1.5px solid rgba(255,255,255,0.25);
+      color:rgba(255,255,255,0.5); font-size:20px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition: all 0.2s;
+    }
+    .cam-flash-btn:disabled { opacity:0.25; cursor:not-allowed; }
+    .cam-flash-btn.on {
+      background:rgba(255,220,0,0.22);
+      border-color:rgba(255,220,0,0.7);
+      color:#FFE000;
+      box-shadow:0 0 14px rgba(255,220,0,0.45);
+    }
+    .cam-switch-btn {
+      width:52px; height:52px; border-radius:50%;
+      background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3);
+      color:#fff; font-size:20px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition: all 0.2s;
+    }
+    .cam-switch-btn:disabled { opacity:0.3; cursor:not-allowed; }
+    .cam-capture-btn {
+      width:76px; height:76px; border-radius:50%;
+      background:linear-gradient(135deg,#E90101,#b00000);
+      border:4px solid rgba(255,255,255,0.35);
+      color:#fff; font-size:30px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 0 0 2px rgba(233,1,1,0.4),0 6px 28px rgba(233,1,1,0.5);
+      transition: transform 0.12s;
+    }
+    .cam-capture-btn:not(:disabled):active { transform:scale(0.88); }
+    .cam-capture-btn:disabled { opacity:0.35; cursor:not-allowed; }
+    #camTipBar {
+      position:absolute; left:0; right:0; bottom:140px;
+      display:none; justify-content:center; align-items:center;
+      z-index:10; pointer-events:none;
+    }
+    .cam-tip-label {
+      font-size:12px; font-weight:600; color:rgba(255,255,255,0.92);
+      background:rgba(0,0,0,0.6); padding:6px 18px; border-radius:24px;
+      border:1px solid rgba(255,255,255,0.15);
+    }
+    #camErrorMsg {
+      position:absolute; inset:0; z-index:20;
+      display:none; flex-direction:column;
+      align-items:center; justify-content:center;
+      padding:40px 28px; text-align:center;
+      background:rgba(0,0,0,0.88);
+      color:rgba(255,255,255,0.65); font-size:14px; line-height:1.65;
+    }
+    #camErrorMsg i { font-size:52px; color:#ff6060; margin-bottom:18px; display:block; }
+    #camErrorMsg strong { color:#ff8080; font-size:17px; display:block; margin-bottom:8px; }
+
+    /* Mobile guide screen */
+    .mob-guide-overlay {
+      position:fixed; inset:0; z-index:1300;
+      background:#080810;
+      display:flex; flex-direction:column;
+      opacity:0; pointer-events:none;
+      transition:opacity 0.22s;
+    }
+    .mob-guide-overlay.open { opacity:1; pointer-events:all; }
+    .mob-guide-topbar {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:max(env(safe-area-inset-top,0px),14px) 18px 10px;
+      position:relative; z-index:2;
+    }
+    .mob-guide-title { font-size:15px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; }
+    .mob-guide-close {
+      width:38px; height:38px; border-radius:50%;
+      background:rgba(255,255,255,0.1); border:1.5px solid rgba(255,255,255,0.2);
+      color:#fff; font-size:15px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .mob-guide-canvas-wrap { flex:1; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    #mobGuideCanvas { width:100%; height:100%; display:block; }
+    .mob-guide-footer {
+      padding:20px 24px max(env(safe-area-inset-bottom,0px),28px);
+      display:flex; flex-direction:column; align-items:center; gap:12px;
+      background:linear-gradient(to top,rgba(0,0,0,0.75),transparent);
+    }
+    .mob-guide-hint { font-size:12px; color:rgba(255,255,255,0.55); text-align:center; line-height:1.5; margin:0; }
+    .mob-guide-btn {
+      width:72px; height:72px; border-radius:50%;
+      background:linear-gradient(135deg,#E90101,#b00000);
+      border:4px solid rgba(255,255,255,0.3);
+      color:#fff; font-size:28px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 0 0 2px rgba(233,1,1,0.4),0 6px 28px rgba(233,1,1,0.5);
+      transition:transform 0.12s;
+    }
+    .mob-guide-btn:active { transform:scale(0.88); }
   </style>
 </head>
 <body>
@@ -748,7 +882,7 @@ $justRegistered = !empty($_SESSION['just_registered']);
 
   <div class="vfy-container">
 
-    <!-- Hidden file inputs -->
+    <!-- Hidden file input for browse-only (no camera capture here) -->
     <input type="file" id="fileCamera" accept="image/*" capture="environment" style="display:none;">
     <input type="file" id="fileUpload" accept="image/jpeg,image/png,image/webp" style="display:none;">
 
@@ -912,10 +1046,10 @@ $justRegistered = !empty($_SESSION['just_registered']);
     });
     dropZone.addEventListener('click', () => fileUpload.click());
 
-    // ── Camera button ──
+    // ── Camera button: two-path system
     document.getElementById('cameraBtnEl').addEventListener('click', e => {
       e.stopPropagation();
-      fileCamera.click();
+      openVfyCamera();
     });
 
     // ── Browse button ──
@@ -925,8 +1059,15 @@ $justRegistered = !empty($_SESSION['just_registered']);
     });
 
     // ── File inputs ──
-    fileCamera.addEventListener('change', () => { if (fileCamera.files[0]) applyFile(fileCamera.files[0]); });
+    // change + input events both wired (Android browsers differ in which fires)
+    function handleCameraFile() {
+      const f = fileCamera.files[0];
+      if (f) { closeMobGuide(); applyFile(f); }
+    }
+    fileCamera.addEventListener('change', handleCameraFile);
+    fileCamera.addEventListener('input',  handleCameraFile);   // fallback for some Android
     fileUpload.addEventListener('change', () => { if (fileUpload.files[0]) applyFile(fileUpload.files[0]); });
+    fileUpload.addEventListener('input',  () => { if (fileUpload.files[0]) applyFile(fileUpload.files[0]); });
 
     // ── Remove preview ──
     if (removeBtn) removeBtn.addEventListener('click', clearFile);
@@ -1219,7 +1360,449 @@ $justRegistered = !empty($_SESSION['just_registered']);
 
   // Guard against bfcache
   window.addEventListener('pageshow', e => { if (e.persisted) window.location.reload(); });
+
+  // ──────────────────────────────────────────────────────────
+  // CAMERA SYSTEM
+  // ──────────────────────────────────────────────────────────
+  let vfyCamStream = null, vfyCamDevices = [], vfyCamIdx = 0;
+  let _raf = null, _sY = 0, _sD = 1, _cP = 0;
+  let _flashOn = false, _focusRing = null; // flash + tap-to-focus state
+
+  function isMobile() { return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0); }
+
+  function openVfyCamera() {
+    // Always try getUserMedia real-time scanner on all devices
+    // (guide screen is the fallback if getUserMedia fails on mobile)
+    openScanner();
+  }
+
+  function openMobGuide() {
+    document.getElementById('vfyMobGuide').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    // Use setTimeout so the overlay layout is fully computed before drawing
+    setTimeout(drawGuide, 80);
+  }
+  function closeMobGuide() {
+    document.getElementById('vfyMobGuide').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  // launchNativeCam is kept as JS fallback; primary path is <label for="fileCamera">
+  function launchNativeCam() {
+    // Do NOT close guide here — close it after photo is returned
+    document.getElementById('fileCamera').click();
+  }
+
+  function drawGuide() {
+    const canvas = document.getElementById('vfyGuideCanvas');
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    // Use window dimensions — canvas.offsetWidth/Height returns 0 on Android before layout
+    const W = window.innerWidth;
+    // Canvas wrap = full height minus topbar (~54px) and footer (~180px)
+    const H = Math.max(200, window.innerHeight - 234);
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, W, H);
+
+    // Background
+    ctx.fillStyle = '#0d0d18';
+    ctx.fillRect(0, 0, W, H);
+
+    // Frame: credit-card ratio, centred
+    const fW = Math.min(W * 0.80, H * 1.586 * 0.72);
+    const fH = fW / 1.586;
+    const fX = (W - fW) / 2;
+    const fY = (H - fH) / 2;
+    const r  = 10;
+
+    // Dark vignette then punch clear window
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    vfyRRect(ctx, fX, fY, fW, fH, r); ctx.fill();
+    ctx.restore();
+
+    // ID card body
+    ctx.save();
+    ctx.fillStyle = 'rgba(18,22,48,0.95)';
+    vfyRRect(ctx, fX, fY, fW, fH, r); ctx.fill();
+    ctx.restore();
+
+    // Header stripe
+    ctx.fillStyle = 'rgba(0,126,210,0.18)';
+    ctx.fillRect(fX, fY, fW, fH * 0.28);
+
+    // Text line placeholders
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    const lH = fH * 0.07;
+    [0,1,2].forEach(i => ctx.fillRect(fX+fW*0.08, fY+fH*0.37+i*(lH*1.65), fW*0.52, lH));
+
+    // Photo box
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(fX+fW*0.73, fY+fH*0.25, fW*0.19, fH*0.5);
+
+    // ── Frame border (solid, NO shadowBlur — Android Chrome canvas shadow bug) ──
+    ctx.save();
+    // Outer glow: draw bracket twice — once wider in orange-red, once thinner in bright red
+    const brackets = [
+      [fX+r+28,fY,  fX+r,fY,  fX,fY,  fX,fY+r,  fX,fY+r+28],
+      [fX+fW-r-28,fY,  fX+fW-r,fY,  fX+fW,fY,  fX+fW,fY+r,  fX+fW,fY+r+28],
+      [fX,fY+fH-r-28,  fX,fY+fH-r,  fX,fY+fH,  fX+r,fY+fH,  fX+r+28,fY+fH],
+      [fX+fW,fY+fH-r-28,  fX+fW,fY+fH-r,  fX+fW,fY+fH,  fX+fW-r,fY+fH,  fX+fW-r-28,fY+fH]
+    ];
+    // Pass 1: thick outer halo
+    ctx.strokeStyle = 'rgba(255,60,60,0.4)';
+    ctx.lineWidth   = 9;
+    ctx.lineCap     = 'round';
+    brackets.forEach(p => {
+      ctx.beginPath();
+      ctx.moveTo(p[0],p[1]); ctx.lineTo(p[2],p[3]);
+      ctx.quadraticCurveTo(p[4],p[5],p[6],p[7]); ctx.lineTo(p[8],p[9]);
+      ctx.stroke();
+    });
+    // Pass 2: solid bright red line on top
+    ctx.strokeStyle = '#FF2828';
+    ctx.lineWidth   = 4;
+    brackets.forEach(p => {
+      ctx.beginPath();
+      ctx.moveTo(p[0],p[1]); ctx.lineTo(p[2],p[3]);
+      ctx.quadraticCurveTo(p[4],p[5],p[6],p[7]); ctx.lineTo(p[8],p[9]);
+      ctx.stroke();
+    });
+    ctx.restore();
+
+    // "ALIGN ID HERE" label
+    ctx.save();
+    ctx.font = `bold ${Math.max(12, Math.round(fH*0.08))}px Poppins,sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.30)';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('ALIGN ID INSIDE FRAME', fX+fW/2, fY+fH*0.13);
+    ctx.restore();
+  }
+
+  /* ── DESKTOP SCANNER ── */
+  async function openScanner() {
+    const ov  = document.getElementById('vfyScannerOverlay');
+    const vid = document.getElementById('camVideo');
+    const err = document.getElementById('camErrorMsg');
+    const cap = document.getElementById('vfyCaptureBtn');
+    const sw  = document.getElementById('vfySwitchBtn');
+    err.style.display='none'; vid.style.display='block';
+    cap.disabled=true; sw.disabled=true; vfyCamDevices=[]; vfyCamIdx=0;
+    ov.classList.add('open'); document.body.style.overflow='hidden';
+    if (!navigator.mediaDevices?.getUserMedia) {
+      showScanErr('Camera not supported by this browser.'); return;
+    }
+    try {
+      vfyCamStream = await navigator.mediaDevices.getUserMedia({
+        video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false
+      });
+      vid.srcObject=vfyCamStream; await vid.play();
+      cap.disabled=false; startScanOverlay();
+      // Check torch support
+      try {
+        const track = vfyCamStream.getVideoTracks()[0];
+        const caps  = track.getCapabilities ? track.getCapabilities() : {};
+        const fb = document.getElementById('vfyFlashBtn');
+        if (fb && caps.torch) { fb.disabled = false; }
+      } catch(_) {}
+      try {
+        const all = await navigator.mediaDevices.enumerateDevices();
+        vfyCamDevices=all.filter(d=>d.kind==='videoinput'&&d.deviceId);
+        if (vfyCamDevices.length>1) sw.disabled=false;
+      } catch(_) {}
+    } catch(e) {
+      const msgs = {
+        NotAllowedError  : 'Camera permission denied. Tap the lock icon in the address bar → Camera → Allow.',
+        NotFoundError    : 'No camera detected on this device.',
+        NotReadableError : 'Camera is in use by another app. Close it and try again.',
+        SecurityError    : 'HTTPS is required for camera access. Use the Cloudflare tunnel URL.'
+      };
+      const msg = msgs[e.name] || `Camera error: ${e.message}`;
+      if (isMobile()) {
+        // getUserMedia failed on mobile — fall back to guide + native camera
+        closeScanner();
+        openMobGuide();
+      } else {
+        showScanErr(msg);
+      }
+    }
+  }
+
+  function closeScanner() {
+    stopScanOverlay();
+    // Turn off torch before stopping stream
+    if (_flashOn && vfyCamStream) {
+      try { vfyCamStream.getVideoTracks()[0]?.applyConstraints({ advanced:[{torch:false}] }); } catch(_) {}
+    }
+    _flashOn = false; _focusRing = null;
+    const fb = document.getElementById('vfyFlashBtn');
+    if (fb) { fb.disabled = true; fb.classList.remove('on'); }
+    if (vfyCamStream) { vfyCamStream.getTracks().forEach(t=>t.stop()); vfyCamStream=null; }
+    document.getElementById('camVideo').srcObject=null;
+    document.getElementById('vfyScannerOverlay').classList.remove('open');
+    document.body.style.overflow='';
+  }
+
+  function showScanErr(msg) {
+    document.getElementById('camVideo').style.display='none';
+    document.getElementById('camErrorMsg').querySelector('span').textContent=msg;
+    document.getElementById('camErrorMsg').style.display='flex';
+    stopScanOverlay();
+  }
+
+  async function vfySwitchCamera() {
+    if (vfyCamDevices.length<2) return;
+    vfyCamIdx=(vfyCamIdx+1)%vfyCamDevices.length;
+    if (vfyCamStream) vfyCamStream.getTracks().forEach(t=>t.stop());
+    try {
+      const vid=document.getElementById('camVideo');
+      vfyCamStream=await navigator.mediaDevices.getUserMedia({
+        video:{deviceId:{exact:vfyCamDevices[vfyCamIdx].deviceId}},audio:false
+      });
+      vid.srcObject=vfyCamStream; await vid.play();
+    } catch(_) {}
+  }
+
+  // ── Flash toggle
+  async function toggleFlash() {
+    if (!vfyCamStream) return;
+    const track = vfyCamStream.getVideoTracks()[0];
+    if (!track) return;
+    _flashOn = !_flashOn;
+    try {
+      await track.applyConstraints({ advanced: [{ torch: _flashOn }] });
+      const fb = document.getElementById('vfyFlashBtn');
+      if (fb) fb.classList.toggle('on', _flashOn);
+    } catch(e) {
+      _flashOn = false;
+      console.warn('Torch not supported', e);
+    }
+  }
+
+  // ── Tap-to-focus
+  async function handleTapFocus(clientX, clientY) {
+    if (!vfyCamStream) return;
+    const track = vfyCamStream.getVideoTracks()[0];
+    if (!track) return;
+    // Show focus ring on canvas
+    _focusRing = { x: clientX, y: clientY, t: Date.now() };
+    try {
+      const caps = track.getCapabilities ? track.getCapabilities() : {};
+      const adv  = {};
+      if (caps.focusMode?.includes('single-shot')) adv.focusMode = 'single-shot';
+      else if (caps.focusMode?.includes('manual')) adv.focusMode = 'manual';
+      if (caps.pointsOfInterest) {
+        const vid  = document.getElementById('camVideo');
+        const rect = vid.getBoundingClientRect();
+        adv.pointsOfInterest = [{
+          x: Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)),
+          y: Math.max(0, Math.min(1, (clientY - rect.top)  / rect.height))
+        }];
+      }
+      if (Object.keys(adv).length) await track.applyConstraints({ advanced: [adv] });
+    } catch(e) { /* focus not supported — ring still shows */ }
+  }
+
+  // Wire up tap-to-focus on the scanner overlay
+  (function() {
+    const ov = document.getElementById('vfyScannerOverlay');
+    if (!ov) return;
+    // Mouse click (desktop)
+    ov.addEventListener('click', e => {
+      // Ignore clicks on the control buttons
+      if (e.target.closest('button, .cam-top-bar, .cam-bottom-bar')) return;
+      handleTapFocus(e.clientX, e.clientY);
+    });
+    // Touch (mobile)
+    ov.addEventListener('touchend', e => {
+      if (e.target.closest('button, .cam-top-bar, .cam-bottom-bar')) return;
+      e.preventDefault();
+      const t = e.changedTouches[0];
+      handleTapFocus(t.clientX, t.clientY);
+    }, { passive: false });
+  })();
+
+  function vfyCapturePhoto() {
+    const vid=document.getElementById('camVideo');
+    const cvs=document.getElementById('camCaptureCanvas');
+    cvs.width=vid.videoWidth; cvs.height=vid.videoHeight;
+    cvs.getContext('2d').drawImage(vid,0,0);
+    cvs.toBlob(blob=> {
+      const file=new File([blob],'camera-capture.jpg',{type:'image/jpeg'});
+      applyFile(file);
+      closeScanner();
+    },'image/jpeg',0.95);
+  }
+
+  function startScanOverlay() {
+    const old=document.getElementById('vfyScanCanvas');
+    if (old) old.remove();
+    const c=document.createElement('canvas');
+    c.id='vfyScanCanvas';
+    Object.assign(c.style,{position:'fixed',top:'0',left:'0',width:'100vw',height:'100vh',zIndex:'9999',pointerEvents:'none'});
+    document.body.appendChild(c);
+    const tb=document.getElementById('camTipBar');
+    if (tb) tb.style.display='flex';
+    _sY=0; _sD=1; _cP=0;
+    function frame() {
+      const dpr = window.devicePixelRatio || 1;
+      const VW  = window.innerWidth, VH = window.innerHeight;
+      c.width = VW*dpr; c.height = VH*dpr;
+      const ctx = c.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, VW, VH);
+
+      // Frame dimensions — landscape ID card ratio, centred on screen
+      const fW = Math.min(VW*0.86, VH*1.586*0.62);
+      const fH = fW / 1.586;
+      const fX = (VW - fW) / 2;
+      const fY = (VH - fH) / 2 - VH * 0.04;
+      const r  = 12;
+
+      // Dark vignette with clear window
+      ctx.fillStyle = 'rgba(0,0,0,0.60)';
+      ctx.fillRect(0, 0, VW, VH);
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-out';
+      vfyRRect(ctx, fX, fY, fW, fH, r); ctx.fill();
+      ctx.restore();
+
+      // Animated scan line (no shadowBlur — Android Chrome bug)
+      _sY += _sD * 2.2;
+      if (_sY >= fH - 2) { _sY = fH - 2; _sD = -1; }
+      if (_sY <= 0)       { _sY = 0;      _sD =  1; }
+      const sy = fY + _sY;
+      const sg = ctx.createLinearGradient(fX, sy, fX + fW, sy);
+      sg.addColorStop(0,   'rgba(255,30,30,0)');
+      sg.addColorStop(0.5, 'rgba(255,60,60,1)');
+      sg.addColorStop(1,   'rgba(255,30,30,0)');
+      ctx.strokeStyle = sg;
+      ctx.lineWidth   = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(fX + 8, sy); ctx.lineTo(fX + fW - 8, sy);
+      ctx.stroke();
+
+      // Corner brackets — double-pass (no shadowBlur)
+      _cP += 0.05;
+      const pulse = 0.5 + 0.5 * Math.abs(Math.sin(_cP));
+      const cL = 30;
+      const brackets = [
+        [fX+r+cL,fY,   fX+r,fY,   fX,fY,   fX,fY+r,   fX,fY+r+cL],
+        [fX+fW-r-cL,fY,   fX+fW-r,fY,   fX+fW,fY,   fX+fW,fY+r,   fX+fW,fY+r+cL],
+        [fX,fY+fH-r-cL,   fX,fY+fH-r,   fX,fY+fH,   fX+r,fY+fH,   fX+r+cL,fY+fH],
+        [fX+fW,fY+fH-r-cL, fX+fW,fY+fH-r, fX+fW,fY+fH, fX+fW-r,fY+fH, fX+fW-r-cL,fY+fH]
+      ];
+      function drawBrackets(color, width) {
+        ctx.save();
+        ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineCap = 'round';
+        brackets.forEach(p => {
+          ctx.beginPath();
+          ctx.moveTo(p[0],p[1]); ctx.lineTo(p[2],p[3]);
+          ctx.quadraticCurveTo(p[4],p[5],p[6],p[7]); ctx.lineTo(p[8],p[9]);
+          ctx.stroke();
+        });
+        ctx.restore();
+      }
+      drawBrackets(`rgba(255,40,40,${(0.35 + 0.25*pulse).toFixed(2)})`, 10); // glow halo
+      drawBrackets('#FF2828', 4);                                               // solid line
+
+      // ── Focus ring (tap-to-focus indicator)
+      if (_focusRing) {
+        const elapsed = Date.now() - _focusRing.t;
+        if (elapsed < 900) {
+          const alpha = Math.max(0, 1 - elapsed / 900);
+          const sz = 64 + 20 * (1 - alpha); // shrinks as it fades
+          ctx.save();
+          ctx.strokeStyle = `rgba(255,220,0,${alpha})`;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(_focusRing.x - sz/2, _focusRing.y - sz/2, sz, sz);
+          // Corner ticks
+          const tk = 10;
+          ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+          ctx.lineWidth = 2;
+          [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([sx,sy]) => {
+            const cx = _focusRing.x + sx*(sz/2), cy = _focusRing.y + sy*(sz/2);
+            ctx.beginPath(); ctx.moveTo(cx, cy - sy*tk); ctx.lineTo(cx, cy); ctx.lineTo(cx + sx*tk, cy); ctx.stroke();
+          });
+          ctx.restore();
+        } else { _focusRing = null; }
+      }
+
+      _raf = requestAnimationFrame(frame);
+    }
+    if (_raf) cancelAnimationFrame(_raf);
+    frame();
+  }
+
+  function stopScanOverlay() {
+    if (_raf){cancelAnimationFrame(_raf);_raf=null;}
+    const c=document.getElementById('vfyScanCanvas'); if(c) c.remove();
+    const tb=document.getElementById('camTipBar'); if(tb) tb.style.display='none';
+  }
+
+  function vfyRRect(ctx,x,y,w,h,r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+    ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+    ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+    ctx.closePath();
+  }
+
+  document.addEventListener('keydown', e=> {
+    if (e.key==='Escape') { closeScanner(); closeMobGuide(); }
+  });
   </script>
 
+<!-- MOBILE GUIDE OVERLAY -->
+<div class="mob-guide-overlay" id="vfyMobGuide">
+  <div class="mob-guide-topbar">
+    <div class="mob-guide-title"><i class="bi bi-camera-fill" style="color:#80ccff;"></i> ID Scanner Guide</div>
+    <button class="mob-guide-close" onclick="closeMobGuide()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="mob-guide-canvas-wrap"><canvas id="vfyGuideCanvas"></canvas></div>
+  <div class="mob-guide-footer">
+    <p class="mob-guide-hint">Position your ID to match the red frame above,<br>
+      then tap the button to open your camera.</p>
+    <!-- label directly triggers fileCamera — most reliable on Android, no JS needed -->
+    <label class="mob-guide-btn" for="fileCamera" title="Open Camera">
+      <i class="bi bi-camera-fill"></i>
+    </label>
+  </div>
+</div>
+
+<!-- DESKTOP FULLSCREEN SCANNER OVERLAY -->
+<div class="cam-scanner-overlay" id="vfyScannerOverlay">
+  <video id="camVideo" autoplay playsinline muted></video>
+  <div class="cam-top-bar">
+    <div class="cam-top-title"><i class="bi bi-camera-video-fill" style="color:#80ccff;"></i> Capture ID Photo</div>
+    <button class="cam-close-btn" onclick="closeScanner()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div id="camTipBar">
+    <span class="cam-tip-label">📋 Align your ID inside the red frame</span>
+  </div>
+  <div class="cam-bottom-bar">
+    <button class="cam-switch-btn" id="vfySwitchBtn" onclick="vfySwitchCamera()" disabled><i class="bi bi-arrow-repeat"></i></button>
+    <button class="cam-capture-btn" id="vfyCaptureBtn" onclick="vfyCapturePhoto()" disabled><i class="bi bi-camera-fill"></i></button>
+    <button class="cam-flash-btn" id="vfyFlashBtn" onclick="toggleFlash()" disabled title="Toggle flash"><i class="bi bi-lightning-fill"></i></button>
+  </div>
+  <div id="camErrorMsg">
+    <i class="bi bi-camera-video-off-fill"></i>
+    <strong>Camera unavailable</strong>
+    <span>Could not access camera.</span>
+    <button onclick="closeScanner()" style="margin-top:20px;padding:10px 24px;border-radius:12px;background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);color:#fff;font-size:14px;cursor:pointer;">Close</button>
+  </div>
+  <canvas id="camCaptureCanvas" style="display:none;"></canvas>
+</div>
+
 </body>
-</html>
+</html>

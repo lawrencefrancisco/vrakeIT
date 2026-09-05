@@ -137,5 +137,55 @@
         "points": 0,
         "verified": 0,
         "role": "user"
+    },
+    {
+        "first": "Lawrence Dhaniel",
+        "last": "Francisco",
+        "email": "lawrence.dhaniel@gmail.com",
+        "phone": "09694309741",
+        "password": "$2y$10$ZEg5Nww1yLN2Bn1CFepb2ustCl6maVm6DkFP7MGsm4jweID8eUWjC",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    },
+    {
+        "first": "Lawrence Dhaniel",
+        "last": "Francisco",
+        "email": "lawrence.dhaniel@gmail.com",
+        "phone": "09694309741",
+        "password": "$2y$10$XVbk.mgrNJytCc31QfI.0uLVFQQQeoe7yXVSU3GSZqMRFJ8yZ.\/fS",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    },
+    {
+        "first": "Lawrence Dhaniel",
+        "last": "Francisco",
+        "email": "lawrence.dhaniel@gmail.com",
+        "phone": "09694309741",
+        "password": "$2y$10$1LAf5lycuAXskht0jA87COZsfhPbyZmQqO7K0mz9HHcMpcjnTpn1m",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    },
+    {
+        "first": "Lawrence",
+        "last": "Francisco",
+        "email": "lawrence.dhaniel@gmail.com",
+        "phone": "09692941373",
+        "password": "$2y$10$.R6xbpvXL\/KYv0eOJPVaWOF0NiRKDA5NWHiHBoCmL.ADQVjV0.a6C",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
+    },
+    {
+        "first": "Lawrence",
+        "last": "Francisco",
+        "email": "lawrence.dhaniel@gmail.com",
+        "phone": "09692941373",
+        "password": "$2y$10$81KQLIRfHN7bJP8wawDqVuDaaLHamOTBamctdGnoVZp34JZEXcl12",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
     }
 ]
