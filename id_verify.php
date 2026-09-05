@@ -283,90 +283,223 @@ $hasBirthdate     = !empty($_SESSION['reg_birthdate']);
       .idv-capture-row { flex-direction: column; }
     }
 
-    /* ── Camera modal ── */
-    .cam-modal-backdrop {
+    /* ═══════════════════════════════════════════════════════════
+       FULL-SCREEN IN-BROWSER ID SCANNER
+       No native camera app. Ever. getUserMedia only.
+    ═══════════════════════════════════════════════════════════ */
+    .cam-scanner-overlay {
       position: fixed; inset: 0; z-index: 1100;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(8px);
-      display: flex; align-items: center; justify-content: center;
-      padding: 16px;
+      background: #000;
       opacity: 0; pointer-events: none;
-      transition: opacity 0.25s;
+      transition: opacity 0.22s;
     }
-    .cam-modal-backdrop.open { opacity: 1; pointer-events: all; }
-    .cam-modal {
-      width: 100%; max-width: 520px;
-      background: rgba(20,20,32,0.97);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.7);
-      transform: scale(0.94); transition: transform 0.25s;
-    }
-    .cam-modal-backdrop.open .cam-modal { transform: scale(1); }
-    .cam-modal-header {
-      padding: 16px 20px;
-      display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .cam-modal-header h5 { margin: 0; font-size: 15px; font-weight: 700; color: #fff; }
-    .cam-close-btn {
-      background: rgba(255,255,255,0.08); border: none; border-radius: 50%;
-      width: 32px; height: 32px; color: rgba(255,255,255,0.7);
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: 16px; transition: background 0.2s;
-    }
-    .cam-close-btn:hover { background: rgba(220,53,69,0.3); color: #ff8080; }
-    .cam-video-wrap {
-      background: #000; position: relative;
-      display: flex; align-items: center; justify-content: center;
-      min-height: 260px;
-    }
-    #camVideo { width: 100%; max-height: 320px; object-fit: cover; display: block; }
-    .cam-guide-overlay {
+    .cam-scanner-overlay.open { opacity: 1; pointer-events: all; }
+
+    /* Video fills the entire screen — this IS the camera */
+    #camVideo {
       position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── Top bar: title + close btn overlaid on video ── */
+    .cam-top-bar {
+      position: absolute; top: 0; left: 0; right: 0;
+      padding: max(env(safe-area-inset-top, 0px), 12px) 16px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, transparent 100%);
+      z-index: 20;
+    }
+    .cam-top-title {
+      font-size: 15px; font-weight: 700; color: #fff;
+      display: flex; align-items: center; gap: 8px;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+    }
+    .cam-close-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(0,0,0,0.45); border: 1.5px solid rgba(255,255,255,0.2);
+      color: #fff; font-size: 16px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(6px); transition: background 0.2s;
+    }
+    .cam-close-btn:hover { background: rgba(220,53,69,0.55); }
+
+    /* ── Bottom bar: switch + capture ── */
+    .cam-bottom-bar {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px 32px max(env(safe-area-inset-bottom, 0px), 28px);
+      display: flex; align-items: center; justify-content: center; gap: 28px;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+      z-index: 20;
+    }
+    /* Spacer to balance the layout (same size as switch btn) */
+    .cam-spacer { width: 52px; height: 52px; }
+    .cam-flash-btn {
+      width:52px; height:52px; border-radius:50%;
+      background:rgba(255,255,255,0.12); border:1.5px solid rgba(255,255,255,0.25);
+      color:rgba(255,255,255,0.5); font-size:20px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition: all 0.2s;
+    }
+    .cam-flash-btn:disabled { opacity:0.25; cursor:not-allowed; }
+    .cam-flash-btn.on {
+      background:rgba(255,220,0,0.22); border-color:rgba(255,220,0,0.7);
+      color:#FFE000; box-shadow:0 0 14px rgba(255,220,0,0.45);
+    }
+
+    /* Circular switch-camera button */
+    .cam-switch-btn {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      color: #fff; font-size: 20px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(6px); transition: all 0.2s;
+    }
+    .cam-switch-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .cam-switch-btn:not(:disabled):hover { background: rgba(255,255,255,0.25); }
+
+    /* Big circular shutter / capture button */
+    .cam-capture-btn {
+      width: 76px; height: 76px; border-radius: 50%;
+      background: linear-gradient(135deg, #E90101, #b00000);
+      border: 4px solid rgba(255,255,255,0.35);
+      color: #fff; font-size: 30px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 2px rgba(233,1,1,0.4), 0 6px 28px rgba(233,1,1,0.5);
+      transition: transform 0.12s, box-shadow 0.12s;
+    }
+    .cam-capture-btn:not(:disabled):active { transform: scale(0.88); }
+    .cam-capture-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ── Tip pill (drawn over frame area by JS, overlaid via CSS) ── */
+    #camTipBar {
+      position: absolute;
+      left: 0; right: 0;
+      bottom: 140px;       /* above the capture button bar */
+      display: none;
+      justify-content: center; align-items: center;
+      z-index: 20;
       pointer-events: none;
     }
-    .cam-guide-frame {
-      width: 72%; aspect-ratio: 1.586;
-      border: 2px solid rgba(233,1,1,0.7);
+    .cam-tip-label {
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.92);
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+      padding: 6px 18px; border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.15);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    }
+
+    /* ── Error state (fullscreen overlay) ── */
+    #camErrorMsg {
+      position: absolute; inset: 0; z-index: 30;
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 28px; text-align: center;
+      background: rgba(0,0,0,0.88);
+      color: rgba(255,255,255,0.65);
+      font-size: 14px; line-height: 1.65;
+    }
+    #camErrorMsg i { font-size: 52px; color: #ff6060; margin-bottom: 18px; display: block; }
+    #camErrorMsg strong { color: #ff8080; font-size: 17px; display: block; margin-bottom: 8px; }
+
+    /* ═══════════════════════════════════════════════════════════
+       MOBILE GUIDE SCREEN
+       Shows before native camera opens on mobile
+    ═══════════════════════════════════════════════════════════ */
+    .mob-guide-overlay {
+      position: fixed; inset: 0; z-index: 1200;
+      background: #080810;
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.22s;
+    }
+    .mob-guide-overlay.open { opacity: 1; pointer-events: all; }
+
+    /* Top bar */
+    .mob-guide-topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: max(env(safe-area-inset-top,0px),14px) 18px 10px;
+      background: linear-gradient(to bottom,rgba(0,0,0,0.6),transparent);
+      position: relative; z-index: 2;
+    }
+    .mob-guide-title {
+      font-size: 15px; font-weight: 700; color: #fff;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .mob-guide-close {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.2);
+      color: #fff; font-size: 15px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Canvas area (shows ID frame guide) */
+    .mob-guide-canvas-wrap {
+      flex: 1; position: relative;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    #mobGuideCanvas {
+      width: 100%; height: 100%;
+      display: block;
+    }
+
+    /* Bottom instruction + button */
+    .mob-guide-footer {
+      padding: 20px 24px max(env(safe-area-inset-bottom,0px),28px);
+      display: flex; flex-direction: column;
+      align-items: center; gap: 12px;
+      background: linear-gradient(to top,rgba(0,0,0,0.75),transparent);
+    }
+    .mob-guide-hint {
+      font-size: 12px; color: rgba(255,255,255,0.55);
+      text-align: center; line-height: 1.5; margin: 0;
+    }
+    .mob-guide-btn {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg,#E90101,#b00000);
+      border: 4px solid rgba(255,255,255,0.3);
+      color: #fff; font-size: 28px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 2px rgba(233,1,1,0.4), 0 6px 28px rgba(233,1,1,0.5);
+      transition: transform 0.12s;
+    }
+    .mob-guide-btn:active { transform: scale(0.88); }
+    .idv-card-guide {
+      position: relative;
+      width: 82%; aspect-ratio: 1.586;
+      margin: 16px auto 8px;
       border-radius: 10px;
-      box-shadow: 0 0 0 2000px rgba(0,0,0,0.35);
+      background: rgba(0,126,210,0.04);
     }
-    .cam-guide-label {
-      position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
-      font-size: 11px; color: rgba(255,255,255,0.6);
-      background: rgba(0,0,0,0.55); padding: 4px 12px; border-radius: 20px;
-      white-space: nowrap;
+    /* Corner brackets for upload zone */
+    .idv-card-guide::before,
+    .idv-card-guide::after,
+    .idv-cg-br, .idv-cg-bl {
+      content: '';
+      position: absolute;
+      width: 20px; height: 20px;
+      border-color: rgba(0,126,210,0.7);
+      border-style: solid;
     }
-    .cam-modal-footer {
-      padding: 16px 20px;
-      display: flex; align-items: center; gap: 10px;
+    .idv-card-guide::before { top:-2px; left:-2px; border-width:2.5px 0 0 2.5px; border-radius:5px 0 0 0; }
+    .idv-card-guide::after  { top:-2px; right:-2px; border-width:2.5px 2.5px 0 0; border-radius:0 5px 0 0; }
+    .idv-cg-br { bottom:-2px; right:-2px; border-width:0 2.5px 2.5px 0; border-radius:0 0 5px 0; }
+    .idv-cg-bl { bottom:-2px; left:-2px;  border-width:0 0 2.5px 2.5px; border-radius:0 0 0 5px; }
+
+    /* ID card silhouette inside the guide */
+    .idv-card-silhouette {
+      position: absolute; inset: 12px;
+      border: 1.5px dashed rgba(0,126,210,0.3);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 4px;
     }
-    .cam-switch-btn {
-      padding: 10px 16px; border-radius: 12px; font-size: 13px; font-weight: 600;
-      border: 1.5px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06);
-      color: rgba(255,255,255,0.7); cursor: pointer; transition: all 0.2s;
-      font-family: 'Poppins', sans-serif; display: flex; align-items: center; gap: 6px;
-    }
-    .cam-switch-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
-    .cam-switch-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .cam-capture-btn {
-      flex: 1; padding: 12px; border-radius: 14px;
-      background: linear-gradient(135deg, #E90101, #c20000);
-      color: #fff; font-weight: 700; font-size: 14px; border: none;
-      cursor: pointer; font-family: 'Poppins', sans-serif;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      box-shadow: 0 4px 18px rgba(233,1,1,0.4); transition: all 0.2s;
-    }
-    .cam-capture-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(233,1,1,0.5); }
-    .cam-capture-btn:active { transform: scale(0.97); }
-    .cam-error-msg {
-      padding: 20px; text-align: center;
-      font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6;
-    }
-    .cam-error-msg i { font-size: 36px; color: #ff8080; display: block; margin-bottom: 10px; }
+    .idv-card-silhouette i { font-size: 28px; color: rgba(0,126,210,0.4); }
+    .idv-card-silhouette span { font-size: 10px; color: rgba(255,255,255,0.3); font-weight: 500; letter-spacing:.4px; }
+    /* ── Upload Zone ID Frame Guide ── */
   </style>
 </head>
 <body>
@@ -426,9 +559,18 @@ $hasBirthdate     = !empty($_SESSION['reg_birthdate']);
            ondragover="handleDragOver(event)"
            ondragleave="handleDragLeave(event)"
            ondrop="handleDrop(event)">
-        <i class="bi bi-id-card idv-upload-icon" id="uploadIcon"></i>
-        <div class="idv-upload-title" id="uploadTitle">Tap to upload your ID</div>
-        <div class="idv-upload-sub" id="uploadSub">JPG, PNG, or WebP &mdash; Max 10 MB</div>
+
+        <!-- ID card frame guide -->
+        <div class="idv-card-guide" id="idCardGuide">
+          <div class="idv-cg-br"></div>
+          <div class="idv-cg-bl"></div>
+          <div class="idv-card-silhouette">
+            <i class="bi bi-person-vcard" id="uploadIcon"></i>
+            <span id="uploadTitle">Place your ID here</span>
+          </div>
+        </div>
+
+        <div class="idv-upload-sub" id="uploadSub" style="margin-top:4px;">Tap to upload &mdash; JPG, PNG, WebP &bull; Max 10 MB</div>
         <input type="file" id="idFileInput" accept="image/jpeg,image/png,image/webp"
                style="display:none;" onchange="handleFileSelect(this.files[0])">
       </div>
@@ -442,6 +584,9 @@ $hasBirthdate     = !empty($_SESSION['reg_birthdate']);
           <i class="bi bi-images"></i> Choose File
         </button>
       </div>
+      <!-- Hidden native camera input for mobile guide path -->
+      <input type="file" id="mobileCameraInput" accept="image/*" capture="environment"
+             style="display:none;" onchange="handleFileSelect(this.files[0])">
 
       <!-- Preview -->
       <div class="idv-preview-wrap" id="previewWrap">
@@ -551,37 +696,90 @@ $hasBirthdate     = !empty($_SESSION['reg_birthdate']);
   </div><!-- /idv-card -->
 </div><!-- /idv-wrap -->
 
-<!-- ── Camera Modal ── -->
-<div class="cam-modal-backdrop" id="camModalBackdrop" onclick="handleBackdropClick(event)">
-  <div class="cam-modal" id="camModal">
-    <div class="cam-modal-header">
-      <h5><i class="bi bi-camera-video-fill me-2" style="color:#80ccff;"></i>Capture ID Photo</h5>
-      <button class="cam-close-btn" id="camCloseBtn" onclick="closeCameraModal()" title="Close">
-        <i class="bi bi-x-lg"></i>
-      </button>
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- FULL-SCREEN IN-BROWSER ID SCANNER                          -->
+<!-- Uses getUserMedia ONLY — never opens native camera app      -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="cam-scanner-overlay" id="camScannerOverlay">
+
+  <!-- Camera feed fills full screen -->
+  <video id="camVideo" autoplay playsinline muted></video>
+
+  <!-- Top bar: title + close -->
+  <div class="cam-top-bar">
+    <div class="cam-top-title">
+      <i class="bi bi-camera-video-fill" style="color:#80ccff;"></i>
+      Capture ID Photo
     </div>
-    <div class="cam-video-wrap" id="camVideoWrap">
-      <video id="camVideo" autoplay playsinline muted></video>
-      <div class="cam-guide-overlay">
-        <div class="cam-guide-frame"></div>
-        <span class="cam-guide-label">Align your ID within the frame</span>
-      </div>
-    </div>
-    <div id="camErrorMsg" class="cam-error-msg" style="display:none;">
-      <i class="bi bi-camera-video-off-fill"></i>
-      <strong style="color:#ff8080;">Camera unavailable</strong><br>
-      <span id="camErrorText">Could not access your camera. Please allow camera permission and try again.</span>
-    </div>
-    <canvas id="camCanvas" style="display:none;"></canvas>
-    <div class="cam-modal-footer">
-      <button class="cam-switch-btn" id="camSwitchBtn" onclick="switchCamera()" title="Switch camera" disabled>
-        <i class="bi bi-arrow-repeat"></i> Switch
-      </button>
-      <button class="cam-capture-btn" id="camCaptureBtn" onclick="capturePhoto()" disabled>
-        <i class="bi bi-camera-fill"></i> Capture Photo
-      </button>
-    </div>
+    <button class="cam-close-btn" id="camCloseBtn" onclick="closeCameraModal()" title="Close">
+      <i class="bi bi-x-lg"></i>
+    </button>
   </div>
+
+  <!-- Tip pill (shown once camera is live) -->
+  <div id="camTipBar">
+    <span class="cam-tip-label">📋 Align your ID inside the red frame</span>
+  </div>
+
+  <!-- Bottom bar: switch + shutter -->
+  <div class="cam-bottom-bar">
+    <button class="cam-switch-btn" id="camSwitchBtn" onclick="switchCamera()" disabled title="Switch camera">
+      <i class="bi bi-arrow-repeat"></i>
+    </button>
+    <button class="cam-capture-btn" id="camCaptureBtn" onclick="capturePhoto()" disabled title="Capture">
+      <i class="bi bi-camera-fill"></i>
+    </button>
+    <button class="cam-flash-btn" id="camFlashBtn" onclick="toggleCamFlash()" disabled title="Toggle flash">
+      <i class="bi bi-lightning-fill"></i>
+    </button>
+  </div>
+
+  <!-- Error state (overlaid, shown when getUserMedia fails) -->
+  <div id="camErrorMsg" style="display:none;">
+    <i class="bi bi-camera-video-off-fill"></i>
+    <strong>Camera unavailable</strong>
+    <span id="camErrorText">Could not access your camera. Please allow camera permission and try again.</span>
+    <button onclick="closeCameraModal()" style="margin-top:24px;padding:12px 28px;border-radius:14px;background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);color:#fff;font-size:14px;cursor:pointer;font-family:'Poppins',sans-serif;">Close</button>
+  </div>
+
+  <!-- Hidden canvas for photo capture -->
+  <canvas id="camCanvas" style="display:none;"></canvas>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- MOBILE GUIDE SCREEN                                        -->
+<!-- Draws the scanning frame guide, then launches native camera -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="mob-guide-overlay" id="mobGuideOverlay">
+
+  <!-- Top bar -->
+  <div class="mob-guide-topbar">
+    <div class="mob-guide-title">
+      <i class="bi bi-camera-fill" style="color:#80ccff;"></i>
+      ID Scanner Guide
+    </div>
+    <button class="mob-guide-close" onclick="closeMobGuide()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <!-- Canvas: shows the scanning frame guide statically -->
+  <div class="mob-guide-canvas-wrap">
+    <canvas id="mobGuideCanvas"></canvas>
+  </div>
+
+  <!-- Footer: instructions + launch button -->
+  <div class="mob-guide-footer">
+    <p class="mob-guide-hint">
+      Tap the button below to open your camera.<br>
+      <strong style="color:rgba(255,255,255,0.8);">Align your ID inside the red frame</strong><br>
+      then tap the shutter button.
+    </p>
+    <button class="mob-guide-btn" onclick="launchMobileCamera()" title="Open Camera">
+      <i class="bi bi-camera-fill"></i>
+    </button>
+  </div>
+
 </div>
 
 <script>
@@ -619,79 +817,352 @@ $hasBirthdate     = !empty($_SESSION['reg_birthdate']);
   let camDevices      = [];   // list of videoinput devices
   let camDeviceIndex  = 0;    // which camera is active
 
-  async function openCameraModal() {
-    const backdrop    = document.getElementById('camModalBackdrop');
-    const videoEl     = document.getElementById('camVideo');
-    const videoWrap   = document.getElementById('camVideoWrap');
-    const errorMsg    = document.getElementById('camErrorMsg');
-    const captureBtn  = document.getElementById('camCaptureBtn');
-    const switchBtn   = document.getElementById('camSwitchBtn');
+  // ── Canvas scanning frame animation state
+  let _canvasRaf  = null;   // requestAnimationFrame handle
+  let _scanY      = 0;      // current scan line Y (0-1, relative to frame)
+  let _scanDir    = 1;      // 1 = down, -1 = up
+  let _cornerPulse = 0;     // for corner glow animation
+  let _camFlashOn = false, _camFocusRing = null; // flash + tap-to-focus
 
-    // Reset to a clean state each time the modal opens
+  function startCanvasOverlay() {
+    // Remove stale canvas if any
+    const old = document.getElementById('camOverlayCanvas');
+    if (old) old.remove();
+
+    // Inject canvas directly into <body> — sits above ALL hardware layers
+    const canvas = document.createElement('canvas');
+    canvas.id = 'camOverlayCanvas';
+    Object.assign(canvas.style, {
+      position: 'fixed', top: '0', left: '0',
+      width: '100vw', height: '100vh',
+      zIndex: '9999', pointerEvents: 'none', display: 'block'
+    });
+    document.body.appendChild(canvas);
+
+    // Show tip
+    const tipBar = document.getElementById('camTipBar');
+    if (tipBar) tipBar.style.display = 'flex';
+
+    _scanY = 0; _scanDir = 1; _cornerPulse = 0;
+
+    function drawFrame() {
+      const dpr = window.devicePixelRatio || 1;
+      const VW  = window.innerWidth;
+      const VH  = window.innerHeight;
+      canvas.width  = VW * dpr;
+      canvas.height = VH * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, VW, VH);
+
+      // Frame: credit-card ratio centred, shifted slightly up
+      const fW = Math.min(VW * 0.86, VH * 1.586 * 0.62);
+      const fH = fW / 1.586;
+      const fX = (VW - fW) / 2;
+      const fY = (VH - fH) / 2 - VH * 0.04;
+      const r  = 12;
+
+      // Dark vignette
+      ctx.fillStyle = 'rgba(0,0,0,0.60)';
+      ctx.fillRect(0, 0, VW, VH);
+
+      // Clear window
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-out';
+      roundRect(ctx, fX, fY, fW, fH, r);
+      ctx.fill();
+      ctx.restore();
+
+      // Animated scan line (NO shadowBlur — Android Chrome bug causes invisible strokes)
+      _scanY += _scanDir * 2.2;
+      if (_scanY >= fH - 2) { _scanY = fH - 2; _scanDir = -1; }
+      if (_scanY <= 0)       { _scanY = 0;       _scanDir =  1; }
+      const sy = fY + _scanY;
+      const sg = ctx.createLinearGradient(fX, sy, fX + fW, sy);
+      sg.addColorStop(0,   'rgba(255,30,30,0)');
+      sg.addColorStop(0.5, 'rgba(255,60,60,1)');
+      sg.addColorStop(1,   'rgba(255,30,30,0)');
+      ctx.strokeStyle = sg;
+      ctx.lineWidth   = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(fX + 8, sy); ctx.lineTo(fX + fW - 8, sy);
+      ctx.stroke();
+
+      // Corner brackets — double-pass: halo then solid (NO shadowBlur)
+      _cornerPulse += 0.05;
+      const pulse = 0.5 + 0.5 * Math.abs(Math.sin(_cornerPulse));
+      const cL = 30;
+      const brackets = [
+        [fX+r+cL, fY,      fX+r,    fY,      fX,    fY,      fX,    fY+r,    fX,    fY+r+cL],
+        [fX+fW-r-cL, fY,   fX+fW-r, fY,      fX+fW, fY,      fX+fW, fY+r,    fX+fW, fY+r+cL],
+        [fX,  fY+fH-r-cL,  fX,      fY+fH-r, fX,    fY+fH,   fX+r,  fY+fH,   fX+r+cL, fY+fH],
+        [fX+fW, fY+fH-r-cL, fX+fW,  fY+fH-r, fX+fW, fY+fH,   fX+fW-r, fY+fH, fX+fW-r-cL, fY+fH]
+      ];
+      function drawBrackets(color, lw) {
+        ctx.save();
+        ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+        brackets.forEach(p => {
+          ctx.beginPath();
+          ctx.moveTo(p[0],p[1]); ctx.lineTo(p[2],p[3]);
+          ctx.quadraticCurveTo(p[4],p[5],p[6],p[7]); ctx.lineTo(p[8],p[9]);
+          ctx.stroke();
+        });
+        ctx.restore();
+      }
+      drawBrackets(`rgba(255,40,40,${(0.35+0.25*pulse).toFixed(2)})`, 10); // glow halo
+      drawBrackets('#FF2828', 4);                                             // solid line
+
+      // ── Focus ring (tap-to-focus indicator)
+      if (_camFocusRing) {
+        const elapsed = Date.now() - _camFocusRing.t;
+        if (elapsed < 900) {
+          const alpha = Math.max(0, 1 - elapsed / 900);
+          const sz = 64 + 20 * (1 - alpha);
+          ctx.save();
+          ctx.strokeStyle = `rgba(255,220,0,${alpha})`;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(_camFocusRing.x - sz/2, _camFocusRing.y - sz/2, sz, sz);
+          const tk = 10;
+          ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+          ctx.lineWidth = 2;
+          [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([sx,sy]) => {
+            const cx = _camFocusRing.x + sx*(sz/2), cy = _camFocusRing.y + sy*(sz/2);
+            ctx.beginPath(); ctx.moveTo(cx, cy-sy*tk); ctx.lineTo(cx, cy); ctx.lineTo(cx+sx*tk, cy); ctx.stroke();
+          });
+          ctx.restore();
+        } else { _camFocusRing = null; }
+      }
+
+      _canvasRaf = requestAnimationFrame(drawFrame);
+    }
+
+    if (_canvasRaf) cancelAnimationFrame(_canvasRaf);
+    drawFrame();
+  }
+
+  function stopCanvasOverlay() {
+    if (_canvasRaf) { cancelAnimationFrame(_canvasRaf); _canvasRaf = null; }
+    // Remove the body-level canvas
+    const canvas = document.getElementById('camOverlayCanvas');
+    if (canvas) canvas.remove();
+    const tipBar = document.getElementById('camTipBar');
+    if (tipBar) tipBar.style.display = 'none';
+  }
+
+  // Helper: draw rounded rectangle path
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x+w, y,   x+w, y+r);
+    ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+    ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x,   y+h, x,   y+h-r);
+    ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x,   y,   x+r, y);
+    ctx.closePath();
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // MOBILE GUIDE (guide screen + native camera capture)
+  // ─────────────────────────────────────────────────────────────────
+  function isMobileDevice() {
+    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  }
+
+  function openMobGuide() {
+    document.getElementById('mobGuideOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    // Draw after layout settles
+    requestAnimationFrame(() => requestAnimationFrame(drawGuideFrame));
+  }
+
+  function closeMobGuide() {
+    document.getElementById('mobGuideOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function launchMobileCamera() {
+    closeMobGuide();
+    document.getElementById('mobileCameraInput').click();
+  }
+
+  function drawGuideFrame() {
+    const canvas = document.getElementById('mobGuideCanvas');
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    const W   = canvas.offsetWidth  || window.innerWidth;
+    const H   = canvas.offsetHeight || Math.round(window.innerHeight * 0.6);
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, W, H);
+
+    // Background
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#0d0d18');
+    bg.addColorStop(1, '#08080f');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Frame: credit-card ratio centred
+    const fW = Math.min(W * 0.82, H * 1.586 * 0.75);
+    const fH = fW / 1.586;
+    const fX = (W - fW) / 2;
+    const fY = (H - fH) / 2;
+    const r  = 12;
+
+    // Dark vignette then punch clear window
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    roundRect(ctx, fX, fY, fW, fH, r);
+    ctx.fill();
+    ctx.restore();
+
+    // ID card body inside frame
+    ctx.save();
+    ctx.fillStyle = 'rgba(20,25,50,0.92)';
+    roundRect(ctx, fX, fY, fW, fH, r);
+    ctx.fill();
+    ctx.restore();
+
+    // Header stripe
+    ctx.fillStyle = 'rgba(0,126,210,0.14)';
+    ctx.fillRect(fX, fY, fW, fH * 0.28);
+
+    // Placeholder text lines
+    ctx.fillStyle = 'rgba(255,255,255,0.09)';
+    const lH = fH * 0.06;
+    [0,1,2].forEach(i => {
+      ctx.fillRect(fX + fW*0.08, fY + fH*0.38 + i*(lH*1.7), fW*0.52, lH);
+    });
+
+    // Photo box placeholder
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(fX + fW*0.73, fY + fH*0.26, fW*0.19, fH*0.48);
+    ctx.fillStyle = 'rgba(255,255,255,0.04)';
+    ctx.fillRect(fX + fW*0.73, fY + fH*0.26, fW*0.19, fH*0.48);
+
+    // Red corner brackets
+    ctx.save();
+    ctx.strokeStyle = '#E90101';
+    ctx.lineWidth   = 4;
+    ctx.lineCap     = 'round';
+    ctx.shadowColor = 'rgba(233,1,1,0.9)';
+    ctx.shadowBlur  = 14;
+    const cL = 26;
+    // top-left
+    ctx.beginPath();
+    ctx.moveTo(fX+r+cL, fY); ctx.lineTo(fX+r, fY);
+    ctx.quadraticCurveTo(fX, fY, fX, fY+r); ctx.lineTo(fX, fY+r+cL);
+    ctx.stroke();
+    // top-right
+    ctx.beginPath();
+    ctx.moveTo(fX+fW-r-cL, fY); ctx.lineTo(fX+fW-r, fY);
+    ctx.quadraticCurveTo(fX+fW, fY, fX+fW, fY+r); ctx.lineTo(fX+fW, fY+r+cL);
+    ctx.stroke();
+    // bottom-left
+    ctx.beginPath();
+    ctx.moveTo(fX, fY+fH-r-cL); ctx.lineTo(fX, fY+fH-r);
+    ctx.quadraticCurveTo(fX, fY+fH, fX+r, fY+fH); ctx.lineTo(fX+r+cL, fY+fH);
+    ctx.stroke();
+    // bottom-right
+    ctx.beginPath();
+    ctx.moveTo(fX+fW, fY+fH-r-cL); ctx.lineTo(fX+fW, fY+fH-r);
+    ctx.quadraticCurveTo(fX+fW, fY+fH, fX+fW-r, fY+fH); ctx.lineTo(fX+fW-r-cL, fY+fH);
+    ctx.stroke();
+    ctx.restore();
+
+    // "ALIGN ID HERE" label inside frame
+    ctx.save();
+    ctx.font = `bold ${Math.max(11, Math.round(fH*0.09))}px Poppins,sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.22)';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('ALIGN ID INSIDE FRAME', fX + fW/2, fY + fH*0.12);
+    ctx.restore();
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // DESKTOP IN-BROWSER SCANNER (getUserMedia)
+  // ─────────────────────────────────────────────────────────────────
+  async function openCameraModal() {
+    // Try getUserMedia on ALL devices (mobile + desktop)
+    // If it fails on mobile, the catch block falls back to the guide screen
+
+    // ── getUserMedia path
+    const overlay    = document.getElementById('camScannerOverlay');
+    const videoEl    = document.getElementById('camVideo');
+    const errorMsg   = document.getElementById('camErrorMsg');
+    const captureBtn = document.getElementById('camCaptureBtn');
+    const switchBtn  = document.getElementById('camSwitchBtn');
+    const tipBar     = document.getElementById('camTipBar');
+
     errorMsg.style.display  = 'none';
-    videoWrap.style.display = 'flex';
+    videoEl.style.display   = 'block';
     captureBtn.disabled     = true;
     switchBtn.disabled      = true;
-    camDevices              = [];
-    camDeviceIndex          = 0;
+    if (tipBar) tipBar.style.display = 'none';
+    camDevices     = [];
+    camDeviceIndex = 0;
 
-    // Open modal first so user sees something immediately
-    backdrop.classList.add('open');
+    overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
 
-    // Check API support
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      showCamError('Your browser does not support camera access. Please use "Choose File" instead.');
+      showCamError('Your browser does not support in-browser camera access. Please use "Choose File" instead.');
       return;
     }
 
     try {
-      // ── Step 1: request permission with simple constraints (no deviceId yet).
-      // Enumerating devices BEFORE this returns empty deviceId strings on most
-      // browsers, which then causes getUserMedia to fail with OverconstrainedError.
       camStream = await navigator.mediaDevices.getUserMedia({
-        video: { width: { ideal: 1280 }, height: { ideal: 720 } },
+        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 } },
         audio: false
       });
-
       videoEl.srcObject = camStream;
       await videoEl.play();
       captureBtn.disabled = false;
-
-      // ── Step 2: NOW enumerate devices — IDs are populated after permission grant
+      startCanvasOverlay();
+      // Check torch support
+      try {
+        const track = camStream.getVideoTracks()[0];
+        const caps  = track.getCapabilities ? track.getCapabilities() : {};
+        const fb = document.getElementById('camFlashBtn');
+        if (fb && caps.torch) fb.disabled = false;
+      } catch(_) {}
       try {
         const allDevices = await navigator.mediaDevices.enumerateDevices();
         camDevices = allDevices.filter(d => d.kind === 'videoinput' && d.deviceId);
         if (camDevices.length > 1) switchBtn.disabled = false;
-      } catch (_) {
-        // Enumeration failing is non-fatal; switch button just stays disabled
-      }
-
+      } catch (_) {}
     } catch (err) {
       let msg;
       switch (err.name) {
         case 'NotAllowedError':
         case 'PermissionDeniedError':
-          msg = 'Camera permission was denied. Click the camera/lock icon in the address bar, set Camera to "Allow", then refresh and try again.';
+          msg = 'Camera permission denied. Tap the lock icon → Camera → Allow, then try again.';
           break;
         case 'NotFoundError':
-        case 'DevicesNotFoundError':
-          msg = 'No camera was detected on this device. Use the "Choose File" button to upload a photo instead.';
+          msg = 'No camera detected. Use "Choose File" to upload a photo instead.';
           break;
         case 'NotReadableError':
-        case 'TrackStartError':
-          msg = 'Your camera is in use by another application (e.g. Teams, Zoom, OBS). Close it and try again.';
-          break;
-        case 'OverconstrainedError':
-          msg = 'Camera does not support the requested resolution. Please try again.';
+          msg = 'Camera is in use by another application. Close it and try again.';
           break;
         case 'SecurityError':
-          msg = 'Camera access blocked by browser security policy. Make sure you are on http://localhost.';
+          msg = 'Camera blocked (requires HTTPS). Use the Cloudflare tunnel URL.';
           break;
         default:
-          msg = `Camera error (${err.name}): ${err.message || 'unknown'}. Try "Choose File" instead.`;
+          msg = `Camera error: ${err.message || err.name}.`;
       }
-      showCamError(msg);
+      if (isMobileDevice()) {
+        // getUserMedia failed on mobile — fall back to guide + native camera
+        document.getElementById('camScannerOverlay').classList.remove('open');
+        document.body.style.overflow = '';
+        openMobGuide();
+      } else {
+        showCamError(msg);
+      }
     }
   }
 
@@ -747,24 +1218,83 @@ $hasBirthdate     = !empty($_SESSION['reg_birthdate']);
   }
 
   function closeCameraModal() {
+    stopCanvasOverlay();
+    // Turn off torch before stopping stream
+    if (_camFlashOn && camStream) {
+      try { camStream.getVideoTracks()[0]?.applyConstraints({ advanced:[{torch:false}] }); } catch(_) {}
+    }
+    _camFlashOn = false; _camFocusRing = null;
+    const fb = document.getElementById('camFlashBtn');
+    if (fb) { fb.disabled = true; fb.classList.remove('on'); }
     if (camStream) {
       camStream.getTracks().forEach(t => t.stop());
       camStream = null;
     }
     document.getElementById('camVideo').srcObject = null;
-    document.getElementById('camModalBackdrop').classList.remove('open');
+    document.getElementById('camScannerOverlay').classList.remove('open');
     document.body.style.overflow = '';
   }
 
-  function handleBackdropClick(e) {
-    if (e.target === document.getElementById('camModalBackdrop')) closeCameraModal();
-  }
+  function handleBackdropClick(e) { /* no-op: fullscreen scanner has no backdrop */ }
 
   function showCamError(msg) {
-    document.getElementById('camVideoWrap').style.display = 'none';
+    document.getElementById('camVideo').style.display = 'none';
     document.getElementById('camErrorText').textContent = msg;
-    document.getElementById('camErrorMsg').style.display = 'block';
+    document.getElementById('camErrorMsg').style.display = 'flex';
+    stopCanvasOverlay();
   }
+
+  // ── Flash toggle
+  async function toggleCamFlash() {
+    if (!camStream) return;
+    const track = camStream.getVideoTracks()[0];
+    if (!track) return;
+    _camFlashOn = !_camFlashOn;
+    try {
+      await track.applyConstraints({ advanced: [{ torch: _camFlashOn }] });
+      const fb = document.getElementById('camFlashBtn');
+      if (fb) fb.classList.toggle('on', _camFlashOn);
+    } catch(e) { _camFlashOn = false; }
+  }
+
+  // ── Tap-to-focus
+  async function handleCamTapFocus(clientX, clientY) {
+    if (!camStream) return;
+    const track = camStream.getVideoTracks()[0];
+    if (!track) return;
+    _camFocusRing = { x: clientX, y: clientY, t: Date.now() };
+    try {
+      const caps = track.getCapabilities ? track.getCapabilities() : {};
+      const adv  = {};
+      if (caps.focusMode?.includes('single-shot')) adv.focusMode = 'single-shot';
+      else if (caps.focusMode?.includes('manual')) adv.focusMode = 'manual';
+      if (caps.pointsOfInterest) {
+        const vid  = document.getElementById('camVideo');
+        const rect = vid.getBoundingClientRect();
+        adv.pointsOfInterest = [{
+          x: Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)),
+          y: Math.max(0, Math.min(1, (clientY - rect.top)  / rect.height))
+        }];
+      }
+      if (Object.keys(adv).length) await track.applyConstraints({ advanced: [adv] });
+    } catch(e) { /* ring still shows */ }
+  }
+
+  // Wire tap-to-focus on scanner overlay
+  (function() {
+    const ov = document.getElementById('camScannerOverlay');
+    if (!ov) return;
+    ov.addEventListener('click', e => {
+      if (e.target.closest('button, .cam-top-bar, .cam-bottom-bar')) return;
+      handleCamTapFocus(e.clientX, e.clientY);
+    });
+    ov.addEventListener('touchend', e => {
+      if (e.target.closest('button, .cam-top-bar, .cam-bottom-bar')) return;
+      e.preventDefault();
+      const t = e.changedTouches[0];
+      handleCamTapFocus(t.clientX, t.clientY);
+    }, { passive: false });
+  })();
 
   // Close modal on Escape key
   document.addEventListener('keydown', e => {
@@ -797,12 +1327,16 @@ $hasBirthdate     = !empty($_SESSION['reg_birthdate']);
     document.getElementById('previewFilename').textContent = `📄 ${file.name} (${formatBytes(file.size)})`;
     previewWrap.style.display = 'block';
 
-    // Update upload zone
+    // Update upload zone — hide the card guide, show check icon
     uploadZone.classList.add('has-file');
-    uploadIcon.className = 'bi bi-check-circle-fill idv-upload-icon';
-    uploadTitle.textContent = 'Document selected';
-    uploadSub.textContent   = file.name;
-
+    const guide = document.getElementById('idCardGuide');
+    if (guide) {
+      guide.innerHTML = '<div class="idv-cg-br"></div><div class="idv-cg-bl"></div>'
+        + '<div class="idv-card-silhouette" style="border-color:rgba(0,200,83,0.4);">'
+        + '<i class="bi bi-check-circle-fill" style="font-size:28px;color:#00c853;"></i>'
+        + '<span style="color:rgba(0,200,83,0.7);">Document selected</span></div>';
+    }
+    uploadSub.textContent = file.name;
     verifyBtn.disabled = false;
   }
 
@@ -811,12 +1345,18 @@ $hasBirthdate     = !empty($_SESSION['reg_birthdate']);
     previewImg.src = '';
     previewWrap.style.display = 'none';
     uploadZone.classList.remove('has-file');
-    uploadIcon.className = 'bi bi-id-card idv-upload-icon';
-    uploadTitle.textContent = 'Tap to upload your ID';
-    uploadSub.textContent   = 'JPG, PNG, or WebP — Max 10 MB';
+    // Restore card guide
+    const guide = document.getElementById('idCardGuide');
+    if (guide) {
+      guide.innerHTML = '<div class="idv-cg-br"></div><div class="idv-cg-bl"></div>'
+        + '<div class="idv-card-silhouette">'
+        + '<i class="bi bi-person-vcard" style="font-size:28px;color:rgba(0,126,210,0.4);"></i>'
+        + '<span>Place your ID here</span></div>';
+    }
+    uploadSub.textContent = 'Tap to upload \u2014 JPG, PNG, WebP \u2022 Max 10 MB';
     verifyBtn.disabled = true;
     document.getElementById('idFileInput').value  = '';
-    document.getElementById('cameraInput').value  = '';
+    if (document.getElementById('cameraInput')) document.getElementById('cameraInput').value = '';
     hideAlert();
   }
 

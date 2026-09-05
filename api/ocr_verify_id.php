@@ -198,11 +198,11 @@ if ($matchResult['overall_match']) {
          (user_id, status, source, id_type, full_name,
           ocr_extracted_name, ocr_extracted_dob, ocr_extracted_doc_number, ocr_extracted_expiry,
           ocr_confidence_score, ocr_document_valid, ocr_name_match, ocr_dob_match,
-          ocr_reference, image_hash, birthdate)
-         VALUES (?, 'verified', ?, ?, ?,
+          ocr_reference, image_hash, birthdate, id_file)
+         VALUES (?, 'approved', ?, ?, ?,
                  ?, ?, ?, ?,
                  ?, 1, ?, ?,
-                 ?, ?, ?)"
+                 ?, ?, ?, ?)"
     )->execute([
         $userId,
         $source,
@@ -218,11 +218,12 @@ if ($matchResult['overall_match']) {
         $ocrReference,
         $imageHash,
         $regBirthdate ?: null,
+        $filename,   // kept on disk for admin review
     ]);
 
     auditLog($userId, 'ocr_verification_success', "Ref: {$ocrReference}, Score: {$matchResult['score']}");
 
-    @unlink($storagePath); // Delete image after processing — per data retention policy
+    // Image kept on disk for admin audit — do NOT unlink on success
 
     // Clear session flags
     unset($_SESSION['reg_birthdate']);
