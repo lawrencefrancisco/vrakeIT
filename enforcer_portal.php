@@ -917,7 +917,8 @@ function initMap() {
 
   // ── BASE TILE LAYER (full color) ─────────────────────────
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 18
   }).addTo(map);
 
   // ── BORDER HIGHLIGHT ─────────────────────────────────────

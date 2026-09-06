@@ -12,16 +12,23 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $db = getDB();
-$userId = (int)$_SESSION['user_id'];
+$user = getLoggedInUser();
+$userId = (int)$user['id'];
 $reportId = (int)($_POST['report_id'] ?? 0);
 
 if (!$reportId) {
     jsonResponse(false, 'Missing report ID.');
 }
 
-// Ensure the report belongs to the logged-in user
-$stmt = $db->prepare("SELECT r.*, u.first_name, u.last_name FROM reports r JOIN users u ON r.user_id = u.id WHERE r.id = ? AND r.user_id = ?");
-$stmt->execute([$reportId, $userId]);
+// Check if user is admin or enforcer
+if ($user['role'] === 'admin' || $user['role'] === 'enforcer') {
+    $stmt = $db->prepare("SELECT r.*, u.first_name, u.last_name FROM reports r JOIN users u ON r.user_id = u.id WHERE r.id = ?");
+    $stmt->execute([$reportId]);
+} else {
+    // Ensure the report belongs to the logged-in user
+    $stmt = $db->prepare("SELECT r.*, u.first_name, u.last_name FROM reports r JOIN users u ON r.user_id = u.id WHERE r.id = ? AND r.user_id = ?");
+    $stmt->execute([$reportId, $userId]);
+}
 $report = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$report) {

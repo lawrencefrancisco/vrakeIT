@@ -36,7 +36,7 @@ self.addEventListener('push', (event) => {
     badge:   '/vrakeit/assets/img/system_logo.png',
     tag:     data.tag     || 'vrakeit-report-' + Date.now(),
     data: {
-      url: data.url || '/vrakeit/enforcer_landing.php',
+      url: data.url || '/vrakeit/enforcer_live.php',
     },
     actions: [
       { action: 'view',    title: '👁 View Report' },
