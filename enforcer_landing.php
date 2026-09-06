@@ -97,7 +97,7 @@ $reportCount = $totalReports->fetchColumn();
     <!-- Content -->
     <div class="saas-hero-content" style="padding-top:56px;">
       <div class="saas-status-chip">
-        <span class="pulse-dot"></span>
+        <span class="pulse-dot" style="<?= ($user['is_on_duty'] ?? 1) ? '' : 'background: #ff4d4d; box-shadow: 0 0 12px #ff4d4d;' ?>"></span>
         Enforcer Network Active
       </div>
       <h2 class="saas-hero-heading">
@@ -107,6 +107,39 @@ $reportCount = $totalReports->fetchColumn();
       <p class="saas-hero-sub">
         Manage reports and ensure public safety on the road.
       </p>
+
+      <!-- On Duty Toggle -->
+      <style>
+        .duty-toggle-wrap {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          margin-top: 20px;
+          margin-bottom: 30px; /* Gives space so it doesn't clip the bottom edge */
+          padding: 8px 18px;
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 40px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .form-switch .form-check-input.duty-switch {
+          background-color: rgba(255, 255, 255, 0.3);
+          border-color: rgba(255, 255, 255, 0.1);
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+        }
+        .form-switch .form-check-input.duty-switch:checked {
+          background-color: #4ade80;
+          border-color: #4ade80;
+        }
+      </style>
+      <div class="duty-toggle-wrap">
+        <span style="color: #fff; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Receive Live Alerts</span>
+        <div class="form-check form-switch" style="margin: 0; display:flex; align-items:center;">
+          <input class="form-check-input duty-switch" type="checkbox" id="dutyToggle" onchange="toggleDutyStatus(this)" <?= (!isset($user['is_on_duty']) || $user['is_on_duty'] == 1) ? 'checked' : '' ?> style="width: 44px; height: 24px; cursor: pointer; box-shadow: none; margin: 0;">
+        </div>
+      </div>
     </div>
   </div>
 
@@ -119,6 +152,35 @@ $reportCount = $totalReports->fetchColumn();
 
 
 <script>
+async function toggleDutyStatus(checkbox) {
+  const isOnDuty = checkbox.checked ? '1' : '0';
+  const dutyPulse = document.querySelector('.pulse-dot');
+  
+  try {
+    const fd = new FormData();
+    fd.append('is_on_duty', isOnDuty);
+    
+    const res = await fetch('api/toggle_duty.php', { method: 'POST', body: fd });
+    const data = await res.json();
+    
+    if (data.success) {
+      if (isOnDuty === '1') {
+        dutyPulse.style.background = '#4ade80';
+        dutyPulse.style.boxShadow = '0 0 12px #4ade80';
+      } else {
+        dutyPulse.style.background = '#ff4d4d';
+        dutyPulse.style.boxShadow = '0 0 12px #ff4d4d';
+      }
+    } else {
+      alert("Failed to update status");
+      checkbox.checked = !checkbox.checked;
+    }
+  } catch (e) {
+    alert("Network error");
+    checkbox.checked = !checkbox.checked;
+  }
+}
+
 /* Road Safety Assurance Tips */
 /* SMOOTH PREMIUM PHRASE TRANSITION — replace your current rotateSafetyTip() script */
 
@@ -203,11 +265,18 @@ setInterval(rotateSafetyTip, 5000);
         <span class="cta-sub">File on behalf of victim</span>
       </div>
     </a>
-    <a href="track.php" class="saas-cta-btn blue-cta" id="btn-track-report">
+    <a href="enforcer_live.php" class="saas-cta-btn blue-cta" id="btn-live-incidents">
+      <div class="saas-cta-icon-wrap" style="color:#007ED2; background:rgba(0,126,210,0.1);"><i class="bi bi-geo-alt-fill"></i></div>
+      <div class="cta-text-wrap">
+        <span class="cta-label" style="color:#007ED2;">Live Incidents</span>
+        <span class="cta-sub" style="color:rgba(0,126,210,0.7);">View active emergency reports</span>
+      </div>
+    </a>
+    <a href="track.php" class="saas-cta-btn green-cta" id="btn-track-report" style="grid-column: span 2;">
       <div class="saas-cta-icon-wrap"><i class="bi bi-list-check"></i></div>
       <div class="cta-text-wrap">
-        <span class="cta-label">Track Reports</span>
-        <span class="cta-sub">View filed reports</span>
+        <span class="cta-label green-cta-label">My Tracked Reports</span>
+        <span class="cta-sub">View reports you have filed</span>
       </div>
     </a>
   </div>

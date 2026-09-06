@@ -150,6 +150,19 @@ a{color:inherit;text-decoration:none;}
 .form-dark::placeholder{color:var(--muted);font-weight:400;}
 .form-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block;}
 
+/* ========================================================= */
+/* GLOBAL MAP DARK MODE CSS (NO API KEY REQUIRED)            */
+/* ========================================================= */
+.leaflet-tile-pane,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+.leaflet-container {
+    background: #000 !important;
+}
+
 </style>
 <?php } // end adminHead
 

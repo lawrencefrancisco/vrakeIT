@@ -232,12 +232,12 @@ function sendPushToAllEnforcers(array $payload): void {
     try {
         $db   = getDB();
         
-        // Get all enforcer subscriptions
+        // Get all enforcer subscriptions who are on duty
         $stmt = $db->query("
             SELECT ps.id, ps.endpoint, ps.p256dh, ps.auth
             FROM push_subscriptions ps
             JOIN users u ON ps.user_id = u.id
-            WHERE u.role = 'enforcer'
+            WHERE u.role = 'enforcer' AND u.is_on_duty = 1
         ");
         $subscriptions = $stmt->fetchAll();
 

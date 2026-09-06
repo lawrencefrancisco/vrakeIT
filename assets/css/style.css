@@ -2465,3 +2465,17 @@ body::before {
     .dark-input::placeholder {
         color: transparent !important;
     }
+
+/* ========================================================= */
+/* GLOBAL MAP DARK MODE CSS (NO API KEY REQUIRED)            */
+/* Inverts the standard OSM map tiles to a sleek dark theme  */
+/* ========================================================= */
+.leaflet-tile-pane,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+.leaflet-container {
+    background: #000 !important;
+}

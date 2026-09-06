@@ -112,7 +112,7 @@ requireAdminLogin();
     });
     map.setMaxBounds(VALENZUELA_BOUNDS);
 
-    // ── BASE TILE LAYER (full color) ─────────────────────────
+    // ── BASE TILE LAYER (dark mode via CSS) ─────────────────────────
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap contributors'
