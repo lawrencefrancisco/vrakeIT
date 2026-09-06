@@ -13,6 +13,7 @@ $where = "WHERE 1=1";
 if ($filter === 'pending')     $where .= " AND status='pending'";
 if ($filter === 'approved')    $where .= " AND status='approved'";
 if ($filter === 'rejected')    $where .= " AND status='rejected'";
+if ($filter === 'deactivated') $where .= " AND status='deactivated'";
 
 $merchants = $db->query("SELECT * FROM merchants $where ORDER BY created_at DESC")->fetchAll();
 
@@ -26,12 +27,10 @@ adminHead('Merchant Oversight');
     <div class="page-body">
 
       <div class="section-card mb-4">
-        <div class="section-header" style="flex-wrap:wrap; gap:10px;">
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <?php foreach (['all' => 'All', 'pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected'] as $k => $v): ?>
-              <a href="?filter=<?= $k ?>" class="btn-admin <?= $filter === $k ? 'btn-primary-admin' : 'btn-review' ?>"><?= $v ?></a>
-            <?php endforeach; ?>
-          </div>
+        <div class="section-header" style="justify-content: flex-start; gap: 8px; flex-wrap: wrap;">
+          <?php foreach (['all' => 'All', 'pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected', 'deactivated' => 'Deactivated'] as $k => $v): ?>
+            <a href="?filter=<?= $k ?>" class="btn-admin <?= $filter === $k ? 'btn-primary-admin' : 'btn-review' ?> m-0"><?= $v ?></a>
+          <?php endforeach; ?>
         </div>
       </div>
 
@@ -67,7 +66,7 @@ adminHead('Merchant Oversight');
                       <button class="btn-admin btn-reject" onclick="merchantAction(<?= $m['id'] ?>,'rejected')"><i class="bi bi-x"></i> Reject</button>
                     <?php endif; ?>
                     <?php if ($m['status'] === 'approved'): ?>
-                      <button class="btn-admin btn-danger-admin" onclick="merchantAction(1, 'deactivated')">
+                      <button class="btn-admin btn-danger-admin" onclick="merchantAction(<?= $m['id'] ?>, 'deactivated')">
                         <i class="bi bi-pause"></i> Deactivate
                       </button>
                     <?php endif; ?>

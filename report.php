@@ -277,8 +277,24 @@ if (($user['role'] ?? 'user') !== 'user') {
     }
 
     .choice-btn .cb-icon {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-light);
+      color: var(--primary);
+      transition: all 0.2s;
+    }
+
+    .choice-btn:hover .cb-icon,
+    .choice-btn.selected .cb-icon,
+    .choice-btn.active .cb-icon {
+      background: var(--primary);
+      color: #fff;
     }
 
     .choice-btn .cb-body .cb-title {
@@ -330,7 +346,23 @@ if (($user['role'] ?? 'user') !== 'user') {
     }
 
     .choice-card .cc-icon {
-      font-size: 2rem;
+      font-size: 1.8rem;
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-light);
+      color: var(--primary);
+      margin-bottom: 6px;
+      transition: all 0.2s;
+    }
+
+    .choice-card:hover .cc-icon,
+    .choice-card.active .cc-icon {
+      background: var(--primary);
+      color: #fff;
     }
 
     .choice-card .cc-label {
@@ -1013,7 +1045,7 @@ if (($user['role'] ?? 'user') !== 'user') {
       white-space: nowrap;
     " onmouseover="this.style.background='var(--primary-light)';this.style.color='var(--primary)';this.style.borderColor='var(--primary)';"
       onmouseout="this.style.background='var(--bg)';this.style.color='var(--muted)';this.style.borderColor='var(--border)';">
-      🌐 Filipino
+      <i class="bi bi-globe"></i> Filipino
     </button>
   </header>
 
@@ -1031,7 +1063,7 @@ if (($user['role'] ?? 'user') !== 'user') {
   <!-- ─── CALMING BANNER ──────────────────────────────────── -->
   <div class="calm-banner" id="calmBanner">
     <div class="calm-inner">
-      <span class="calm-emoji" id="calmEmoji"><i class="bi bi-flower1"></i></span>
+      <span class="calm-emoji" id="calmEmoji"><i class="bi bi-flower1" style="color:#fbbf24;"></i></span>
       <span class="calm-text" id="calmText">Take a deep breath. You're doing the right thing by reporting this calmly.</span>
     </div>
   </div>
@@ -1050,17 +1082,17 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-card-grid">
             <button class="choice-card" onclick="chooseParties('self', this)">
-              <span class="cc-icon"><i class="bi bi-person-fill"></i></span>
+              <span class="cc-icon"><i class="bi bi-person"></i></span>
               <div class="cc-label">Just Me</div>
               <div class="cc-sub">Solo incident</div>
             </button>
             <button class="choice-card" onclick="chooseParties('two', this)">
-              <span class="cc-icon"><i class="bi bi-people-fill"></i></span>
+              <span class="cc-icon"><i class="bi bi-people"></i></span>
               <div class="cc-label">Two People</div>
               <div class="cc-sub">Me + Another</div>
             </button>
             <button class="choice-card" onclick="chooseParties('multiple', this)">
-              <span class="cc-icon"><i class="bi bi-people-fill"></i><i class="bi bi-plus" style="margin-left:-4px;"></i></span>
+              <span class="cc-icon"><i class="bi bi-people-fill"></i></span>
               <div class="cc-label">Three or More</div>
               <div class="cc-sub">Multi-party</div>
             </button>
@@ -1078,14 +1110,14 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid">
             <button class="choice-btn" onclick="setSelfInjury(true)">
-              <span class="cb-icon"><i class="bi bi-bandaid-fill"></i></span>
+              <span class="cb-icon"><i class="bi bi-truck-front"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes — there was an injury</div>
                 <div class="cb-desc">Someone may be hurt</div>
               </div>
             </button>
             <button class="choice-btn" onclick="setSelfInjury(false)">
-              <span class="cb-icon"><i class="bi bi-car-front-fill"></i></span>
+              <span class="cb-icon"><i class="bi bi-car-front"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No — property or vehicle damage only</div>
                 <div class="cb-desc">No injuries involved</div>
@@ -1111,14 +1143,14 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid">
             <button class="choice-btn danger" onclick="setSelfHurt(true)">
-              <span class="cb-icon"><i class="bi bi-person-bounding-box"></i></span>
+              <span class="cb-icon"><i class="bi bi-bandaid"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes, I am hurt</div>
                 <div class="cb-desc">I need medical attention</div>
               </div>
             </button>
             <button class="choice-btn" onclick="setSelfHurt(false)">
-              <span class="cb-icon"><i class="bi bi-hand-thumbs-up-fill"></i></span>
+              <span class="cb-icon"><i class="bi bi-check2-circle"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No, I am not hurt </div>
                 <div class="cb-desc">I'm okay physically</div>
@@ -1139,12 +1171,12 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="call-grid">
             <a href="tel:911" class="call-btn red">
-              <span class="ca-icon"><i class="bi bi-telephone-fill"></i></span>
+              <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
               <strong>Call 911</strong>
               <span class="ca-label">Emergency Hotline</span>
             </a>
             <a href="tel:117" class="call-btn blue">
-              <span class="ca-icon"><i class="bi bi-heart-pulse-fill"></i></span>
+              <span class="ca-icon"><i class="bi bi-truck-front"></i></span>
               <strong>Call 117</strong>
               <span class="ca-label">Philippine Red Cross</span>
             </a>
@@ -1154,7 +1186,7 @@ if (($user['role'] ?? 'user') !== 'user') {
               <span class="ca-label">Fire Bureau</span>
             </a>
             <a href="tel:7220650" class="call-btn green">
-              <span class="ca-icon"><i class="bi bi-shield-fill"></i></span>
+              <span class="ca-icon"><i class="bi bi-car-front-fill"></i></span>
               <strong>PNP Hotline</strong>
               <span class="ca-label">722-0650</span>
             </a>
@@ -1163,7 +1195,7 @@ if (($user['role'] ?? 'user') !== 'user') {
           <hr class="divider">
           <div class="step-title" style="font-size:1rem; margin-bottom:0.4rem;">Do you still want to file a report?</div>
           <p class="step-sub" style="margin-bottom:0.85rem;">You can still document the incident even after calling for help.</p>
-          <button class="btn-primary" onclick="goToFormFlow()"><i class="bi bi-file-earmark-text"></i> Yes, I want to file a report</button>
+          <button class="btn-primary" onclick="goToFormFlow()"><i class="bi bi-file-earmark-text" style="color:#fbbf24;"></i> Yes, I want to file a report</button>
           <button class="btn-outline" onclick="goToStep('step-end-no-report')"><i class="bi bi-x-circle"></i> No, I'm done</button>
           <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
         </div>
@@ -1175,14 +1207,14 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid">
             <button class="choice-btn" onclick="setSelfAttended(true)">
-              <span class="cb-icon"><i class="bi bi-person-badge-fill"></i></span>
+              <span class="cb-icon"><i class="bi bi-person-badge"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes, TMO or Police is here</div>
                 <div class="cb-desc">Enforcer is present at the scene</div>
               </div>
             </button>
             <button class="choice-btn" onclick="setSelfAttended(false)">
-              <span class="cb-icon"><i class="bi bi-person-dash-fill"></i></span>
+              <span class="cb-icon"><i class="bi bi-question-circle"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No, no enforcer present</div>
                 <div class="cb-desc">Nobody has arrived yet</div>
@@ -1196,19 +1228,19 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- S-CALL-TMO — prompt to call TMO (not attended) -->
         <div class="wizard-step" id="step-s-call-tmo">
           <div class="center-screen">
-            <div class="hero-icon amber pulse"><i class="bi bi-stoplights-fill"></i></div>
+            <div class="hero-icon amber pulse"><i class="bi bi-stoplights"></i></div>
             <div class="step-title">Please contact TMO first</div>
             <p class="step-sub">Speed Dial your local Traffic Management Officer or the nearest authority before continuing.</p>
           </div>
 
           <div class="call-grid">
             <a href="tel:136" class="call-btn amber">
-              <span class="ca-icon"><i class="bi bi-stoplights-fill"></i></span>
+              <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
               <strong>TMO Hotline</strong>
               <span class="ca-label">Speed Dial</span>
             </a>
             <a href="tel:911" class="call-btn red">
-              <span class="ca-icon"><i class="bi bi-telephone-fill"></i></span>
+              <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
               <strong>911</strong>
               <span class="ca-label">Emergency</span>
             </a>
@@ -1286,14 +1318,14 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid">
             <button class="choice-btn" onclick="setMultiInjury(true)">
-              <span class="cb-icon"><i class="bi bi-bandaid-fill"></i></span>
+              <span class="cb-icon"><i class="bi bi-truck-front"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes, someone is injured</div>
                 <div class="cb-desc">Immediate medical attention may be needed</div>
               </div>
             </button>
             <button class="choice-btn" onclick="setMultiInjury(false)">
-              <span class="cb-icon"><i class="bi bi-check-circle-fill"></i></span>
+              <span class="cb-icon"><i class="bi bi-check-circle"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No, everyone is safe</div>
                 <div class="cb-desc">No physical injuries</div>
@@ -1319,14 +1351,14 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid">
             <button class="choice-btn" onclick="setMultiAttended(true)">
-              <span class="cb-icon"><i class="bi bi-person-badge-fill"></i></span>
+              <span class="cb-icon"><i class="bi bi-person-badge"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes, enforcer is present</div>
                 <div class="cb-desc">TMO or Police is at the scene</div>
               </div>
             </button>
             <button class="choice-btn" onclick="setMultiAttended(false)">
-              <span class="cb-icon"><i class="bi bi-person-dash-fill"></i></span>
+              <span class="cb-icon"><i class="bi bi-telephone-x"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No, nobody has arrived</div>
                 <div class="cb-desc">No law enforcer yet</div>
@@ -1347,22 +1379,22 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="call-grid">
             <a href="tel:911" class="call-btn red">
-              <span class="ca-icon"><i class="bi bi-telephone-fill"></i></span>
+              <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
               <strong>Call 911</strong>
               <span class="ca-label">Emergency Hotline</span>
             </a>
             <a href="tel:136" class="call-btn amber">
-              <span class="ca-icon"><i class="bi bi-stoplights-fill"></i></span>
+              <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
               <strong>Speed Dial TMO</strong>
               <span class="ca-label">Traffic Mgmt</span>
             </a>
             <a href="tel:117" class="call-btn blue">
-              <span class="ca-icon"><i class="bi bi-heart-pulse-fill"></i></span>
+              <span class="ca-icon"><i class="bi bi-truck-front"></i></span>
               <strong>Call 117</strong>
               <span class="ca-label">Red Cross</span>
             </a>
             <a href="tel:7220650" class="call-btn green">
-              <span class="ca-icon"><i class="bi bi-shield-fill"></i></span>
+              <span class="ca-icon"><i class="bi bi-car-front-fill"></i></span>
               <strong>PNP Hotline</strong>
               <span class="ca-label">722-0650</span>
             </a>
@@ -1370,7 +1402,7 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="step-title" style="font-size:1rem; margin-bottom:0.4rem;">Do you still want to file a report?</div>
           <p class="step-sub" style="margin-bottom:0.85rem;">You can still document the incident even after calling for help.</p>
-          <button class="btn-primary" onclick="goToFormFlow()"><i class="bi bi-file-earmark-text"></i> Yes, I want to file a report</button>
+          <button class="btn-primary" onclick="goToFormFlow()"><i class="bi bi-file-earmark-text" style="color:#fbbf24;"></i> Yes, I want to file a report</button>
           <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
         </div>
 
@@ -1412,7 +1444,7 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid">
             <button class="choice-btn" onclick="setSettle(true)">
-              <span class="cb-icon"><i class="bi bi-people-fill"></i></span>
+              <span class="cb-icon"><i class="bi bi-handshake-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes, settle on our own</div>
                 <div class="cb-desc">Agree between involved parties</div>
@@ -1433,7 +1465,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- M-TALK — Talk about agreement in person -->
         <div class="wizard-step" id="step-m-talk">
           <div class="center-screen">
-            <div class="hero-icon blue"><i class="bi bi-people-fill"></i></div>
+            <div class="hero-icon blue"><i class="bi bi-handshake-fill" style="color:#22c55e;"></i></div>
             <div class="step-title">Talk it out first</div>
             <p class="step-sub">Have an in-person discussion with the other party. This happens outside the app. Use the guide below to make sure you cover all important points.</p>
           </div>
@@ -1562,7 +1594,7 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid" style="margin-bottom:0.85rem;">
             <button class="choice-btn" onclick="setContractAgree(true)">
-              <span class="cb-icon"><i class="bi bi-check-circle-fill"></i></span>
+              <span class="cb-icon"><i class="bi bi-check-circle"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes, all parties agree</div>
                 <div class="cb-desc">Save the contract</div>
@@ -1771,7 +1803,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- End — No report -->
         <div class="wizard-step" id="step-end-no-report">
           <div class="center-screen">
-            <div class="hero-icon green"><i class="bi bi-check-circle-fill"></i></div>
+            <div class="hero-icon green"><i class="bi bi-check-circle"></i></div>
             <div class="step-title">Okay, you're all set</div>
             <p class="step-sub">No report has been filed. Stay safe and drive carefully. You can always come back to file a report later.</p>
           </div>
@@ -1781,7 +1813,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- End — Settled -->
         <div class="wizard-step" id="step-end-settled">
           <div class="center-screen">
-            <div class="hero-icon green"><i class="bi bi-people-fill"></i></div>
+            <div class="hero-icon green"><i class="bi bi-handshake-fill" style="color:#22c55e;"></i></div>
             <div class="step-title">Settlement noted</div>
             <p class="step-sub">Great — the incident was resolved between parties. No formal report was filed. Drive safely!</p>
           </div>
@@ -1800,7 +1832,7 @@ if (($user['role'] ?? 'user') !== 'user') {
             <div class="ov-row"><span class="ov-label">Contract Ref</span><span class="ov-value text-primary" id="contractRefNum" style="color:var(--primary);">—</span></div>
             <div class="ov-row"><span class="ov-label">Parties</span><span class="ov-value" id="cs-parties">—</span></div>
             <div class="ov-row"><span class="ov-label">Amount</span><span class="ov-value" id="cs-amount">—</span></div>
-            <div class="ov-row"><span class="ov-label">Status</span><span class="ov-value" style="color:#00c853;">✅ Agreed & Signed</span></div>
+            <div class="ov-row"><span class="ov-label">Status</span><span class="ov-value" style="color:#00c853;"><i class="bi bi-check-circle"></i> Agreed & Signed</span></div>
           </div>
 
           <div class="btn-row">
@@ -1872,8 +1904,8 @@ if (($user['role'] ?? 'user') !== 'user') {
         tl: 'Mag-ulat ng Insidente'
       },
       'translate-btn': {
-        en: '🌐 Filipino',
-        tl: '🌐 English'
+        en: '<i class="bi bi-globe"></i> Filipino',
+        tl: '<i class="bi bi-globe"></i> English'
       },
 
       // Step 1
@@ -2299,7 +2331,7 @@ if (($user['role'] ?? 'user') !== 'user') {
     const translationMap = [
       // Header
       ['h1', 'header-title', 'text'],
-      ['#translateBtn', 'translate-btn', 'text'],
+      ['#translateBtn', 'translate-btn', 'html'],
 
       // Step 1
       ['#step-1 .step-title', 's1-title', 'text'],
@@ -2428,6 +2460,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         if (!t) return;
         document.querySelectorAll(selector).forEach(el => {
           if (attr === 'text') el.textContent = t[currentLang];
+          else if (attr === 'html') el.innerHTML = t[currentLang];
           else if (attr === 'placeholder') el.placeholder = t[currentLang];
         });
       });
@@ -2439,52 +2472,52 @@ if (($user['role'] ?? 'user') !== 'user') {
     //  CALMING MESSAGES
     // ══════════════════════════════════════════════════════════
     const calmMessages = [{
-        emoji: '🌿',
+        emoji: '<i class="bi bi-flower1" style="color:#fbbf24;"></i>',
         en: 'Take a deep breath. You\'re doing the right thing by reporting this calmly.',
         tl: 'Huminga nang malalim. Ginagawa mo ang tamang bagay sa pag-uulat nang mahinahon.'
       },
       {
-        emoji: '💚',
+        emoji: '<i class="bi bi-heart-fill" style="color:#22c55e;"></i>',
         en: 'Accidents happen to everyone. Stay calm — this form will guide you step by step.',
         tl: 'Nangyayari ang aksidente sa lahat. Manatiling kalmado — gagabayan ka ng form na ito.'
       },
       {
-        emoji: '🕊️',
+        emoji: '<i class="bi bi-feather" style="color:#a78bfa;"></i>',
         en: 'No need to rush. Take your time — your safety and clarity matter most right now.',
         tl: 'Hindi kailangang magmadali. Mag-ingat — ang iyong kaligtasan at kalinawan ang pinakamahalaga.'
       },
       {
-        emoji: '🤝',
+        emoji: '<i class="bi bi-handshake-fill" style="color:#22c55e;"></i>',
         en: 'Keep it civil — the other party is also a person. Together, this can be resolved.',
         tl: 'Manatiling maayos — tao rin ang kabilang partido. Sama-sama, maaari itong maayos.'
       },
       {
-        emoji: '🧘',
+        emoji: '<i class="bi bi-person-arms-up" style="color:#60a5fa;"></i>',
         en: 'Anger makes things harder. A calm report leads to a faster, fairer resolution.',
         tl: 'Nagpapalubha ang galit ng sitwasyon. Ang mahinahong ulat ay humahantong sa mas mabilis na solusyon.'
       },
       {
-        emoji: '🌤️',
+        emoji: '<i class="bi bi-cloud-sun-fill" style="color:#fbbf24;"></i>',
         en: 'You\'re safe now. Focus on the facts — leave the frustration behind for a moment.',
         tl: 'Ligtas ka na ngayon. Tumutok sa mga katotohanan — iwanan muna ang pagkabigo.'
       },
       {
-        emoji: '💛',
+        emoji: '<i class="bi bi-heart-fill" style="color:#fbbf24;"></i>',
         en: 'Road rage only escalates things. Your calm response shows real strength of character.',
         tl: 'Ang road rage ay nagpapalala lamang. Ang iyong mahinahong tugon ay nagpapakita ng tunay na lakas.'
       },
       {
-        emoji: '🛡️',
+        emoji: '<i class="bi bi-shield-fill-check" style="color:#60b4ff;"></i>',
         en: 'You\'re protected when you report properly. Stay composed and trust the process.',
         tl: 'Protektado ka kapag nag-ulat ka nang tama. Manatiling panatag at magtiwala sa proseso.'
       },
       {
-        emoji: '🌱',
+        emoji: '<i class="bi bi-flower2" style="color:#4ade80;"></i>',
         en: 'This too shall pass. Filing a proper report is the quickest path to moving forward.',
         tl: 'Lalipas din ito. Ang pag-file ng wastong ulat ang pinakamabilis na paraan para sumulong.'
       },
       {
-        emoji: '☀️',
+        emoji: '<i class="bi bi-sun-fill" style="color:#fbbf24;"></i>',
         en: 'Everyone on the road is trying to get somewhere safely — including you. Stay kind.',
         tl: 'Lahat sa daan ay nagsisikap na makarating nang ligtas — kasama ka. Manatiling mabait.'
       },
@@ -2503,7 +2536,7 @@ if (($user['role'] ?? 'user') !== 'user') {
 
     function refreshCalmBanner() {
       const msg = calmMessages[lastCalmIndex >= 0 ? lastCalmIndex : 0];
-      document.getElementById('calmEmoji').textContent = msg.emoji;
+      document.getElementById('calmEmoji').innerHTML = msg.emoji;
       document.getElementById('calmText').textContent = msg[currentLang];
     }
 
@@ -2515,7 +2548,7 @@ if (($user['role'] ?? 'user') !== 'user') {
       inner.style.opacity = '0';
       setTimeout(() => {
         const msg = getRandomCalmMessage();
-        document.getElementById('calmEmoji').textContent = msg.emoji;
+        document.getElementById('calmEmoji').innerHTML = msg.emoji;
         document.getElementById('calmText').textContent = msg[currentLang];
         inner.style.opacity = '1';
       }, 300);
@@ -2724,27 +2757,27 @@ if (($user['role'] ?? 'user') !== 'user') {
       // ── Base topics (always shown) — bilingual ─────────────
       const topics = [
         {
-          icon: '📸',
+          icon: '<i class="bi bi-camera" style="color:#60a5fa;"></i>',
           en: { title: 'Damage Assessment', desc: 'Inspect and agree on the extent of vehicle or property damage on both sides. Take photos for reference.' },
           tl: { title: 'Pagtatasa ng Pinsala', desc: 'Suriin at sumang-ayon sa lawak ng pinsala sa sasakyan o ari-arian ng magkabilang panig. Kumuha ng mga larawan para sa sanggunian.' }
         },
         {
-          icon: '📋',
+          icon: '<i class="bi bi-clipboard2-check" style="color:#a78bfa;"></i>',
           en: { title: 'Responsibility Acknowledgment', desc: 'Discuss and acknowledge who was at fault or if responsibility is shared between parties.' },
           tl: { title: 'Pagkilala sa Pananagutan', desc: 'Talakayin at kilalanin kung sino ang may kasalanan o kung ibinabahagi ng magkabilang panig ang pananagutan.' }
         },
         {
-          icon: '📞',
+          icon: '<i class="bi bi-telephone-fill" style="color:#fbbf24;"></i>',
           en: { title: 'Contact Information Exchange', desc: 'Share full names, mobile numbers, and addresses with each other for follow-up purposes.' },
           tl: { title: 'Pagpapalitan ng Impormasyon', desc: 'Ibahagi ang buong pangalan, numero ng telepono, at address ng bawat partido para sa follow-up.' }
         },
         {
-          icon: '💵',
+          icon: '<i class="bi bi-cash-stack" style="color:#4ade80;"></i>',
           en: { title: 'Payment or Repair Agreement', desc: 'Agree on the repair method — cash payment, repair-in-kind, or through a preferred shop — and the payment deadline.' },
           tl: { title: 'Kasunduan sa Bayad o Pagkukumpuni', desc: 'Sumang-ayon sa paraan ng pagkukumpuni — cash payment, pagkukumpuni sa napiling shop — at sa takdang petsa ng bayad.' }
         },
         {
-          icon: '🤝',
+          icon: '<i class="bi bi-handshake-fill" style="color:#22c55e;"></i>',
           en: { title: 'Settlement Terms', desc: 'Agree on specific terms — who pays for what, timelines for payment or repairs, and any conditions.' },
           tl: { title: 'Mga Tuntunin ng Kasunduan', desc: 'Sumang-ayon sa mga tiyak na tuntunin — sino ang magbabayad ng ano, takdang panahon ng bayad o pagkukumpuni, at iba pang kondisyon.' }
         },
@@ -2753,7 +2786,7 @@ if (($user['role'] ?? 'user') !== 'user') {
       // ── Conditional: injury present ────────────────────────
       if (state.has_injury) {
         topics.splice(1, 0, {
-          icon: '🏥',
+          icon: '<i class="bi bi-hospital" style="color:#ef4444;"></i>',
           en: { title: 'Medical Expense Agreement', desc: 'Discuss who will shoulder medical costs, hospital bills, or rehabilitation expenses for the injured party.' },
           tl: { title: 'Kasunduan sa Gastos sa Medikal', desc: 'Talakayin kung sino ang magnanagot ng gastos sa medikal, bayad sa ospital, o rehabilitasyon ng nasugatan.' }
         });
@@ -2762,7 +2795,7 @@ if (($user['role'] ?? 'user') !== 'user') {
       // ── Conditional: insurance present ────────────────────
       if (state.insurance_type && state.insurance_type !== 'none' && state.insurance_type !== 'unknown') {
         topics.push({
-          icon: '🛡️',
+          icon: '<i class="bi bi-shield-check" style="color:#60a5fa;"></i>',
           en: { title: 'Insurance Discussion', desc: "Discuss whether an insurance claim will be filed and which party's policy applies (TPL, comprehensive, etc.)." },
           tl: { title: 'Talakayan ng Insurance', desc: 'Talakayin kung magfa-file ng insurance claim at kung anong polisiya ang naaangkop (TPL, komprehensibo, atbp.).' }
         });
@@ -2771,7 +2804,7 @@ if (($user['role'] ?? 'user') !== 'user') {
       // ── Conditional: multi-party / witnesses ──────────────
       if (state.parties === 'multiple' || (state.vehicle_types && state.vehicle_types.length > 2)) {
         topics.push({
-          icon: '👥',
+          icon: '<i class="bi bi-people" style="color:#a78bfa;"></i>',
           en: { title: 'Witness Confirmation', desc: 'Identify any bystanders or witnesses present. Collect their contact information in case it is needed later.' },
           tl: { title: 'Pagpapatunay ng mga Saksi', desc: 'Tukuyin ang mga nakasaksi o testigo. Kolektahin ang kanilang impormasyon sa pakikipag-ugnayan kung kailangan sa hinaharap.' }
         });
@@ -2779,7 +2812,7 @@ if (($user['role'] ?? 'user') !== 'user') {
 
       // ── Always last ────────────────────────────────────────
       topics.push({
-        icon: '📝',
+        icon: '<i class="bi bi-file-earmark-text" style="color:#fbbf24;"></i>',
         en: { title: 'Written Agreement / Contract', desc: "Decide if you will formalize the settlement in writing via VrakeIT's digital contract or a handwritten document." },
         tl: { title: 'Nakasulat na Kasunduan / Kontrata', desc: 'Magpasya kung pormal na isusulat ang kasunduan sa pamamagitan ng digital na kontrata ng VrakeIT o isang kamay na nakasulat na dokumento.' }
       });
@@ -2998,7 +3031,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         two: 'Two People',
         multiple: 'Three or More'
       };
-      document.getElementById('ov-type').textContent = state.flow_type === 'good_citizen' ? '⭐ Good Citizen' : '📋 Standard Report';
+      document.getElementById('ov-type').textContent = state.flow_type === 'good_citizen' ? '<i class="bi bi-star-fill"></i> Good Citizen' : '📋 Standard Report';
       document.getElementById('ov-parties').textContent = partyLabels[state.parties] || '—';
       document.getElementById('ov-injured').textContent = state.has_injury ? 'Yes' : 'No';
       document.getElementById('ov-datetime').textContent = state.incident_date ? `${state.incident_date} @ ${state.incident_time}` : '—';
@@ -3090,7 +3123,7 @@ if (($user['role'] ?? 'user') !== 'user') {
       document.body.insertAdjacentHTML('beforeend', `
     <div style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:1100;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px);">
       <div style="background:#fff;border-radius:24px;padding:2rem 1.5rem;max-width:360px;width:100%;text-align:center;animation:stepIn .35s ease;">
-        <div style="width:80px;height:80px;background:linear-gradient(135deg,#00c853,#009624);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:2.2rem;">✅</div>
+        <div style="width:80px;height:80px;background:linear-gradient(135deg,#00c853,#009624);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:2.2rem;"><i class="bi bi-check-circle"></i></div>
         <div style="font-size:1.25rem;font-weight:800;margin-bottom:0.5rem;">Report Submitted!</div>
         <div style="background:#f5f5f5;border-radius:12px;padding:0.75rem;margin-bottom:0.85rem;">
           <div style="font-size:0.68rem;color:#888;">Reference Number</div>
@@ -3270,7 +3303,7 @@ if (($user['role'] ?? 'user') !== 'user') {
       };
       const flowLabels = {
         standard: 'Standard Report',
-        good_citizen: 'Good Citizen ⭐',
+        good_citizen: 'Good Citizen <i class="bi bi-star-fill"></i>',
         contract: 'Contract Settlement'
       };
 

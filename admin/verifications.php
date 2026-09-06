@@ -122,8 +122,8 @@ adminHead('ID Verifications');
           <div class="vm-row" style="border:none;"><span class="vm-label">Expiry</span><span id="vm-expiry" class="vm-val"></span></div>
         </div>
 
-        <!-- OCR Confidence -->
-        <div class="vm-section-label"><i class="bi bi-bar-chart-fill"></i> OCR Confidence</div>
+        <!-- Confidence Score -->
+        <div class="vm-section-label"><i class="bi bi-graph-up"></i> OCR Confidence</div>
         <div class="vm-block">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
             <span id="vm-engine" style="font-size:12px;"></span>
@@ -185,9 +185,9 @@ function openVerifModal(v) {
 
   // Status banner
   const bannerStyles = {
-    pending:  { bg:'rgba(251,191,36,0.12)',  border:'rgba(251,191,36,0.3)',  color:'#fbbf24', icon:'<i class="bi bi-hourglass-split"></i>', label:'Pending Review'  },
-    approved: { bg:'rgba(74,222,128,0.12)',  border:'rgba(74,222,128,0.3)', color:'#4ade80', icon:'<i class="bi bi-check-circle-fill"></i>', label:'Approved'        },
-    rejected: { bg:'rgba(248,113,113,0.12)', border:'rgba(248,113,113,0.3)',color:'#f87171', icon:'<i class="bi bi-x-circle-fill"></i>', label:'Rejected'        },
+    pending:  { bg:'rgba(251,191,36,0.12)',  border:'rgba(251,191,36,0.3)',  color:'#fbbf24', icon:'⏳', label:'Pending Review'  },
+    approved: { bg:'rgba(74,222,128,0.12)',  border:'rgba(74,222,128,0.3)', color:'#4ade80', icon:'<i class="bi bi-check-circle"></i>', label:'Approved'        },
+    rejected: { bg:'rgba(248,113,113,0.12)', border:'rgba(248,113,113,0.3)',color:'#f87171', icon:'❌', label:'Rejected'        },
   };
   const s = bannerStyles[v.status] || { bg:'var(--muted)', border:'var(--muted)', color:'var(--muted)', icon:'<i class="bi bi-question-circle-fill"></i>', label: v.status ? ucFirst(v.status) : 'Unknown' };
   const banner = document.getElementById('vm-status-banner');

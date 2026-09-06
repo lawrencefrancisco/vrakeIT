@@ -127,13 +127,13 @@ const enforcersList = <?= json_encode($enforcers) ?>;
 
 function getAdminStatusBadge(s) {
   const cfg = {
-    pending:   { cls: 'bs-pending',   icon: '<i class="bi bi-exclamation-triangle-fill"></i>', label: 'Pending'   },
-    reviewing: { cls: 'bs-reviewing', icon: '<i class="bi bi-search"></i>', label: 'Reviewing' },
-    verified:  { cls: 'bs-verified',  icon: '<i class="bi bi-check-circle-fill"></i>', label: 'Verified'  },
-    rejected:  { cls: 'bs-rejected',  icon: '<i class="bi bi-x-circle-fill"></i>', label: 'Rejected'  },
-    closed:    { cls: 'bs-closed',    icon: '<i class="bi bi-lock-fill"></i>', label: 'Closed'    }
+    pending:   { cls: 'bs-pending',   icon: '<i class="bi bi-exclamation-triangle"></i>', label: 'Pending'   },
+    reviewing: { cls: 'bs-reviewing', icon: '🔍', label: 'Reviewing' },
+    verified:  { cls: 'bs-verified',  icon: '<i class="bi bi-check-circle"></i>', label: 'Verified'  },
+    rejected:  { cls: 'bs-rejected',  icon: '❌', label: 'Rejected'  },
+    closed:    { cls: 'bs-closed',    icon: '🔒', label: 'Closed'    },
   };
-  const c = cfg[s] || { cls: 'bs-pending', icon: '<i class="bi bi-exclamation-triangle-fill"></i>', label: s || 'N/A' };
+  const c = cfg[s] || { cls: 'bs-pending', icon: '<i class="bi bi-exclamation-triangle"></i>', label: s || 'N/A' };
   return `<span class="badge-status ${c.cls}" style="font-size:12px;">${c.icon} ${c.label}</span>`;
 }
 
@@ -144,9 +144,9 @@ async function adminPost(data) {
   return await res.json();
 }
 async function approveGC(rid, uid) {
-  if (!confirm('Approve this Good Citizen report?\n\nThis will:\n• Grant +' + <?= GOOD_CITIZEN_POINTS ?> + ' points to the reporter\n• Set status to [Verified]')) return;
+  if (!confirm('Approve this Good Citizen report?\n\nThis will:\n• Grant +' + <?= GOOD_CITIZEN_POINTS ?> + ' points to the reporter\n• Set status to <i class="bi bi-check-circle"></i> Verified')) return;
   const d = await adminPost({action:'approve_gc', report_id:rid, user_id:uid});
-  if (d.success) { alert('[SUCCESS] ' + d.message); location.reload(); } else alert(d.message);
+  if (d.success) { alert('<i class="bi bi-check-circle"></i> ' + d.message); location.reload(); } else alert(d.message);
 }
 async function updateStatus(rid, status) {
   const d = await adminPost({action:'update_report_status', report_id:rid, status});
@@ -181,7 +181,7 @@ async function saveAdminManagement(rid) {
   });
   
   if(d.success) {
-    alert('[SUCCESS] ' + d.message);
+    alert('<i class="bi bi-check-circle"></i> ' + d.message);
     location.reload();
   } else {
     alert('Error: ' + d.message);
@@ -347,15 +347,15 @@ async function viewReport(rid) {
       
       <div class="col-md-4">
         <p class="mb-1" style="color: #007ED2; font-size:12px; text-transform:uppercase; letter-spacing:1px;">Weather / Road</p>
-        <h6 style="margin:0;">${r.weather_condition || 'N/A'} <span style="color:rgba(255, 255, 255, 0.73)">|</span> ${r.road_condition || 'N/A'}</h6>
+        <h6 style="margin:0;">${r.weather_condition || 'N/A'} <span style="color:var(--muted)">|</span> ${r.road_condition || 'N/A'}</h6>
       </div>
       <div class="col-md-4">
         <p class="mb-1" style="color: #007ED2; font-size:12px; text-transform:uppercase; letter-spacing:1px;">Injured Persons?</p>
-        <h6 style="margin:0;">${r.is_injured == 1 ? '<span style="color:#f87171;"><i class="bi bi-exclamation-circle-fill me-1"></i> Yes</span>' : '<span style="color:rgba(255, 255, 255, 0.73);">No</span>'}</h6>
+        <h6 style="margin:0;">${r.is_injured == 1 ? '<span style="color:#f87171;"><i class="bi bi-exclamation-circle-fill me-1"></i> Yes</span>' : '<span style="color:var(--muted);">No</span>'}</h6>
       </div>
       <div class="col-md-4">
         <p class="mb-1" style="color: #007ED2; font-size:12px; text-transform:uppercase; letter-spacing:1px;">Other Parties</p>
-        <h6 style="margin:0;">${r.has_other_parties == 1 ? '<span style="color:#f87171;">Yes</span>' : '<span style="color:rgba(255, 255, 255, 0.73);">No</span>'}</h6>
+        <h6 style="margin:0;">${r.has_other_parties == 1 ? '<span style="color:#f87171;">Yes</span>' : '<span style="color:var(--muted);">No</span>'}</h6>
       </div>
 
       <div class="col-12"><hr style="border-color:var(--muted); margin:0;"></div>

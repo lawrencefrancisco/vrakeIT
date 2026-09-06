@@ -40,7 +40,7 @@ adminHead('Settlement Contracts');
                         ['Disputed',    $disputed,   'bi-exclamation-triangle-fill', '#ef4444'],
                     ] as [$label, $count, $icon, $color]
                 ): ?>
-                    <div style="background:var(--muted);border:1px solid var(--muted);border-radius:14px;padding:18px 20px;">
+                    <div class="stat-card">
                         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
                             <i class="bi <?= $icon ?>" style="font-size:1.2rem;color:<?= $color ?>;"></i>
                             <span style="font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;"><?= $label ?></span>
@@ -55,10 +55,9 @@ adminHead('Settlement Contracts');
                 <div style="position:relative;flex:1;min-width:200px;">
                     <i class="bi bi-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;"></i>
                     <input type="text" id="searchInput" placeholder="Search reference, party, or user..." oninput="filterTable()"
-                        style="width:100%;padding:9px 12px 9px 34px;background:var(--muted);border:1px solid var(--muted);border-radius:10px;color:var(--text);font-family:inherit;font-size:13px;outline:none;">
+                        class="search-input" style="width:100%;padding-left:34px;">
                 </div>
-                <select id="statusFilter" onchange="filterTable()"
-                    style="padding:9px 12px;background:var(--muted);border:1px solid var(--muted);border-radius:10px;color:var(--text);font-family:inherit;font-size:13px;outline:none;">
+                <select id="statusFilter" onchange="filterTable()" class="form-dark" style="width:auto;">
                     <option value="all">All Status</option>
                     <option value="not_settled">Pending</option>
                     <option value="settled">Settled</option>
@@ -104,7 +103,7 @@ adminHead('Settlement Contracts');
                             ?>
                                 <tr data-status="<?= $status ?>"
                                     data-search="<?= strtolower(htmlspecialchars($c['reference_number'] . ' ' . $c['party1_name'] . ' ' . $c['party2_name'] . ' ' . ($c['submitted_by'] ?? ''))) ?>">
-                                    <td><strong style="color:#e2e8f0;"><?= htmlspecialchars($c['reference_number']) ?></strong></td>
+                                    <td><strong style="color:var(--text);"><?= htmlspecialchars($c['reference_number']) ?></strong></td>
                                     <td style="font-size:12px;color:var(--muted);"><?= htmlspecialchars($c['submitted_by'] ?? '—') ?></td>
                                     <td>
                                         <div style="font-weight:600;"><?= htmlspecialchars($c['party1_name'] ?? '—') ?></div>
@@ -123,10 +122,7 @@ adminHead('Settlement Contracts');
                                     <td><span class="badge-status <?= $badgeClass ?>"><?= $badgeLabel ?></span></td>
                                     <td style="font-size:12px;color:var(--muted);"><?= date('M d, Y', strtotime($c['created_at'])) ?></td>
                                     <td>
-                                        <button onclick='openDetail(<?= htmlspecialchars(json_encode($c), ENT_QUOTES) ?>)'
-                                            style="background:var(--muted);border:1px solid var(--muted);border-radius:8px;padding:5px 12px;color:var(--text);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:background .2s;"
-                                            onmouseover="this.style.background='var(--muted)'"
-                                            onmouseout="this.style.background='var(--muted)'">
+                                        <button onclick='openDetail(<?= htmlspecialchars(json_encode($c), ENT_QUOTES) ?>)' class="btn-admin btn-review">
                                             <i class="bi bi-eye me-1"></i>View
                                         </button>
                                     </td>
@@ -198,7 +194,7 @@ adminHead('Settlement Contracts');
                 'Not specified';
 
             const row = (label, value) => `
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--muted);">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.07);">
       <span style="font-size:12px;color:var(--muted);flex-shrink:0;">${label}</span>
       <span style="font-size:13px;font-weight:600;text-align:right;word-break:break-word;max-width:65%;">${value}</span>
     </div>`;
@@ -217,12 +213,12 @@ adminHead('Settlement Contracts');
     ${c.description ? `
     <div style="margin-top:14px;">
       <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Incident Description</div>
-      <div style="background:var(--muted);border-radius:10px;padding:12px;font-size:13px;line-height:1.6;color:var(--muted);">${htmlEsc(c.description)}</div>
+      <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;font-size:13px;line-height:1.6;color:var(--muted);">${htmlEsc(c.description)}</div>
     </div>` : ''}
     ${c.terms ? `
     <div style="margin-top:14px;">
       <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Agreed Terms</div>
-      <div style="background:var(--muted);border-radius:10px;padding:12px;font-size:13px;line-height:1.6;color:var(--muted);">${htmlEsc(c.terms)}</div>
+      <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;font-size:13px;line-height:1.6;color:var(--muted);">${htmlEsc(c.terms)}</div>
     </div>` : ''}
   `;
 

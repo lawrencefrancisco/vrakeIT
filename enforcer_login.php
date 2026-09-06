@@ -19,8 +19,8 @@ $timeout = isset($_GET['timeout']) ? 'Your session expired. Please log in again.
   <link href="assets/css/style.css?v=<?= time() ?>" rel="stylesheet">
   
 </head>
-<body class="bg-light">
-  <div class="auth-bg" style="position: relative; min-height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+<body style="background-color: #f8fafc;">
+  <div class="auth-bg" style="background: radial-gradient(circle at top left, rgba(233, 1, 1, 0.18), transparent 45%), radial-gradient(circle at bottom right, rgba(0, 126, 210, 0.22), transparent 45%); background-color: #f8fafc; position: relative; min-height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center;">
     
     <!-- Reuse animated elements from Enforcer Landing for consistency -->
     <div class="hero-grid-overlay"></div>
@@ -47,9 +47,9 @@ $timeout = isset($_GET['timeout']) ? 'Your session expired. Please log in again.
             <img src="assets/img/system_logo.png" alt="VrakeIT Logo" style="width:80px;height:80px;object-fit:contain;">
         </div>
         <h1 style="font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px;">
-          <span style="color: #ffffff;">Vrake</span><span style="color: #E90101;">IT</span>
+          <span style="color: #0f172a;">Vrake</span><span style="color: #E90101;">IT</span>
         </h1>
-        <p style="color: rgba(255,255,255,0.7); font-weight: 500; font-size: 14px;">Authorized Personnel Only</p>
+        <p style="color: rgba(0,0,0,0.6); font-weight: 500; font-size: 14px;">Authorized Personnel Only</p>
       </div>
 
       <?php if ($timeout): ?>
@@ -64,19 +64,19 @@ $timeout = isset($_GET['timeout']) ? 'Your session expired. Please log in again.
         
         <div class="form-floating mb-3">
           <input type="email" class="form-control dark-input" id="email" name="email" placeholder="Email" required>
-          <label for="email" style="color: rgba(255,255,255,0.6);"><i class="bi bi-envelope me-1"></i>Email Address</label>
+          <label for="email" style="color: rgba(0,0,0,0.6);"><i class="bi bi-envelope me-1"></i>Email Address</label>
         </div>
         
         <div class="form-floating mb-3" style="position:relative;">
           <input type="password" class="form-control dark-input" id="password" name="password" placeholder="Password" required>
-          <label for="password" style="color: rgba(255,255,255,0.6);"><i class="bi bi-lock me-1"></i>Password</label>
+          <label for="password" style="color: rgba(0,0,0,0.6);"><i class="bi bi-lock me-1"></i>Password</label>
           <button type="button" class="btn btn-sm" id="togglePass" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:#E90101; z-index:10;">
             <i class="bi bi-eye" id="eyeIcon"></i>
           </button>
         </div>
         
         <div class="text-end mb-4">
-          <a href="#" style="font-size:13px; color: rgba(255,255,255,0.6); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#E90101'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Forgot Password?</a>
+          <a href="#" style="font-size:13px; color: rgba(0,0,0,0.6); text-decoration:none; transition: color 0.3s;" onmouseover="this.style.color='#E90101'" onmouseout="this.style.color='rgba(0,0,0,0.6)'">Forgot Password?</a>
         </div>
         
         <button type="submit" class="btn-primary-vr enforcer-btn mb-3" id="loginBtn">
@@ -93,11 +93,11 @@ $timeout = isset($_GET['timeout']) ? 'Your session expired. Please log in again.
     <!-- Standard User Login Link -->
     <div style="position: absolute; bottom: 30px; width: 100%; text-align: center; z-index: 10;">
       <a href="index.php" class="user-access-btn" style="opacity: 0.7; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
-        <span class="user-icon">
+        <span class="user-icon" style="background: rgba(0,0,0,0.06); color: #0f172a;">
           <i class="bi bi-person-circle"></i>
         </span>
-        <span class="user-text">Standard User Login</span>
-        <span class="user-arrow">
+        <span class="user-text" style="color: #0f172a; font-weight:600;">Standard User Login</span>
+        <span class="user-arrow" style="color: #0f172a;">
           <i class="bi bi-arrow-right-short"></i>
         </span>
       </a>
