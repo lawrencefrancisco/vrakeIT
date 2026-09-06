@@ -20,13 +20,13 @@ $timeout = isset($_GET['timeout']) ? 'Your session expired. Please log in again.
   <link href="assets/css/style.css" rel="stylesheet">
 </head>
 
-<body>
-  <div class="auth-bg" style="background-image: url('assets/img/background.png'); background-size: cover; background-position: center; position: relative;">
+<body style="background-color: #f8fafc;">
+  <div class="auth-bg" style="background: radial-gradient(circle at top left, rgba(0, 126, 210, 0.22), transparent 45%), radial-gradient(circle at bottom right, rgba(233, 1, 1, 0.18), transparent 45%); background-color: #f8fafc; position: relative; min-height: 100vh; overflow: hidden;">
 
     <!-- Merchant Portal Mini Button -->
     <div style="position: absolute; top: 20px; right: 20px; z-index: 100;">
       <!-- Updated href to point to the correct merchant login directory -->
-      <a href="merchant/login.php" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #ffffff; border-radius: 30px; backdrop-filter: blur(10px); padding: 8px 16px; font-size: 12px; font-weight: 500; text-decoration: none; display: flex; align-items: center; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" onmouseover="this.style.background='rgba(255,255,255,0.15)'; this.style.borderColor='rgba(255,200,0,0.5)'; this.style.color='#FFD700'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.15)'; this.style.color='#ffffff'; this.style.transform='translateY(0)';">
+      <a href="merchant/login.php" style="background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.1); color: #0f172a; border-radius: 30px; backdrop-filter: blur(10px); padding: 8px 16px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.05);" onmouseover="this.style.background='#ffffff'; this.style.borderColor='rgba(0,0,0,0.15)'; this.style.color='#007ED2'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='rgba(255,255,255,0.7)'; this.style.borderColor='rgba(0,0,0,0.1)'; this.style.color='#0f172a'; this.style.transform='translateY(0)';">
         <i class="bi bi-shop-window me-2"></i> Merchant Login
       </a>
     </div>
@@ -37,7 +37,7 @@ $timeout = isset($_GET['timeout']) ? 'Your session expired. Please log in again.
         <h1>
           <span style="color: #007ED2;">Vrake</span><span style="color: #E90101;">IT</span>
         </h1>
-        <p class="text-white">Road Incident Reporting System</p>
+        <p style="color: rgba(0,0,0,0.6); font-weight: 500; font-size: 14px;">Road Incident Reporting System</p>
       </div>
 
       <?php if ($timeout): ?>
@@ -62,13 +62,13 @@ $timeout = isset($_GET['timeout']) ? 'Your session expired. Please log in again.
           </button>
         </div>
         <div class="text-end mb-3">
-          <a href="#" style="font-size:13px;color: whitesmoke;text-decoration:none;">Forgot Password?</a>
+          <a href="#" style="font-size:13px;color: rgba(0,0,0,0.6);text-decoration:none;transition: color 0.3s;" onmouseover="this.style.color='#007ED2'" onmouseout="this.style.color='rgba(0,0,0,0.6)'">Forgot Password?</a>
         </div>
         <button type="submit" class="btn-primary-vr mb-3" id="loginBtn">
           <i class="bi bi-box-arrow-in-right me-1"></i> Login
         </button>
-        <div class="divider-text" style="color: whitesmoke;">or</div>
-        <a href="register.php" class="btn-outline-vr d-block text-center text-decoration-none mt-3" style="padding:13px;">
+        <div class="divider-text" style="color: rgba(0,0,0,0.4); font-weight: 600;">or</div>
+        <a href="register.php" class="btn-outline-vr d-block text-center text-decoration-none mt-3" style="padding:13px; color: #007ED2; border-color: rgba(0, 126, 210, 0.3); background: rgba(0, 126, 210, 0.05);" onmouseover="this.style.background='rgba(0, 126, 210, 0.1)';" onmouseout="this.style.background='rgba(0, 126, 210, 0.05)';">
           <i class="bi bi-person-plus me-1"></i> Create Account
         </a>
       </form>
@@ -77,11 +77,11 @@ $timeout = isset($_GET['timeout']) ? 'Your session expired. Please log in again.
     <!-- Enforcer Portal Link -->
     <div style="position: absolute; bottom: 20px; width: 100%; text-align: center;">
       <a href="enforcer_login.php" class="enforcer-access-btn">
-        <span class="enforcer-icon">
+        <span class="enforcer-icon" style="background: rgba(233,1,1,0.1); color: #E90101;">
           <i class="bi bi-shield-lock-fill"></i>
         </span>
-        <span class="enforcer-text">Enforcer Portal</span>
-        <span class="enforcer-arrow">
+        <span class="enforcer-text" style="color: #0f172a; font-weight:600;">Enforcer Portal</span>
+        <span class="enforcer-arrow" style="color: #0f172a;">
           <i class="bi bi-arrow-right-short"></i>
         </span>
       </a>
