@@ -67,9 +67,9 @@ adminHead('ID Verifications');
 ══════════════════════════════════════════ -->
 <div class="modal fade" id="verifModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width:520px;">
-    <div class="modal-content" style="background:#1a1a2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;color:#fff;">
+    <div class="modal-content" style="background:var(--card-bg);border:1px solid var(--muted);border-radius:20px;color:var(--text);">
 
-      <div class="modal-header" style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 24px;">
+      <div class="modal-header" style="border-bottom:1px solid var(--muted);padding:20px 24px;">
         <div>
           <h5 class="modal-title" style="font-weight:700;font-size:16px;margin:0;">
             <i class="bi bi-shield-check me-2" style="color:#60b4ff;"></i>ID Verification Details
@@ -85,7 +85,7 @@ adminHead('ID Verifications');
         <div id="vm-status-banner" style="border-radius:12px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:13px;"></div>
 
         <!-- Registrant Info -->
-        <div class="vm-section-label">👤 Registrant Info</div>
+        <div class="vm-section-label"><i class="bi bi-person-fill"></i> Registrant Info</div>
         <div class="vm-block">
           <div class="vm-row"><span class="vm-label">Name</span><span id="vm-user-name" class="vm-val"></span></div>
           <div class="vm-row"><span class="vm-label">Email</span><span id="vm-user-email" class="vm-val"></span></div>
@@ -95,8 +95,8 @@ adminHead('ID Verifications');
 
         <!-- ID Image -->
         <div id="vm-image-wrap" style="display:none;margin-bottom:18px;">
-          <div class="vm-section-label">🪪 Submitted ID Image</div>
-          <div style="border-radius:12px;overflow:hidden;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);">
+          <div class="vm-section-label"><i class="bi bi-person-badge-fill"></i> Submitted ID Image</div>
+          <div style="border-radius:12px;overflow:hidden;background:var(--bg);border:1px solid var(--muted);">
             <img id="vm-id-image" src="" alt="ID Image"
               style="width:100%;display:block;max-height:240px;object-fit:contain;cursor:zoom-in;"
               onclick="window.open(this.src,'_blank')">
@@ -105,7 +105,7 @@ adminHead('ID Verifications');
         </div>
 
         <!-- OCR Extracted -->
-        <div class="vm-section-label">🔍 OCR Extracted from ID</div>
+        <div class="vm-section-label"><i class="bi bi-search"></i> OCR Extracted from ID</div>
         <div class="vm-block">
           <div class="vm-row"><span class="vm-label">Document Type</span><span id="vm-doc-type" class="vm-val"></span></div>
           <div class="vm-row">
@@ -129,14 +129,14 @@ adminHead('ID Verifications');
             <span id="vm-engine" style="font-size:12px;"></span>
             <span id="vm-conf-pct" style="font-size:20px;font-weight:800;"></span>
           </div>
-          <div style="height:8px;border-radius:4px;background:rgba(255,255,255,0.08);overflow:hidden;">
+          <div style="height:8px;border-radius:4px;background:var(--muted);overflow:hidden;">
             <div id="vm-conf-bar" style="height:100%;border-radius:4px;transition:width 0.8s ease;width:0%;"></div>
           </div>
         </div>
 
         <!-- Failure Reason -->
-        <div id="vm-fail-wrap" style="display:none;">
-          <div class="vm-section-label" style="color:rgba(248,113,113,0.7);">❌ Failure Reason</div>
+        <div id="vm-failure-wrap" style="display:none;margin-top:16px;">
+          <div class="vm-section-label" style="color:rgba(248,113,113,0.7);"><i class="bi bi-x-circle-fill"></i> Failure Reason</div>
           <div id="vm-fail-reason" style="background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:12px;padding:14px;font-size:13px;color:#f87171;line-height:1.6;margin-bottom:18px;"></div>
         </div>
 
@@ -145,7 +145,7 @@ adminHead('ID Verifications');
 
       </div>
 
-      <div class="modal-footer" style="border-top:1px solid rgba(255,255,255,0.08);gap:8px;padding:16px 24px;" id="vm-footer"></div>
+      <div class="modal-footer" style="border-top:1px solid var(--muted);gap:8px;padding:16px 24px;" id="vm-footer"></div>
     </div>
   </div>
 </div>
@@ -156,12 +156,12 @@ adminHead('ID Verifications');
   letter-spacing:1px;color:var(--muted);margin-bottom:10px;
 }
 .vm-block {
-  background:rgba(255,255,255,0.04);border-radius:12px;
+  background:var(--muted);border-radius:12px;
   padding:14px;margin-bottom:18px;
 }
 .vm-row {
   display:flex;align-items:center;gap:10px;
-  padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);
+  padding:8px 0;border-bottom:1px solid var(--muted);
   font-size:13px;flex-wrap:wrap;
 }
 .vm-label {
@@ -189,7 +189,7 @@ function openVerifModal(v) {
     approved: { bg:'rgba(74,222,128,0.12)',  border:'rgba(74,222,128,0.3)', color:'#4ade80', icon:'<i class="bi bi-check-circle"></i>', label:'Approved'        },
     rejected: { bg:'rgba(248,113,113,0.12)', border:'rgba(248,113,113,0.3)',color:'#f87171', icon:'❌', label:'Rejected'        },
   };
-  const s = bannerStyles[v.status] || { bg:'rgba(255,255,255,0.06)', border:'rgba(255,255,255,0.12)', color:'rgba(255,255,255,0.5)', icon:'🔘', label: v.status ? ucFirst(v.status) : 'Unknown' };
+  const s = bannerStyles[v.status] || { bg:'var(--muted)', border:'var(--muted)', color:'var(--muted)', icon:'<i class="bi bi-question-circle-fill"></i>', label: v.status ? ucFirst(v.status) : 'Unknown' };
   const banner = document.getElementById('vm-status-banner');
   banner.style.cssText = `background:${s.bg};border:1px solid ${s.border};color:${s.color};border-radius:12px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:13px;`;
   banner.innerHTML = `<span style="font-size:18px;">${s.icon}</span> ${s.label}`;
@@ -209,7 +209,7 @@ function openVerifModal(v) {
 
   // Match badges
   setBadge('vm-name-badge', v.ocr_name_match);
-  setBadge('vm-dob-badge',  v.ocr_dob_match);
+  setBadge('vm-dob-badge', v.ocr_dob_match);
 
   // Confidence score
   const pct = v.ocr_confidence_score ? Math.round(parseFloat(v.ocr_confidence_score) * 100) : 0;
@@ -222,18 +222,18 @@ function openVerifModal(v) {
   // OCR engine
   const engineEl = document.getElementById('vm-engine');
   if (v.ocr_engine) {
-    const label = v.ocr_engine === 'tesseract' ? '🖥️ Tesseract (Local)'
-                : v.ocr_engine === 'gemini'    ? '🤖 Gemini Vision (AI)'
-                : v.ocr_engine;
-    engineEl.textContent = label;
+    const label = v.ocr_engine === 'tesseract' ? '<i class="bi bi-pc-display"></i> Tesseract (Local)'
+                : v.ocr_engine === 'gemini'    ? '<i class="bi bi-robot"></i> Gemini Vision (AI)'
+                : v.ocr_engine.toUpperCase();
+    engineEl.innerHTML = label;
     engineEl.style.color = '#60b4ff';
   } else {
     engineEl.textContent = 'Engine unknown';
-    engineEl.style.color = 'rgba(255,255,255,0.3)';
+    engineEl.style.color = 'var(--muted)';
   }
 
   // Failure reason
-  const failWrap = document.getElementById('vm-fail-wrap');
+  const failWrap = document.getElementById('vm-failure-wrap');
   if (v.ocr_failure_reason) {
     failWrap.style.display = 'block';
     document.getElementById('vm-fail-reason').textContent = v.ocr_failure_reason;
@@ -285,9 +285,9 @@ function setBadge(id, raw) {
   if (raw === null || raw === undefined || raw === '') {
     el.textContent = ''; el.className = 'vm-badge';
   } else if (parseInt(raw) === 1) {
-    el.textContent = '✓ Match';    el.className = 'vm-badge match';
+    el.innerHTML = '<i class="bi bi-check"></i> Match';    el.className = 'vm-badge match';
   } else {
-    el.textContent = '✗ Mismatch'; el.className = 'vm-badge nomatch';
+    el.innerHTML = '<i class="bi bi-x"></i> Mismatch'; el.className = 'vm-badge nomatch';
   }
 }
 
@@ -309,3 +309,4 @@ async function verifyAction(vid, status) {
 }
 </script>
 </body></html>
+

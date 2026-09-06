@@ -142,7 +142,7 @@ adminHead('Settlement Contracts');
     <!-- ── Detail Modal ─────────────────────────────────────── -->
     <div class="modal fade" id="detailModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-scrollable" style="margin:auto;max-width:500px;">
-            <div class="modal-content" style="border-radius:20px;border:none;background:#1e2433;color:#fff;">
+            <div class="modal-content" style="border-radius:20px;border:none;background:var(--card-bg);color:var(--text);">
                 <div class="modal-header" style="background:linear-gradient(135deg,#6366f1,#4f46e5);border-radius:20px 20px 0 0;border:none;">
                     <h5 class="modal-title" style="font-weight:700;"><i class="bi bi-file-earmark-ruled me-2"></i>Contract Details</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -200,7 +200,7 @@ adminHead('Settlement Contracts');
     </div>`;
 
             document.getElementById('modalBody').innerHTML = `
-    <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:4px 12px;margin-bottom:4px;">
+    <div style="background:var(--muted);border-radius:12px;padding:4px 12px;margin-bottom:4px;">
       ${row('Reference',     htmlEsc(c.reference_number))}
       ${row('Status',        `<span style="color:${statusColors[s]};font-weight:700;">${statusLabels[s] ?? s}</span>`)}
       ${row('Submitted By',  htmlEsc(c.submitted_by ?? '—'))}

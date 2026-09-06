@@ -111,13 +111,13 @@ adminHead('User Management');
 <div class="modal fade modal-dark" id="deactivateModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content p-2">
-      <div class="modal-header" style="border-bottom:1px solid rgba(255,255,255,0.08);">
+      <div class="modal-header" style="border-bottom:1px solid var(--muted);">
         <h6 class="modal-title" id="deactivateModalTitle">Deactivate Account</h6>
         <button class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body" id="deactivateModalBody" style="padding:20px 16px;">
       </div>
-      <div class="modal-footer" style="border-top:1px solid rgba(255,255,255,0.08);gap:8px;">
+      <div class="modal-footer" style="border-top:1px solid var(--muted);gap:8px;">
         <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
         <button id="deactivateConfirmBtn" onclick="doDeactivate()"></button>
       </div>
@@ -231,3 +231,4 @@ async function doDeactivate() {
 
 </script>
 </body></html>
+

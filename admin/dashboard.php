@@ -99,7 +99,7 @@ adminHead('Dashboard', 'dashboard');
       <div style="position: relative; height: 450px; border-radius: 0 0 12px 12px; overflow: hidden;">
         
         <!-- Floating Legend -->
-        <div style="position: absolute; top: 15px; right: 15px; z-index: 1000; background: rgba(30, 30, 45, 0.95); padding: 10px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+        <div style="position: absolute; top: 15px; right: 15px; z-index: 1000; background: rgba(30, 30, 45, 0.95); padding: 10px 15px; border-radius: 8px; border: 1px solid var(--muted); color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
           <div style="font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #a78bfa;">Status Legend</div>
           <div style="font-size: 11px;"><span style="color: #f87171; font-size: 16px; vertical-align: middle;">●</span> Pending</div>
           <div style="font-size: 11px;"><span style="color: #fbbf24; font-size: 16px; vertical-align: middle;">●</span> Reviewing</div>
@@ -155,12 +155,12 @@ adminHead('Dashboard', 'dashboard');
     <tbody>
     <?php foreach($recentReports as $r): ?>
     <tr>
-      <td><span style="font-family:monospace;color:#60b4ff;"><?= htmlspecialchars($r['reference_number']) ?></span></td>
+      <td><span style="font-family:monospace;color:#007ED2;font-weight:600;"><?= htmlspecialchars($r['reference_number']) ?></span></td>
       <td><?= htmlspecialchars($r['first_name'].' '.$r['last_name']) ?></td>
       <td><?php
         $labels = ['standard'=>'Standard','good_citizen'=>'Good Citizen'];
-        $colors = ['standard'=>'#f87171','good_citizen'=>'#4ade80'];
-        $ft = $r['flow_type'];
+        $colors = ['standard'=>'#e90101','good_citizen'=>'#16a34a'];
+        $ft = $r['flow_type'] ?? 'standard';
         echo "<span style='color:{$colors[$ft]};font-weight:600;font-size:12px;'>{$labels[$ft]}</span>";
       ?></td>
       <td><span class="badge-status bs-<?= $r['status'] ?>"><?= ucfirst($r['status']) ?></span></td>
@@ -435,3 +435,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 </body></html>
+

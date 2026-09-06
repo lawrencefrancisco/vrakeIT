@@ -1451,7 +1451,7 @@ if (($user['role'] ?? 'user') !== 'user') {
               </div>
             </button>
             <button class="choice-btn" onclick="setSettle(false)">
-              <span class="cb-icon">📋</span>
+              <span class="cb-icon"><i class="bi bi-card-checklist"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No, file a formal report</div>
                 <div class="cb-desc">Document through VrakeIT</div>
@@ -1601,7 +1601,7 @@ if (($user['role'] ?? 'user') !== 'user') {
               </div>
             </button>
             <button class="choice-btn" onclick="setContractAgree(false)">
-              <span class="cb-icon">✏️</span>
+              <span class="cb-icon"><i class="bi bi-pencil-square"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No, needs revision</div>
                 <div class="cb-desc">Edit the terms</div>
@@ -1615,7 +1615,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- M-CONTRACT-REVISE — Revision note -->
         <div class="wizard-step" id="step-m-contract-revise">
           <div class="center-screen">
-            <div class="hero-icon amber">✏️</div>
+            <div class="hero-icon amber"><i class="bi bi-pencil-fill"></i></div>
             <div class="step-title">Let's revise the contract</div>
             <p class="step-sub">Go back and update the terms to reflect what both parties can agree on. Take your time.</p>
           </div>
@@ -1721,10 +1721,10 @@ if (($user['role'] ?? 'user') !== 'user') {
           <div class="choice-grid">
             <?php foreach (
               [
-                ['❓', 'Unknown', 'unknown', 'Not sure about coverage'],
-                ['🌟', 'Comprehensive', 'comprehensive', 'Full insurance coverage'],
-                ['📄', 'TPL Only', 'tpl', 'Third-party liability only'],
-                ['🚫', 'None / Uninsured', 'none', 'No insurance policy'],
+                ['<i class="bi bi-question-circle-fill"></i>', 'Unknown', 'unknown', 'Not sure about coverage'],
+                ['<i class="bi bi-star-fill"></i>', 'Comprehensive', 'comprehensive', 'Full insurance coverage'],
+                ['<i class="bi bi-file-earmark-text-fill"></i>', 'TPL Only', 'tpl', 'Third-party liability only'],
+                ['<i class="bi bi-slash-circle-fill"></i>', 'None / Uninsured', 'none', 'No insurance policy'],
               ] as [$icon, $label, $val, $desc]
             ): ?>
               <button class="choice-btn py-2" onclick="selectInsurance('<?= $val ?>', this)">
@@ -1823,7 +1823,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- End — Contract Saved -->
         <div class="wizard-step" id="step-end-contract-saved">
           <div class="center-screen">
-            <div class="hero-icon green pulse">💾</div>
+            <div class="hero-icon green pulse"><i class="bi bi-cloud-check-fill"></i></div>
             <div class="step-title">Contract Saved!</div>
             <p class="step-sub" style="margin-bottom:1.25rem;">The settlement contract has been saved and is accessible to all parties.</p>
           </div>

@@ -30,7 +30,7 @@ else {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VrakeIT Enforcer — Report an Incident</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -58,33 +58,61 @@ else {
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Poppins', sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
       padding-bottom: 6rem;
       font-size: 15px;
+      position: relative;
+      z-index: 0;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: -2;
+      background-image: url('assets/img/bg-house.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.35;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -50px;
+      left: 0;
+      width: 100%;
+      height: 190px;
+      background: linear-gradient(to right, #E90101, #007ED2);
+      filter: blur(50px);
+      opacity: 0.6;
+      z-index: -1;
+      pointer-events: none;
     }
 
     /* ─── HEADER ─── */
     .app-header {
       position: sticky; top: 0; z-index: 200;
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      padding: 0.85rem 1.25rem;
+      background: linear-gradient(to right, rgba(233, 1, 1, 0.8), rgba(0, 126, 210, 0.8));
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.6);
+      padding: 0.9rem 1.25rem;
       display: flex; align-items: center; justify-content: space-between;
-      box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+      box-shadow: 0 1px 12px rgba(0,0,0,0.05);
     }
     .back-btn {
-      width: 36px; height: 36px; border-radius: 50%;
+      width: 38px; height: 38px; border-radius: 50%;
       background: var(--bg); border: 1px solid var(--border);
       display: flex; align-items: center; justify-content: center;
-      color: var(--muted); font-size: 1rem; text-decoration: none;
-      transition: background 0.15s, color 0.15s;
+      color: var(--muted); font-size: 1.1rem; text-decoration: none;
+      transition: all 0.2s;
     }
     .back-btn:hover { background: var(--blue-light); color: var(--blue); }
-    .header-title { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+    .header-title { font-size: 1rem; font-weight: 700; color: #fff; }
 
     /* ─── LAYOUT ─── */
     .page-wrap {
@@ -95,22 +123,23 @@ else {
 
     /* ─── SECTION CARDS ─── */
     .form-section {
-      background: var(--surface);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
       margin-bottom: 1.25rem;
       overflow: hidden;
+      backdrop-filter: blur(12px);
       transition: box-shadow 0.2s;
     }
     .form-section:focus-within {
       box-shadow: 0 0 0 2px rgba(0,126,210,0.15), var(--shadow);
     }
     .section-header {
-      padding: 1rem 1.25rem;
-      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 1.25rem 0.5rem;
+      border-bottom: none;
       display: flex; align-items: center; gap: 0.65rem;
-      background: #fafbfc;
+      background: transparent;
     }
     .section-icon {
       width: 32px; height: 32px; border-radius: 8px;
@@ -121,8 +150,8 @@ else {
     .section-icon.red { background: var(--red-light); }
     .section-icon.amber { background: #fffbeb; }
     .section-icon.green { background: #f0fdf4; }
-    .section-title { font-size: 0.88rem; font-weight: 700; color: var(--text); }
-    .section-sub { font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
+    .section-title { font-size: 1.1rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .section-sub { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
     .section-body { padding: 1.25rem; }
 
     /* ─── REQUIRED BADGE ─── */
@@ -141,10 +170,10 @@ else {
     /* ─── FORM CONTROLS ─── */
     .fld {
       width: 100%;
-      border: 1.5px solid var(--border);
+      border: 1px solid rgba(0,0,0,0.08);
       border-radius: var(--radius);
       padding: 0.65rem 0.9rem;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Poppins', sans-serif;
       font-size: 0.875rem;
       color: var(--text);
       background: #fff;
@@ -168,7 +197,7 @@ else {
     /* ─── TOGGLE CHIPS ─── */
     .chip-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.4rem; }
     .chip-opt {
-      border: 1.5px solid var(--border);
+      border: 1px solid rgba(0,0,0,0.08);
       background: #fff;
       border-radius: 999px;
       padding: 0.35rem 0.8rem;
@@ -176,7 +205,7 @@ else {
       font-weight: 600;
       cursor: pointer;
       transition: all 0.15s;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Poppins', sans-serif;
       color: var(--muted);
       user-select: none;
     }
@@ -187,7 +216,7 @@ else {
     .radio-stack { display: flex; flex-direction: column; gap: 0.5rem; }
     .radio-card {
       display: flex; align-items: center; gap: 0.75rem;
-      border: 1.5px solid var(--border);
+      border: 1px solid rgba(0,0,0,0.08);
       border-radius: var(--radius);
       padding: 0.75rem 1rem;
       cursor: pointer;
@@ -228,7 +257,7 @@ else {
     #mapContainer {
       width: 100%; height: 220px;
       border-radius: var(--radius);
-      border: 1.5px solid var(--border);
+      border: 1px solid rgba(0,0,0,0.08);
       overflow: hidden; margin-bottom: 0.75rem;
     }
     .address-pill {
@@ -280,7 +309,7 @@ else {
     .call-btn {
       display: flex; flex-direction: column; align-items: center; gap: 4px;
       border-radius: var(--radius); padding: 0.85rem 0.5rem;
-      text-decoration: none; font-family: 'DM Sans', sans-serif;
+      text-decoration: none; font-family: 'Poppins', sans-serif;
       font-weight: 700; font-size: 0.78rem; text-align: center;
       color: #fff; transition: transform 0.15s, box-shadow 0.15s;
     }
@@ -314,13 +343,13 @@ else {
     }
     .submit-inner { max-width: 780px; margin: 0 auto; display: flex; gap: 0.75rem; align-items: center; }
     .btn-submit {
-      flex: 1; background: var(--blue); color: #fff;
+      flex: 1; background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: #fff; box-shadow: 0 4px 16px rgba(0, 126, 210, 0.3); border: none;
       border: none; border-radius: var(--radius); padding: 0.8rem 1.25rem;
-      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 700;
+      font-family: 'Poppins', sans-serif; font-size: 0.9rem; font-weight: 700;
       cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem;
       transition: background 0.15s, transform 0.15s;
     }
-    .btn-submit:hover { background: var(--blue-dark); transform: translateY(-1px); }
+    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0, 126, 210, 0.4); }
     .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     .points-hint { font-size: 0.72rem; color: var(--muted); text-align: right; line-height: 1.4; flex-shrink: 0; }
     .pts { font-size: 0.88rem; font-weight: 700; color: var(--blue); display: block; }
@@ -338,8 +367,8 @@ else {
 
     /* ─── SECTION NUMBERS ─── */
     .sec-num {
-      width: 22px; height: 22px; border-radius: 50%; background: var(--blue);
-      color: #fff; font-size: 0.68rem; font-weight: 700;
+      width: 26px; height: 26px; border-radius: 50%; background: var(--blue);
+      color: #fff; font-size: 0.75rem; font-weight: 700;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
 
@@ -378,19 +407,19 @@ else {
         <label class="radio-card" onclick="selectParties('self', this)">
           <input type="radio" name="parties" value="self">
           <div class="radio-dot"></div>
-          <span class="rc-icon">🧑</span>
+          <span class="rc-icon"><i class="bi bi-person-fill" style="color:var(--blue); font-size: 1.3rem;"></i></span>
           <div><div class="rc-title">Single</div><div class="rc-sub">Solo incident</div></div>
         </label>
         <label class="radio-card" onclick="selectParties('two', this)">
           <input type="radio" name="parties" value="two">
           <div class="radio-dot"></div>
-          <span class="rc-icon">👥</span>
+          <span class="rc-icon"><i class="bi bi-people-fill" style="color:var(--blue); font-size: 1.3rem;"></i></span>
           <div><div class="rc-title">Two People</div><div class="rc-sub">Me + Another party</div></div>
         </label>
         <label class="radio-card" onclick="selectParties('multiple', this)">
           <input type="radio" name="parties" value="multiple">
           <div class="radio-dot"></div>
-          <span class="rc-icon">👨‍👩‍👧</span>
+          <span class="rc-icon"><i class="bi bi-people-fill" style="color:var(--blue); font-size: 1.3rem;"></i></span>
           <div><div class="rc-title">Three or More</div><div class="rc-sub">Multi-party incident</div></div>
         </label>
       </div>
@@ -416,13 +445,13 @@ else {
           <label class="radio-card" onclick="setInjury(true, this)">
             <input type="radio" name="injury" value="1">
             <div class="radio-dot"></div>
-            <span class="rc-icon">🚑</span>
+            <span class="rc-icon"><i class="bi bi-bandaid-fill" style="color:var(--red); font-size: 1.3rem;"></i></span>
             <div><div class="rc-title">Yes, someone is injured</div><div class="rc-sub">Medical attention needed</div></div>
           </label>
           <label class="radio-card" onclick="setInjury(false, this)">
             <input type="radio" name="injury" value="0">
             <div class="radio-dot"></div>
-            <span class="rc-icon">✅</span>
+            <span class="rc-icon"><i class="bi bi-check-circle-fill" style="color:var(--green); font-size: 1.3rem;"></i></span>
             <div><div class="rc-title">No injuries</div><div class="rc-sub">Property/vehicle damage only</div></div>
           </label>
         </div>
@@ -436,13 +465,13 @@ else {
           <label class="radio-card" onclick="setSelfHurt(true, this)">
             <input type="radio" name="self_hurt" value="1">
             <div class="radio-dot"></div>
-            <span class="rc-icon">🤕</span>
+            <span class="rc-icon"><i class="bi bi-emoji-dizzy-fill" style="color:var(--red); font-size: 1.3rem;"></i></span>
             <div><div class="rc-title">Yes, he/she is hurt</div><div class="rc-sub">I need medical attention</div></div>
           </label>
           <label class="radio-card" onclick="setSelfHurt(false, this)">
             <input type="radio" name="self_hurt" value="0">
             <div class="radio-dot"></div>
-            <span class="rc-icon">👌</span>
+            <span class="rc-icon"><i class="bi bi-emoji-smile-fill" style="color:var(--green); font-size: 1.3rem;"></i></span>
             <div><div class="rc-title">No, he/she is not hurt</div><div class="rc-sub">They're okay physically</div></div>
           </label>
         </div>
@@ -522,7 +551,7 @@ else {
       <input type="hidden" id="locLat">
       <input type="hidden" id="locLng">
       <input type="hidden" id="locAddress">
-      <button type="button" onclick="detectLocation()" style="background:none;border:1.5px solid var(--border);border-radius:var(--radius);padding:0.5rem 0.85rem;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:600;color:var(--blue);cursor:pointer;display:flex;align-items:center;gap:0.35rem;">
+      <button type="button" onclick="detectLocation()" style="background:none;border:1.5px solid var(--border);border-radius:var(--radius);padding:0.5rem 0.85rem;font-family: 'Poppins', sans-serif;font-size:0.78rem;font-weight:600;color:var(--blue);cursor:pointer;display:flex;align-items:center;gap:0.35rem;">
         <i class="bi bi-geo-alt-fill"></i> Re-detect My Location
       </button>
     </div>
@@ -599,10 +628,10 @@ else {
     <div class="section-body">
       <div class="radio-row">
         <?php foreach ([
-          ['❓','Unknown','unknown','Not sure about coverage'],
-          ['🌟','Comprehensive','comprehensive','Full insurance coverage'],
-          ['📄','TPL Only','tpl','Third-party liability only'],
-          ['🚫','Uninsured','none','No insurance policy'],
+          ['<i class="bi bi-question-circle-fill" style="color:var(--blue); font-size: 1.3rem;"></i>','Unknown','unknown','Not sure about coverage'],
+          ['<i class="bi bi-star-fill" style="color:var(--blue); font-size: 1.3rem;"></i>','Comprehensive','comprehensive','Full insurance coverage'],
+          ['<i class="bi bi-file-earmark-text-fill" style="color:var(--blue); font-size: 1.3rem;"></i>','TPL Only','tpl','Third-party liability only'],
+          ['<i class="bi bi-slash-circle-fill" style="color:var(--muted); font-size: 1.3rem;"></i>','Uninsured','none','No insurance policy'],
         ] as [$icon,$label,$val,$desc]): ?>
           <label class="radio-card" onclick="selectInsurance('<?=$val?>', this)">
             <input type="radio" name="insurance" value="<?=$val?>">
@@ -1028,15 +1057,15 @@ function showSuccess(ref, pts, total) {
   document.body.insertAdjacentHTML('beforeend', `
   <div style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:1100;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px);">
     <div style="background:#fff;border-radius:24px;padding:2rem 1.5rem;max-width:360px;width:100%;text-align:center;">
-      <div style="width:72px;height:72px;background:linear-gradient(135deg,#00a854,#007a3d);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:2rem;">✅</div>
+      <div style="width:72px;height:72px;background:linear-gradient(135deg,#00a854,#007a3d);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:2rem;"><i class="bi bi-check-circle-fill" style="color:var(--green); font-size: 1.3rem;"></i></div>
       <div style="font-size:1.2rem;font-weight:700;margin-bottom:0.5rem;">Report Submitted!</div>
       <div style="background:#f8fafc;border-radius:10px;padding:0.7rem;margin-bottom:0.75rem;">
         <div style="font-size:0.68rem;color:#888;font-family:'DM Mono',monospace;">REFERENCE NUMBER</div>
         <div style="font-size:1rem;font-weight:700;color:#E90101;font-family:'DM Mono',monospace;">${ref}</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.5rem;">
-        <a href="track.php" style="background:#f1f5f9;color:#334155;border-radius:10px;padding:0.7rem;text-decoration:none;font-weight:600;font-size:0.82rem;font-family:'DM Sans',sans-serif;">Track Report</a>
-        <a href="enforcer_landing.php" style="background:linear-gradient(135deg,#007ED2,#005fa3);color:#fff;border-radius:10px;padding:0.7rem;text-decoration:none;font-weight:600;font-size:0.82rem;font-family:'DM Sans',sans-serif;">Go Home</a>
+        <a href="track.php" style="background:#f1f5f9;color:#334155;border-radius:10px;padding:0.7rem;text-decoration:none;font-weight:600;font-size:0.82rem;font-family: 'Poppins', sans-serif;">Track Report</a>
+        <a href="enforcer_landing.php" style="background:linear-gradient(135deg,#007ED2,#005fa3);color:#fff;border-radius:10px;padding:0.7rem;text-decoration:none;font-weight:600;font-size:0.82rem;font-family: 'Poppins', sans-serif;">Go Home</a>
       </div>
     </div>
   </div>`);
@@ -1046,10 +1075,10 @@ function showError() {
   document.body.insertAdjacentHTML('beforeend', `
   <div style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:1100;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px);">
     <div style="background:#fff;border-radius:24px;padding:2rem 1.5rem;max-width:340px;width:100%;text-align:center;">
-      <div style="font-size:2.5rem;margin-bottom:0.75rem;">⚠️</div>
+      <div style="font-size:2.5rem;margin-bottom:0.75rem;color:var(--amber);"><i class="bi bi-exclamation-triangle-fill"></i></div>
       <div style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Connection Error</div>
       <div style="font-size:0.82rem;color:#64748b;margin-bottom:1.25rem;">Could not submit your report. Please check your connection and try again.</div>
-      <button onclick="this.closest('[style]').remove()" style="width:100%;background:#007ED2;color:#fff;border:none;border-radius:12px;padding:0.8rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;">Dismiss</button>
+      <button onclick="this.closest('[style]').remove()" style="width:100%;background:#007ED2;color:#fff;border:none;border-radius:12px;padding:0.8rem;font-family: 'Poppins', sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;">Dismiss</button>
     </div>
   </div>`);
 }

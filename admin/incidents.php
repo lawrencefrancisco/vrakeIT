@@ -106,15 +106,15 @@ adminHead('Incident Monitoring');
 <!-- Modal for Viewing Report -->
 <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content" style="background:#1e1e2d; color:#fff; border: 1px solid rgba(255,255,255,0.1); border-radius:12px;">
-      <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+    <div class="modal-content" style="background:var(--card-bg); color:var(--text); border: 1px solid var(--muted); border-radius:12px;">
+      <div class="modal-header" style="border-bottom: 1px solid var(--muted);">
         <h5 class="modal-title"><i class="bi bi-card-text me-2"></i>Report Details</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="reportModalBody" style="min-height: 200px;">
         <div class="text-center mt-5"><div class="spinner-border text-primary" role="status"></div></div>
       </div>
-      <div class="modal-footer" style="border-top: 1px solid rgba(255,255,255,0.05);">
+      <div class="modal-footer" style="border-top: 1px solid var(--muted);">
         <button type="button" class="btn-admin btn-review" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
@@ -204,7 +204,7 @@ async function generateAISummary(rid) {
   btn.disabled = false;
   
   if(d.success) {
-    textDiv.innerHTML = `<span style="color:#fff;">${d.summary}</span>`;
+    textDiv.innerHTML = `<span style="color:var(--text);">${d.summary}</span>`;
   } else {
     textDiv.innerHTML = `<span style="color:#f87171;">Error: ${d.message}</span>`;
   }
@@ -238,9 +238,9 @@ async function viewReport(rid) {
       // Ensure the path uses the correct assets folder
       const imgPath = m.file_path.includes('assets/') ? `../${m.file_path}` : `../assets/uploads/${m.file_path}`;
       if (m.file_type === 'image') {
-        mediaHtml += `<a href="${imgPath}" target="_blank"><img src="${imgPath}" style="height:150px; border-radius:8px; border:1px solid rgba(255,255,255,0.1); object-fit:cover;"></a>`;
+        mediaHtml += `<a href="${imgPath}" target="_blank"><img src="${imgPath}" style="height:150px; border-radius:8px; border:1px solid var(--muted); object-fit:cover;"></a>`;
       } else if (m.file_type === 'video') {
-        mediaHtml += `<video src="${imgPath}" controls style="height:150px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);"></video>`;
+        mediaHtml += `<video src="${imgPath}" controls style="height:150px; border-radius:8px; border:1px solid var(--muted);"></video>`;
       }
     });
     mediaHtml += '</div>';
@@ -250,7 +250,7 @@ async function viewReport(rid) {
   if (r.vehicles && r.vehicles.length > 0) {
     vehiclesHtml = '<ul style="list-style:none; padding:0; margin:0;">';
     r.vehicles.forEach(v => {
-      vehiclesHtml += `<li style="background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:6px; margin-bottom:5px; font-size:13px;">
+      vehiclesHtml += `<li style="background:var(--muted); padding:8px 12px; border-radius:6px; margin-bottom:5px; font-size:13px;">
         <span style="font-weight:bold;">${v.vehicle_type}</span> 
         <span style="margin:0 8px; color:var(--muted);">|</span> 
         <span style="font-family:monospace; color:#60b4ff;">${v.plate_number || 'No Plate'}</span>
@@ -308,7 +308,7 @@ async function viewReport(rid) {
             <img src="${r.avatar_url}" alt="${r.reporter_name}"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
                  style="width:48px; height:48px; border-radius:50%; object-fit:cover;
-                        border:2px solid rgba(96,180,255,0.4); background:#1e1e2d;">
+                        border:2px solid rgba(96,180,255,0.4); background:var(--card-bg);">
             <div style="display:none; width:48px; height:48px; border-radius:50%;
                         background:rgba(96,180,255,0.15); border:2px solid rgba(96,180,255,0.4);
                         align-items:center; justify-content:center; font-weight:700;
