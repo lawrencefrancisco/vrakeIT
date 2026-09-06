@@ -34,7 +34,7 @@ adminHead('Reward Controls');
     <?php foreach($all as $r): ?>
     <tr>
       <td><strong><?= htmlspecialchars($r['reward_name']) ?></strong>
-        <?php if($r['description']): ?><div style="font-size:11px;color:rgba(255,255,255,0.35);"><?= htmlspecialchars(substr($r['description'],0,50)) ?></div><?php endif; ?>
+        <?php if($r['description']): ?><div style="font-size:11px;color:var(--muted);"><?= htmlspecialchars(substr($r['description'],0,50)) ?></div><?php endif; ?>
       </td>
       <td><?= htmlspecialchars($r['source']==='merchant' ? $r['merchant_name'] : $r['business_name']) ?></td>
       <td><span class="badge-status <?= $r['source']==='merchant'?'bs-approved':'bs-reviewing' ?>"><?= $r['source']==='merchant'?'Merchant':'Legacy' ?></span></td>
@@ -42,7 +42,7 @@ adminHead('Reward Controls');
       <td><?= $r['source']==='merchant' ? ($r['quantity'] ?? '∞') : '∞' ?></td>
       <td><?= $r['source']==='merchant' ? ($r['redeemed_count'] ?? 0) : '—' ?></td>
       <td><?php if($r['is_active']): ?><span class="badge-status bs-approved">Active</span><?php else: ?><span class="badge-status bs-closed">Inactive</span><?php endif; ?></td>
-      <td style="font-size:12px;color:rgba(255,255,255,0.4);"><?= ($r['source']==='merchant' && $r['expires_at']) ? date('M d, Y', strtotime($r['expires_at'])) : '—' ?></td>
+      <td style="font-size:12px;color:var(--muted);"><?= ($r['source']==='merchant' && $r['expires_at']) ? date('M d, Y', strtotime($r['expires_at'])) : '—' ?></td>
     </tr>
     <?php endforeach; ?>
     </tbody>
@@ -53,3 +53,4 @@ adminHead('Reward Controls');
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body></html>
+

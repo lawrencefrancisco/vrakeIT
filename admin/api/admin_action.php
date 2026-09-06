@@ -338,9 +338,9 @@ if ($action === 'merchant_status') {
 if ($action === 'get_map_reports') {
     try {
         $stmt = $db->query("
-            SELECT id, reference_number, flow_type, status, is_injured, location_address, latitude, longitude, created_at 
+            SELECT id, reference_number, flow_type, status, is_injured, location_address, location_lat AS latitude, location_lng AS longitude, created_at 
             FROM reports 
-            WHERE latitude IS NOT NULL AND longitude IS NOT NULL
+            WHERE location_lat IS NOT NULL AND location_lng IS NOT NULL
             ORDER BY created_at DESC
         ");
         $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
