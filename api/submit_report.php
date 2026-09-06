@@ -28,7 +28,7 @@ $stmt = $db->prepare("
         user_id, reference_number, flow_type,
         is_injured, enforcer_type, enforcer_documented, emergency_services,
         is_safe, incident_date, incident_time,
-        latitude, longitude, location_address,
+        location_lat, location_lng, location_address,
         has_other_parties, other_parties_present,
         weather_condition, road_condition, insurance_type,
         event_details, damage_category, status
@@ -37,29 +37,32 @@ $stmt = $db->prepare("
 
 $emergencyServices = !empty($data['emergency_services']) ? json_encode((array)$data['emergency_services']) : null;
 
-$stmt->execute([
-    $userId,
-    $refNum,
-    $flowType,
-    (int)($data['is_injured'] ?? 0),
-    sanitize($data['enforcer_type'] ?? null),
-    $data['enforcer_documented'] ?? null,
-    $emergencyServices,
-    isset($data['is_safe']) ? (int)$data['is_safe'] : null,
-    $data['incident_date'] ?? null,
-    $data['incident_time'] ?? null,
-    $data['location_lat'] ?? null,
-    $data['location_lng'] ?? null,
-    sanitize($data['location_address'] ?? null),
-    (int)($data['has_other_parties'] ?? 0),
-    isset($data['other_parties_present']) ? (int)$data['other_parties_present'] : null,
-    sanitize($data['weather_condition'] ?? null),
-    sanitize($data['road_condition'] ?? null),
-    $data['insurance_type'] ?? null,
-    sanitize($data['event_details'] ?? null),
-    sanitize($data['damage_category'] ?? null),
-
-]);
+try {
+    $stmt->execute([
+        $userId,
+        $refNum,
+        $flowType,
+        (int)($data['is_injured'] ?? 0),
+        sanitize($data['enforcer_type'] ?? null),
+        $data['enforcer_documented'] ?? null,
+        $emergencyServices,
+        isset($data['is_safe']) ? (int)$data['is_safe'] : null,
+        $data['incident_date'] ?? null,
+        $data['incident_time'] ?? null,
+        $data['location_lat'] ?? null,
+        $data['location_lng'] ?? null,
+        sanitize($data['location_address'] ?? null),
+        (int)($data['has_other_parties'] ?? 0),
+        isset($data['other_parties_present']) ? (int)$data['other_parties_present'] : null,
+        sanitize($data['weather_condition'] ?? null),
+        sanitize($data['road_condition'] ?? null),
+        $data['insurance_type'] ?? null,
+        sanitize($data['event_details'] ?? null),
+        sanitize($data['damage_category'] ?? null),
+    ]);
+} catch (Exception $e) {
+    jsonResponse(false, 'Failed to save report: ' . $e->getMessage());
+}
 
 $reportId = (int)$db->lastInsertId();
 
