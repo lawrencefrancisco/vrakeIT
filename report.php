@@ -75,7 +75,7 @@ if (($user['role'] ?? 'user') !== 'user') {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: linear-gradient(to right, rgba(233, 1, 1, 0.8), rgba(0, 126, 210, 0.8));
+      background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), linear-gradient(to right, rgba(233, 1, 1, 0.85), rgba(0, 126, 210, 0.85));
       backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.6);
       padding: 0.9rem 1.25rem;
