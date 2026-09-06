@@ -1031,7 +1031,7 @@ if (($user['role'] ?? 'user') !== 'user') {
   <!-- ─── CALMING BANNER ──────────────────────────────────── -->
   <div class="calm-banner" id="calmBanner">
     <div class="calm-inner">
-      <span class="calm-emoji" id="calmEmoji">🌿</span>
+      <span class="calm-emoji" id="calmEmoji"><i class="bi bi-flower1"></i></span>
       <span class="calm-text" id="calmText">Take a deep breath. You're doing the right thing by reporting this calmly.</span>
     </div>
   </div>
@@ -1050,17 +1050,17 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-card-grid">
             <button class="choice-card" onclick="chooseParties('self', this)">
-              <span class="cc-icon">🧑</span>
+              <span class="cc-icon"><i class="bi bi-person-fill"></i></span>
               <div class="cc-label">Just Me</div>
               <div class="cc-sub">Solo incident</div>
             </button>
             <button class="choice-card" onclick="chooseParties('two', this)">
-              <span class="cc-icon">👥</span>
+              <span class="cc-icon"><i class="bi bi-people-fill"></i></span>
               <div class="cc-label">Two People</div>
               <div class="cc-sub">Me + Another</div>
             </button>
             <button class="choice-card" onclick="chooseParties('multiple', this)">
-              <span class="cc-icon">👨‍👩‍👧</span>
+              <span class="cc-icon"><i class="bi bi-people-fill"></i><i class="bi bi-plus" style="margin-left:-4px;"></i></span>
               <div class="cc-label">Three or More</div>
               <div class="cc-sub">Multi-party</div>
             </button>
@@ -1078,14 +1078,14 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid">
             <button class="choice-btn" onclick="setSelfInjury(true)">
-              <span class="cb-icon">🚑</span>
+              <span class="cb-icon"><i class="bi bi-bandaid-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes — there was an injury</div>
                 <div class="cb-desc">Someone may be hurt</div>
               </div>
             </button>
             <button class="choice-btn" onclick="setSelfInjury(false)">
-              <span class="cb-icon">🚗</span>
+              <span class="cb-icon"><i class="bi bi-car-front-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No — property or vehicle damage only</div>
                 <div class="cb-desc">No injuries involved</div>
@@ -1111,14 +1111,14 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid">
             <button class="choice-btn danger" onclick="setSelfHurt(true)">
-              <span class="cb-icon">🤕</span>
+              <span class="cb-icon"><i class="bi bi-person-bounding-box"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes, I am hurt</div>
                 <div class="cb-desc">I need medical attention</div>
               </div>
             </button>
             <button class="choice-btn" onclick="setSelfHurt(false)">
-              <span class="cb-icon">👌</span>
+              <span class="cb-icon"><i class="bi bi-hand-thumbs-up-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No, I am not hurt </div>
                 <div class="cb-desc">I'm okay physically</div>
@@ -1132,29 +1132,29 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- S-SPEED-DIAL — Emergency contacts (self hurt) -->
         <div class="wizard-step" id="step-s-speed-dial">
           <div class="center-screen">
-            <div class="hero-icon red pulse">🚨</div>
+            <div class="hero-icon red pulse"><i class="bi bi-exclamation-triangle-fill"></i></div>
             <div class="step-title" style="margin-bottom:0.4rem;">Please call for help first</div>
             <p class="step-sub">Contact emergency services before proceeding with your report.</p>
           </div>
 
           <div class="call-grid">
             <a href="tel:911" class="call-btn red">
-              <span class="ca-icon">📞</span>
+              <span class="ca-icon"><i class="bi bi-telephone-fill"></i></span>
               <strong>Call 911</strong>
               <span class="ca-label">Emergency Hotline</span>
             </a>
             <a href="tel:117" class="call-btn blue">
-              <span class="ca-icon">🚑</span>
+              <span class="ca-icon"><i class="bi bi-heart-pulse-fill"></i></span>
               <strong>Call 117</strong>
               <span class="ca-label">Philippine Red Cross</span>
             </a>
             <a href="tel:163" class="call-btn amber">
-              <span class="ca-icon">🚒</span>
+              <span class="ca-icon"><i class="bi bi-fire"></i></span>
               <strong>BFP 163</strong>
               <span class="ca-label">Fire Bureau</span>
             </a>
             <a href="tel:7220650" class="call-btn green">
-              <span class="ca-icon">🚔</span>
+              <span class="ca-icon"><i class="bi bi-shield-fill"></i></span>
               <strong>PNP Hotline</strong>
               <span class="ca-label">722-0650</span>
             </a>
@@ -1175,14 +1175,14 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid">
             <button class="choice-btn" onclick="setSelfAttended(true)">
-              <span class="cb-icon">👮‍♂️</span>
+              <span class="cb-icon"><i class="bi bi-person-badge-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes, TMO or Police is here</div>
                 <div class="cb-desc">Enforcer is present at the scene</div>
               </div>
             </button>
             <button class="choice-btn" onclick="setSelfAttended(false)">
-              <span class="cb-icon">🤷</span>
+              <span class="cb-icon"><i class="bi bi-person-dash-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No, no enforcer present</div>
                 <div class="cb-desc">Nobody has arrived yet</div>
@@ -1196,19 +1196,19 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- S-CALL-TMO — prompt to call TMO (not attended) -->
         <div class="wizard-step" id="step-s-call-tmo">
           <div class="center-screen">
-            <div class="hero-icon amber pulse">🚦</div>
+            <div class="hero-icon amber pulse"><i class="bi bi-stoplights-fill"></i></div>
             <div class="step-title">Please contact TMO first</div>
             <p class="step-sub">Speed Dial your local Traffic Management Officer or the nearest authority before continuing.</p>
           </div>
 
           <div class="call-grid">
             <a href="tel:136" class="call-btn amber">
-              <span class="ca-icon">🚦</span>
+              <span class="ca-icon"><i class="bi bi-stoplights-fill"></i></span>
               <strong>TMO Hotline</strong>
               <span class="ca-label">Speed Dial</span>
             </a>
             <a href="tel:911" class="call-btn red">
-              <span class="ca-icon">📞</span>
+              <span class="ca-icon"><i class="bi bi-telephone-fill"></i></span>
               <strong>911</strong>
               <span class="ca-label">Emergency</span>
             </a>
@@ -1252,7 +1252,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- S-PROPERTY — No injury, property only (Good Citizen) -->
         <div class="wizard-step" id="step-s-property">
           <div class="center-screen">
-            <div class="hero-icon green">⭐</div>
+            <div class="hero-icon green"><i class="bi bi-star-fill"></i></div>
             <div class="step-title">Good Citizen Report</div>
             <p class="step-sub">No injuries involved. Filing this report helps improve road safety!</p>
           </div>
@@ -1286,14 +1286,14 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid">
             <button class="choice-btn" onclick="setMultiInjury(true)">
-              <span class="cb-icon">🚑</span>
+              <span class="cb-icon"><i class="bi bi-bandaid-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes, someone is injured</div>
                 <div class="cb-desc">Immediate medical attention may be needed</div>
               </div>
             </button>
             <button class="choice-btn" onclick="setMultiInjury(false)">
-              <span class="cb-icon">✅</span>
+              <span class="cb-icon"><i class="bi bi-check-circle-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No, everyone is safe</div>
                 <div class="cb-desc">No physical injuries</div>
@@ -1319,14 +1319,14 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid">
             <button class="choice-btn" onclick="setMultiAttended(true)">
-              <span class="cb-icon">👮‍♂️</span>
+              <span class="cb-icon"><i class="bi bi-person-badge-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes, enforcer is present</div>
                 <div class="cb-desc">TMO or Police is at the scene</div>
               </div>
             </button>
             <button class="choice-btn" onclick="setMultiAttended(false)">
-              <span class="cb-icon">📵</span>
+              <span class="cb-icon"><i class="bi bi-person-dash-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No, nobody has arrived</div>
                 <div class="cb-desc">No law enforcer yet</div>
@@ -1340,29 +1340,29 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- M-SPEED-DIAL — Call TMO (not attended, injury present) -->
         <div class="wizard-step" id="step-m-speed-dial">
           <div class="center-screen">
-            <div class="hero-icon red pulse">🚨</div>
+            <div class="hero-icon red pulse"><i class="bi bi-exclamation-triangle-fill"></i></div>
             <div class="step-title">Call for help immediately</div>
             <p class="step-sub">There is an injury and no enforcer present. Please call emergency services now.</p>
           </div>
 
           <div class="call-grid">
             <a href="tel:911" class="call-btn red">
-              <span class="ca-icon">📞</span>
+              <span class="ca-icon"><i class="bi bi-telephone-fill"></i></span>
               <strong>Call 911</strong>
               <span class="ca-label">Emergency Hotline</span>
             </a>
             <a href="tel:136" class="call-btn amber">
-              <span class="ca-icon">🚦</span>
+              <span class="ca-icon"><i class="bi bi-stoplights-fill"></i></span>
               <strong>Speed Dial TMO</strong>
               <span class="ca-label">Traffic Mgmt</span>
             </a>
             <a href="tel:117" class="call-btn blue">
-              <span class="ca-icon">🚑</span>
+              <span class="ca-icon"><i class="bi bi-heart-pulse-fill"></i></span>
               <strong>Call 117</strong>
               <span class="ca-label">Red Cross</span>
             </a>
             <a href="tel:7220650" class="call-btn green">
-              <span class="ca-icon">🚔</span>
+              <span class="ca-icon"><i class="bi bi-shield-fill"></i></span>
               <strong>PNP Hotline</strong>
               <span class="ca-label">722-0650</span>
             </a>
@@ -1412,14 +1412,14 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid">
             <button class="choice-btn" onclick="setSettle(true)">
-              <span class="cb-icon">🤝</span>
+              <span class="cb-icon"><i class="bi bi-people-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes, settle on our own</div>
                 <div class="cb-desc">Agree between involved parties</div>
               </div>
             </button>
             <button class="choice-btn" onclick="setSettle(false)">
-              <span class="cb-icon">📋</span>
+              <span class="cb-icon"><i class="bi bi-card-checklist"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No, file a formal report</div>
                 <div class="cb-desc">Document through VrakeIT</div>
@@ -1433,7 +1433,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- M-TALK — Talk about agreement in person -->
         <div class="wizard-step" id="step-m-talk">
           <div class="center-screen">
-            <div class="hero-icon blue">🤝</div>
+            <div class="hero-icon blue"><i class="bi bi-people-fill"></i></div>
             <div class="step-title">Talk it out first</div>
             <p class="step-sub">Have an in-person discussion with the other party. This happens outside the app. Use the guide below to make sure you cover all important points.</p>
           </div>
@@ -1562,14 +1562,14 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid" style="margin-bottom:0.85rem;">
             <button class="choice-btn" onclick="setContractAgree(true)">
-              <span class="cb-icon">✅</span>
+              <span class="cb-icon"><i class="bi bi-check-circle-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes, all parties agree</div>
                 <div class="cb-desc">Save the contract</div>
               </div>
             </button>
             <button class="choice-btn" onclick="setContractAgree(false)">
-              <span class="cb-icon">✏️</span>
+              <span class="cb-icon"><i class="bi bi-pencil-square"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No, needs revision</div>
                 <div class="cb-desc">Edit the terms</div>
@@ -1583,7 +1583,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- M-CONTRACT-REVISE — Revision note -->
         <div class="wizard-step" id="step-m-contract-revise">
           <div class="center-screen">
-            <div class="hero-icon amber">✏️</div>
+            <div class="hero-icon amber"><i class="bi bi-pencil-fill"></i></div>
             <div class="step-title">Let's revise the contract</div>
             <p class="step-sub">Go back and update the terms to reflect what both parties can agree on. Take your time.</p>
           </div>
@@ -1689,10 +1689,10 @@ if (($user['role'] ?? 'user') !== 'user') {
           <div class="choice-grid">
             <?php foreach (
               [
-                ['❓', 'Unknown', 'unknown', 'Not sure about coverage'],
-                ['🌟', 'Comprehensive', 'comprehensive', 'Full insurance coverage'],
-                ['📄', 'TPL Only', 'tpl', 'Third-party liability only'],
-                ['🚫', 'None / Uninsured', 'none', 'No insurance policy'],
+                ['<i class="bi bi-question-circle-fill"></i>', 'Unknown', 'unknown', 'Not sure about coverage'],
+                ['<i class="bi bi-star-fill"></i>', 'Comprehensive', 'comprehensive', 'Full insurance coverage'],
+                ['<i class="bi bi-file-earmark-text-fill"></i>', 'TPL Only', 'tpl', 'Third-party liability only'],
+                ['<i class="bi bi-slash-circle-fill"></i>', 'None / Uninsured', 'none', 'No insurance policy'],
               ] as [$icon, $label, $val, $desc]
             ): ?>
               <button class="choice-btn py-2" onclick="selectInsurance('<?= $val ?>', this)">
@@ -1771,7 +1771,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- End — No report -->
         <div class="wizard-step" id="step-end-no-report">
           <div class="center-screen">
-            <div class="hero-icon green">✅</div>
+            <div class="hero-icon green"><i class="bi bi-check-circle-fill"></i></div>
             <div class="step-title">Okay, you're all set</div>
             <p class="step-sub">No report has been filed. Stay safe and drive carefully. You can always come back to file a report later.</p>
           </div>
@@ -1781,7 +1781,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- End — Settled -->
         <div class="wizard-step" id="step-end-settled">
           <div class="center-screen">
-            <div class="hero-icon green">🤝</div>
+            <div class="hero-icon green"><i class="bi bi-people-fill"></i></div>
             <div class="step-title">Settlement noted</div>
             <p class="step-sub">Great — the incident was resolved between parties. No formal report was filed. Drive safely!</p>
           </div>
@@ -1791,7 +1791,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- End — Contract Saved -->
         <div class="wizard-step" id="step-end-contract-saved">
           <div class="center-screen">
-            <div class="hero-icon green pulse">💾</div>
+            <div class="hero-icon green pulse"><i class="bi bi-cloud-check-fill"></i></div>
             <div class="step-title">Contract Saved!</div>
             <p class="step-sub" style="margin-bottom:1.25rem;">The settlement contract has been saved and is accessible to all parties.</p>
           </div>
