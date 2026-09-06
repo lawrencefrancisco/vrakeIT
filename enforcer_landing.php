@@ -38,32 +38,8 @@ $reportCount = $totalReports->fetchColumn();
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/css/style.css" rel="stylesheet">
-  <style>
-    /* Force dark background for the whole page */
-    body { 
-    /* Fallback background color */
-    background-color: #020b18 !important; 
-    
-    /* Point to where your image is saved */
-    background-image: url('assets/img/background.png') !important; 
-    
-    /* Makes the image scale to cover the entire container without stretching */
-    background-size: cover !important; 
-    
-    /* Centers the image perfectly */
-    background-position: center !important; 
-    
-    /* Prevents the image from tiling/repeating if the screen is larger than the image */
-    background-repeat: no-repeat !important;
-    
-    /* (Optional) Keeps the background static while scrolling down the page */
-    background-attachment: fixed !important;
-  }
+  <link href="assets/css/style.css?v=<?= time() ?>" rel="stylesheet">
   
-  /* Sidebar stays light */
-  
-  </style>
 </head>
 <body>
 
@@ -219,13 +195,17 @@ setInterval(rotateSafetyTip, 5000);
   <div class="saas-cta-grid">
     <a href="enforcer_portal.php" class="saas-cta-btn red-cta" id="btn-file-report">
       <div class="saas-cta-icon-wrap"><i class="bi bi-shield-fill-plus"></i></div>
-      <span class="cta-label">File Victim Report</span>
-      <span class="cta-sub">File on behalf of victim</span>
+      <div class="cta-text-wrap">
+        <span class="cta-label">File Victim Report</span>
+        <span class="cta-sub">File on behalf of victim</span>
+      </div>
     </a>
     <a href="track.php" class="saas-cta-btn blue-cta" id="btn-track-report">
       <div class="saas-cta-icon-wrap"><i class="bi bi-list-check"></i></div>
-      <span class="cta-label">Track Reports</span>
-      <span class="cta-sub">View filed reports</span>
+      <div class="cta-text-wrap">
+        <span class="cta-label">Track Reports</span>
+        <span class="cta-sub">View filed reports</span>
+      </div>
     </a>
   </div>
 
