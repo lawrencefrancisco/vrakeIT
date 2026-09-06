@@ -3031,7 +3031,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         two: 'Two People',
         multiple: 'Three or More'
       };
-      document.getElementById('ov-type').textContent = state.flow_type === 'good_citizen' ? '<i class="bi bi-star-fill"></i> Good Citizen' : '📋 Standard Report';
+      document.getElementById('ov-type').innerHTML = state.flow_type === 'good_citizen' ? '<i class="bi bi-star-fill" style="color:#fbbf24;"></i> Good Citizen' : '📋 Standard Report';
       document.getElementById('ov-parties').textContent = partyLabels[state.parties] || '—';
       document.getElementById('ov-injured').textContent = state.has_injury ? 'Yes' : 'No';
       document.getElementById('ov-datetime').textContent = state.incident_date ? `${state.incident_date} @ ${state.incident_time}` : '—';

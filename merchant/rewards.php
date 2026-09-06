@@ -25,41 +25,59 @@ $error = $_GET['error'] ?? '';
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
-    body { font-family: 'Poppins', sans-serif; background: #0a0f1e; color: #fff; margin: 0; }
-    .m-header { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 14px 20px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; }
-    .m-header a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 20px; }
-    .m-header h5 { margin: 0; font-size: 16px; font-weight: 700; }
-    .page-body { padding: 20px 16px 80px; max-width: 600px; margin: 0 auto; }
-    .section-title { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 12px; }
-    .add-form { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; margin-bottom: 24px; }
-    .add-form h6 { font-weight: 700; color: #4ade80; margin-bottom: 16px; }
-    .form-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
-    .form-control { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); color: #fff; border-radius: 10px; padding: 10px 12px; font-size: 13px; font-family: 'Poppins',sans-serif; }
-    .form-control::placeholder { color: rgba(255,255,255,0.3); }
-    .form-control:focus { background: rgba(255,255,255,0.1); border-color: #4ade80; color: #fff; box-shadow: 0 0 0 3px rgba(74,222,128,0.12); }
-    .btn-add { background: linear-gradient(135deg,#16a34a,#15803d); color: #fff; border: none; border-radius: 10px; padding: 11px 20px; font-weight: 700; font-size: 13px; cursor: pointer; width: 100%; transition: all 0.2s; }
-    .btn-add:hover { opacity: 0.9; }
-    .reward-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
-    .reward-card.inactive { opacity: 0.5; }
-    .reward-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-    .reward-name { font-weight: 700; font-size: 14px; }
-    .reward-pts { background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.3); color: #4ade80; font-size: 11px; font-weight: 700; border-radius: 50px; padding: 3px 10px; white-space: nowrap; }
-    .reward-desc { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
-    .reward-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-    .reward-chip { font-size: 11px; background: rgba(255,255,255,0.08); border-radius: 50px; padding: 3px 10px; color: rgba(255,255,255,0.6); }
+    body { font-family: 'Poppins', sans-serif; background: #f8fafc; color: #0f172a; margin: 0; min-height: 100vh; }
+    
+    .m-header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0, 0, 0, 0.05); padding: 14px 20px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+    .m-header a { color: #0f172a; text-decoration: none; font-size: 20px; transition: color 0.2s; }
+    .m-header a:hover { color: #10b981; }
+    .m-header h5 { margin: 0; font-size: 16px; font-weight: 700; color: #0f172a; }
+    
+    .page-body { padding: 24px 16px 80px; max-width: 600px; margin: 0 auto; }
+    .section-title { font-size: 12px; font-weight: 700; color: rgba(0,0,0,0.4); text-transform: uppercase; letter-spacing: 1px; margin: 28px 0 12px; }
+    
+    .add-form { background: #fff; border: 1px solid rgba(0,0,0,0.05); border-radius: 20px; padding: 24px; margin-bottom: 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.03); }
+    .add-form h6 { font-weight: 700; color: #10b981; margin-bottom: 20px; display: flex; align-items: center; }
+    .form-label { font-size: 11px; font-weight: 700; color: rgba(0,0,0,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .form-control { background: #f8fafc; border: 1px solid rgba(0,0,0,0.1); color: #0f172a; border-radius: 10px; padding: 10px 12px; font-size: 13px; font-family: 'Poppins',sans-serif; transition: all 0.2s; }
+    .form-control::placeholder { color: rgba(0,0,0,0.3); }
+    .form-control:focus { background: #fff; border-color: #10b981; color: #0f172a; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); outline: none; }
+    
+    .btn-add { background: #10b981; color: #fff; border: none; border-radius: 10px; padding: 12px 20px; font-weight: 700; font-size: 13px; cursor: pointer; width: 100%; transition: all 0.2s; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); }
+    .btn-add:hover { background: #059669; transform: translateY(-1px); box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3); }
+    
+    .reward-card { background: #fff; border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 20px; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: transform 0.2s; }
+    .reward-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.04); }
+    .reward-card.inactive { opacity: 0.6; background: #f8fafc; }
+    
+    .reward-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .reward-name { font-weight: 700; font-size: 15px; color: #0f172a; }
+    .reward-pts { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #047857; font-size: 11px; font-weight: 800; border-radius: 50px; padding: 4px 12px; white-space: nowrap; }
+    .reward-desc { font-size: 12.5px; color: rgba(0,0,0,0.6); margin-bottom: 14px; line-height: 1.5; }
+    
+    .reward-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .reward-chip { font-size: 11px; font-weight: 600; background: #f1f5f9; border: 1px solid rgba(0,0,0,0.05); border-radius: 50px; padding: 4px 12px; color: #475569; display: flex; align-items: center; }
+    
     .reward-actions { display: flex; gap: 8px; }
-    .btn-sm-action { border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .btn-replenish { background: rgba(96,180,255,0.15); color: #60b4ff; border: 1px solid rgba(96,180,255,0.3); }
-    .btn-deactivate { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
-    .btn-activate { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
-    .empty-state { text-align: center; padding: 32px; color: rgba(255,255,255,0.3); }
-    .empty-state i { font-size: 40px; display: block; margin-bottom: 10px; }
-    .alert-flash { border-radius: 12px; font-size: 13px; margin-bottom: 16px; }
-    /* Modal */
-    .modal-content { background: #111827; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; color: #fff; }
-    .modal-header { border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .modal-footer { border-top: 1px solid rgba(255,255,255,0.08); }
-    .btn-close { filter: invert(1); }
+    .btn-sm-action { border: none; border-radius: 10px; padding: 8px 16px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; }
+    .btn-replenish { background: rgba(59, 130, 246, 0.1); color: #2563eb; }
+    .btn-replenish:hover { background: rgba(59, 130, 246, 0.15); }
+    .btn-edit-reward { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+    .btn-edit-reward:hover { background: rgba(245, 158, 11, 0.15); }
+    .btn-deactivate { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
+    .btn-deactivate:hover { background: rgba(239, 68, 68, 0.15); }
+    .btn-activate { background: rgba(16, 185, 129, 0.1); color: #059669; }
+    .btn-activate:hover { background: rgba(16, 185, 129, 0.15); }
+    
+    .empty-state { text-align: center; padding: 40px 20px; color: rgba(0,0,0,0.4); }
+    .empty-state i { font-size: 48px; display: block; margin-bottom: 12px; color: rgba(0,0,0,0.1); }
+    .alert-flash { border-radius: 12px; font-size: 13px; margin-bottom: 20px; border: none; }
+    
+    /* Modal styles */
+    .modal-content { background: #fff; border: none; border-radius: 20px; color: #0f172a; box-shadow: 0 20px 40px rgba(0,0,0,0.1); overflow: hidden; }
+    .modal-header { border-bottom: 1px solid rgba(0,0,0,0.05); background: rgba(0,0,0,0.01); padding: 16px 20px; }
+    .modal-footer { border-top: 1px solid rgba(0,0,0,0.05); padding: 16px 20px; background: rgba(0,0,0,0.01); }
+    .btn-close { opacity: 0.5; }
+    .btn-close:hover { opacity: 1; }
   </style>
 </head>
 <body>
@@ -124,14 +142,14 @@ $error = $_GET['error'] ?? '';
         </div>
         <?php if($r['description']): ?><div class="reward-desc"><?= sanitize($r['description']) ?></div><?php endif; ?>
         <div class="reward-meta">
-          <span class="reward-chip"><i class="bi bi-box me-1"></i>Stock: <?= $r['quantity'] ?? '∞' ?></span>
+          <span class="reward-chip"><i class="bi bi-box me-1"></i>Remaining: <?= ($r['quantity'] == -1) ? '∞' : max(0, $r['quantity'] - $r['redeemed_count']) ?></span>
           <span class="reward-chip"><i class="bi bi-arrow-repeat me-1"></i>Redeemed: <?= $r['redeemed_count'] ?></span>
           <?php if($r['expires_at']): ?>
           <span class="reward-chip <?= strtotime($r['expires_at']) < time() ? 'text-danger' : '' ?>">
             <i class="bi bi-clock me-1"></i><?= date('M d, Y', strtotime($r['expires_at'])) ?>
           </span>
           <?php endif; ?>
-          <span class="reward-chip" style="<?= $r['is_active'] ? 'color:#4ade80;' : 'color:#f87171;' ?>">
+          <span class="reward-chip" style="<?= $r['is_active'] ? 'color:#10b981;' : 'color:#ef4444;' ?>">
             <?= $r['is_active'] ? '● Active' : '○ Inactive' ?>
           </span>
         </div>
@@ -139,7 +157,7 @@ $error = $_GET['error'] ?? '';
           <button class="btn-sm-action btn-replenish" onclick="openReplenish(<?= $r['id'] ?>, '<?= addslashes($r['reward_name']) ?>')">
             <i class="bi bi-arrow-up-circle me-1"></i>Replenish
           </button>
-          <button class="btn-sm-action" style="background:rgba(251,191,36,0.12);color:#f59e0b;border:1px solid rgba(251,191,36,0.3);" onclick="openEdit(<?= $r['id'] ?>, '<?= addslashes($r['reward_name']) ?>', '<?= addslashes($r['description'] ?? '') ?>', <?= $r['points_required'] ?>, <?= $r['quantity'] ?>, '<?= $r['category'] ?? 'General' ?>')">
+          <button class="btn-sm-action" class="btn-sm-action btn-edit-reward" onclick="openEdit(<?= $r['id'] ?>, '<?= addslashes($r['reward_name']) ?>', '<?= addslashes($r['description'] ?? '') ?>', <?= $r['points_required'] ?>, <?= $r['quantity'] ?>, '<?= $r['category'] ?? 'General' ?>')">
             <i class="bi bi-pencil me-1"></i>Edit
           </button>
           <?php if($r['is_active']): ?>
@@ -192,7 +210,7 @@ $error = $_GET['error'] ?? '';
     </div>
   </div>
 
-  <!-- Edit Reward Modal -->
+    <!-- Edit Reward Modal -->
   <div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content p-2">
@@ -217,7 +235,7 @@ $error = $_GET['error'] ?? '';
                 <input type="number" class="form-control" name="points_required" id="editPts" min="10" required>
               </div>
               <div class="col-4">
-                <label class="form-label">Stock</label>
+                <label class="form-label" style="font-size:11px;">Total Stock</label>
                 <input type="number" class="form-control" name="quantity" id="editQty" min="1" required>
               </div>
               <div class="col-4">
@@ -275,13 +293,13 @@ $error = $_GET['error'] ?? '';
         const data = await res.json();
         res_div.style.display = 'block';
         if (data.success) {
-          res_div.innerHTML = '<span style="color:#4ade80"><i class="bi bi-check-circle me-1"></i>' + data.message + '</span>';
+          res_div.innerHTML = '<span style="color:#10b981"><i class="bi bi-check-circle me-1"></i>' + data.message + '</span>';
           setTimeout(() => location.reload(), 1000);
         } else {
-          res_div.innerHTML = '<span style="color:#f87171"><i class="bi bi-x-circle me-1"></i>' + data.message + '</span>';
+          res_div.innerHTML = '<span style="color:#ef4444"><i class="bi bi-x-circle me-1"></i>' + data.message + '</span>';
           btn.disabled = false; btn.textContent = 'Save Changes';
         }
-      } catch { res_div.style.display='block'; res_div.innerHTML='<span style="color:#f87171">Connection error.</span>'; btn.disabled=false; btn.textContent='Save Changes'; }
+      } catch { res_div.style.display='block'; res_div.innerHTML='<span style="color:#ef4444">Connection error.</span>'; btn.disabled=false; btn.textContent='Save Changes'; }
     });
 
     document.getElementById('addRewardForm').addEventListener('submit', async e => {
@@ -294,13 +312,13 @@ $error = $_GET['error'] ?? '';
         const data = await res.json();
         res_div.style.display = 'block';
         if (data.success) {
-          res_div.innerHTML = '<span style="color:#4ade80"><i class="bi bi-check-circle me-1"></i>' + data.message + '</span>';
+          res_div.innerHTML = '<span style="color:#10b981"><i class="bi bi-check-circle me-1"></i>' + data.message + '</span>';
           setTimeout(() => location.reload(), 1200);
         } else {
-          res_div.innerHTML = '<span style="color:#f87171"><i class="bi bi-x-circle me-1"></i>' + data.message + '</span>';
+          res_div.innerHTML = '<span style="color:#ef4444"><i class="bi bi-x-circle me-1"></i>' + data.message + '</span>';
           btn.disabled = false; btn.innerHTML = '<i class="bi bi-plus me-1"></i>Add Reward';
         }
-      } catch { res_div.style.display='block'; res_div.innerHTML='<span style="color:#f87171">Connection error.</span>'; btn.disabled=false; btn.innerHTML='<i class="bi bi-plus me-1"></i>Add Reward'; }
+      } catch { res_div.style.display='block'; res_div.innerHTML='<span style="color:#ef4444">Connection error.</span>'; btn.disabled=false; btn.innerHTML='<i class="bi bi-plus me-1"></i>Add Reward'; }
     });
   </script>
 </body>

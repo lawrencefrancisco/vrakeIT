@@ -402,9 +402,11 @@ if ($action === 'adjust_points') {
     elseif ($pts < 0) {
         $absPts = abs($pts);
         $db->prepare("UPDATE users SET points = GREATEST(0, points - ?) WHERE id=?")->execute([$absPts, $uid]);
-        $db->prepare("INSERT INTO good_citizen_transactions (user_id, points, type, description) VALUES (?,?,'redeemed',?)")->execute([$uid, $absPts, $desc]);
+        $db->prepare("INSERT INTO good_citizen_transactions (user_id, points, type, description) VALUES (?,?,'spent',?)")->execute([$uid, $absPts, $desc]);
     }
-    $updated = getUserById($uid);
+    $stmtUser = $db->prepare("SELECT points FROM users WHERE id=?");
+    $stmtUser->execute([$uid]);
+    $updated = $stmtUser->fetch();
     auditLog($adminId, 'points_adjusted', "User #{$uid} pts={$pts}");
     jsonResponse(true, 'Points adjusted. New balance: ' . $updated['points'], ['new_balance' => $updated['points']]);
 }

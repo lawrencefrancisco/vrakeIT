@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/functions.php';
 startSecureSession();
@@ -57,21 +57,32 @@ $categories = array_unique(array_column($rewards, 'category'));
 <link href="assets/css/style.css" rel="stylesheet">
 <style>
 
+  
   :root {
-  --hero-bg-start: #020b18;
-  --hero-bg-mid: #061a35;
-  --hero-bg-end: #0a2250;
-  --accent-glow: rgba(255, 255, 255, 0.12);
-  --glass-bg: rgba(255, 255, 255, 0.08);
-  --glass-border: rgba(255, 255, 255, 0.15);
-
+  --hero-bg-start: #0f172a;
+  --hero-bg-mid: #1e293b;
+  --hero-bg-end: #334155;
+  --accent-glow: rgba(0, 126, 210, 0.15);
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
 }
 
-/* ── GC PAGE DESIGN SYSTEM ─────────────────────── */
-body {background: #fff;
-
-
+body::before { display: none !important; }
+body { 
+  background: #f8fafc !important; 
+  font-family: 'Poppins', sans-serif;
 }
+
+/* Premium App Header */
+.app-header {
+  background: rgba(255,255,255,0.9) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  color: #0f172a !important;
+}
+.app-header a, .app-header i { color: #0f172a !important; }
+.header-logo { color: #0f172a !important; font-weight: 700; }
+
 
 /* Hero */
 .gc-hero {
@@ -179,112 +190,130 @@ body {background: #fff;
   0% { transform: translate(0, 0); }
   100% { transform: translate(15px, 20px); }
 }
-/* Tabs strip */
+
+/* Segmented Control Tabs */
 .gc-tabs {
-  display:flex; gap:0; padding:0 16px;
-  background:#fff; border-bottom:2px solid #e8eef4;
-  position:sticky; top:56px; z-index:50;
-  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+  display: flex; gap: 8px; padding: 16px;
+  background: transparent;
+  position: sticky; top: 56px; z-index: 50;
+  border-bottom: none;
+  box-shadow: none;
 }
 .tab-btn {
-  flex:1; border:none; border-bottom:3px solid transparent;
-  background:transparent; padding:13px 4px 10px;
-  font-size:12px; font-weight:600; cursor:pointer;
-  transition:all .2s; font-family:Poppins,sans-serif;
-  color:#6c757d; border-radius:0;
-  display:flex; align-items:center; justify-content:center; gap:5px;
+  flex: 1; border: none; 
+  background: #e2e8f0; padding: 12px 4px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #64748b; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
 }
-.tab-btn.active { color:#007ED2; border-bottom-color:#007ED2; }
-.tab-btn:hover { color:#005fa3; }
+.tab-btn.active { 
+  background: #ffffff; color: #0f172a; 
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.tab-btn:hover:not(.active) { background: #cbd5e1; color: #334155; }
+
 
 /* Category chips */
-.cat-chips { display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; padding:16px 16px 8px; }
+.cat-chips { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 0 16px 16px; }
 .vehicle-chip {
-  flex-shrink:0; border:1.5px solid #dde4ee; background:#fff;
-  border-radius:20px; padding:6px 14px; font-size:12px;
-  font-weight:600; cursor:pointer; transition:all .2s;
-  font-family:Poppins,sans-serif; color:#555; white-space:nowrap;
+  flex-shrink: 0; border: 1px solid rgba(0,0,0,0.08); background: #ffffff;
+  border-radius: 20px; padding: 8px 18px; font-size: 12px;
+  font-weight: 600; cursor: pointer; transition: all .3s ease;
+  color: #64748b; white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
 }
-.vehicle-chip.active { background:#007ED2; border-color:#007ED2; color:#fff; box-shadow:0 2px 8px rgba(0,126,210,0.25); }
+.vehicle-chip.active { 
+  background: #0f172a; border-color: #0f172a; color: #ffffff; 
+  box-shadow: 0 4px 12px rgba(15,23,42,0.2); 
+}
 
-/* Reward card — full-width single column */
+
+/* Premium Reward Card */
 .reward-card {
-  background:#fff; border:1.5px solid #e8eef4;
-  border-radius:18px; padding:0;
-  overflow:hidden; transition:all .22s;
-  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+  background: #ffffff; border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 20px; padding: 0;
+  overflow: hidden; transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
 }
-.reward-card:hover { border-color:#007ED2; box-shadow:0 6px 24px rgba(0,126,210,0.12); transform:translateY(-2px); }
-.reward-card:active { transform:translateY(0); }
+.reward-card:hover { 
+  border-color: rgba(0, 126, 210, 0.2); 
+  box-shadow: 0 12px 30px rgba(0,126,210,0.08); 
+  transform: translateY(-4px); 
+}
 
 .rc-header {
-  display:flex; align-items:center; gap:12px;
-  padding:14px 16px 12px;
-  border-bottom:1px solid #f0f4f8;
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px 12px;
+  border-bottom: none;
 }
 .rc-logo {
-  width:50px; height:50px; min-width:50px;
-  border-radius:14px; object-fit:cover;
-  border:1.5px solid #e8eef4; background:#f5f7fa;
-  flex-shrink:0;
+  width: 60px; height: 60px; min-width: 60px;
+  border-radius: 16px; object-fit: cover;
+  border: 1px solid rgba(0,0,0,0.05); background: #f8fafc;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
 }
 .rc-icon-fallback {
-  width:50px; height:50px; min-width:50px;
-  border-radius:14px; background:linear-gradient(135deg,#e8f4ff,#cfe6ff);
-  display:flex; align-items:center; justify-content:center; font-size:26px;
+  width: 60px; height: 60px; min-width: 60px;
+  border-radius: 16px; background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  display: flex; align-items: center; justify-content: center; font-size: 28px;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
 }
-.rc-brand { font-size:11px; color:#8a9bb0; font-weight:600; margin-bottom:1px; }
-.rc-name { font-size:14px; font-weight:700; color:#1a2b45; line-height:1.3; }
+.rc-brand { font-size: 12px; color: #64748b; font-weight: 600; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+.rc-name { font-size: 16px; font-weight: 800; color: #0f172a; line-height: 1.2; }
 
-.rc-body { padding:10px 16px 14px; }
-.rc-desc { font-size:12px; color:#8a9bb0; line-height:1.5; margin-bottom:10px; }
-.rc-footer { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.rc-body { padding: 0 20px 20px; }
+.rc-desc { font-size: 13px; color: #475569; line-height: 1.5; margin-bottom: 16px; }
+.rc-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; border-top: 1px dashed rgba(0,0,0,0.06); }
 
 .reward-pts {
-  display:inline-flex; align-items:center; gap:4px;
-  background:linear-gradient(135deg,#e8f4ff,#d0e9ff);
-  color:#005fa3; border-radius:999px;
-  padding:4px 12px; font-size:12px; font-weight:700;
-  border:1px solid rgba(0,126,210,0.15);
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(0, 126, 210, 0.08);
+  color: #007ED2; border-radius: 999px;
+  padding: 6px 14px; font-size: 13px; font-weight: 800;
+  border: 1px solid rgba(0, 126, 210, 0.15);
 }
-.rc-need { font-size:11px; color:#aab4c0; font-weight:500; }
+.rc-need { font-size: 12px; color: #94a3b8; font-weight: 600; }
 
 .rc-btn {
-  background:linear-gradient(135deg,#007ED2,#005fa3);
-  color:#fff; border:none; border-radius:10px;
-  padding:9px 16px; font-family:Poppins,sans-serif;
-  font-size:12px; font-weight:600; cursor:pointer;
-  transition:all .2s; white-space:nowrap;
-  box-shadow:0 2px 8px rgba(0,126,210,0.25);
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #ffffff; border: none; border-radius: 12px;
+  padding: 10px 20px; font-family: 'Poppins', sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: all .3s ease; white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(15,23,42,0.15);
 }
-.rc-btn:hover { transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,126,210,0.35); }
-.rc-btn:active { transform:none; }
+.rc-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15,23,42,0.25); }
+.rc-btn:active { transform: translateY(0); }
+
 
 /* Voucher card */
 .voucher-card {
-  background:linear-gradient(135deg,#005fa3,#007ED2,#00a0e9);
-  border-radius:20px; padding:20px; margin-bottom:12px;
-  color:#fff; position:relative; overflow:hidden;
-  box-shadow:0 6px 24px rgba(0,94,163,0.3);
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border-radius: 20px; padding: 24px; margin-bottom: 16px;
+  color: #ffffff; position: relative; overflow: hidden;
+  box-shadow: 0 8px 30px rgba(15,23,42,0.2);
 }
 .voucher-card::before {
-  content:''; position:absolute; right:-30px; top:-30px;
-  width:130px; height:130px;
-  background:rgba(255,255,255,0.1); border-radius:50%;
+  content:''; position: absolute; right: -40px; top: -40px;
+  width: 150px; height: 150px;
+  background: rgba(255,255,255,0.05); border-radius: 50%;
 }
 .voucher-card::after {
-  content:''; position:absolute; left:-20px; bottom:-20px;
-  width:80px; height:80px;
-  background:rgba(255,255,255,0.06); border-radius:50%;
+  content:''; position: absolute; left: -20px; bottom: -20px;
+  width: 100px; height: 100px;
+  background: rgba(255,255,255,0.03); border-radius: 50%;
 }
 .voucher-code {
-  font-size:20px; font-weight:800; letter-spacing:3px;
-  font-family:monospace; background:rgba(255,255,255,0.18);
-  border:1px solid rgba(255,255,255,0.3);
-  border-radius:12px; padding:10px 16px;
-  display:inline-block; margin:10px 0; position:relative; z-index:1;
+  font-size: 24px; font-weight: 800; letter-spacing: 4px;
+  font-family: 'Courier New', monospace; background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px; padding: 12px 20px;
+  display: inline-block; margin: 16px 0; position: relative; z-index: 1;
 }
-.voucher-exp { font-size:11px; opacity:0.8; position:relative; z-index:1; }
+.voucher-exp { font-size: 12px; opacity: 0.8; position: relative; z-index: 1; font-weight: 500; }
 
 /* History rows */
 .txn-row {
@@ -476,7 +505,7 @@ body {background: #fff;
       $isEarned = $t['type']==='earned';
     ?>
     <div class="txn-row">
-      <div class="txn-icon <?= $isEarned?'earned':'redeemed' ?>"><?= $isEarned?'⭐':'🎫' ?></div>
+      <div class="txn-icon <?= $isEarned?'earned':'redeemed' ?>"><?= $isEarned?'<i class="bi bi-star-fill"></i>':'<i class="bi bi-ticket-perforated-fill"></i>' ?></div>
       <div style="flex:1;min-width:0;">
         <div style="font-size:13px;font-weight:600;color:#1a2b45;"><?= sanitize($t['description']) ?></div>
         <div style="font-size:11px;color:#aab4c0;margin-top:2px;"><?= date('M d, Y', strtotime($t['created_at'])) ?></div>
@@ -492,7 +521,7 @@ body {background: #fff;
 <div id="redeemModal" class="gc-modal-backdrop">
   <div class="gc-modal-sheet">
     <div class="gc-modal-handle"></div>
-    <div class="modal-icon-ring" style="background:#e8f4ff;">🎁</div>
+    <div class="modal-icon-ring" style="background:#e8f4ff; color:#007ED2;"><i class="bi bi-gift-fill"></i></div>
     <h4 style="font-weight:800;margin-bottom:4px;font-size:17px;" id="rm-name"></h4>
     <div style="color:#8a9bb0;font-size:13px;margin-bottom:16px;" id="rm-business"></div>
     <div style="background:#f0f7ff;border-radius:14px;padding:14px;margin-bottom:16px;text-align:left;">
@@ -510,7 +539,7 @@ body {background: #fff;
 <div id="confirmRedeemModal" class="gc-modal-backdrop">
   <div class="gc-modal-sheet">
     <div class="gc-modal-handle"></div>
-    <div class="modal-icon-ring" style="background:#fff8e1;">&#127915;</div>
+    <div class="modal-icon-ring" style="background:#fff8e1; color:#f59e0b;"><i class="bi bi-ticket-perforated-fill"></i></div>
     <h4 style="font-weight:800;margin-bottom:4px;font-size:17px;" id="cr-name"></h4>
     <div style="color:#8a9bb0;font-size:13px;margin-bottom:10px;" id="cr-business"></div>
     <div id="cr-stock-wrap" style="margin-bottom:12px;display:none;">
@@ -532,7 +561,7 @@ body {background: #fff;
 <div id="voucherSuccessModal" style="display:none;position:fixed;inset:0;background:rgba(15,25,50,0.7);z-index:1200;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);">
   <div style="background:#fff;border-radius:28px 28px 0 0;padding:32px 24px 40px;width:100%;max-width:480px;text-align:center;animation:slideUp .3s cubic-bezier(0.22,1,0.36,1);">
     <div style="width:40px;height:4px;background:#e0e5ee;border-radius:4px;margin:0 auto 24px;"></div>
-    <div class="success-badge">✅</div>
+    <div class="success-badge"><i class="bi bi-check-lg" style="color:#fff;"></i></div>
     <h3 style="font-weight:800;margin-bottom:4px;color:#1a2b45;">Voucher Generated!</h3>
     <div style="color:#8a9bb0;font-size:13px;margin-bottom:20px;" id="vs-business"></div>
     <div style="background:linear-gradient(135deg,#005fa3,#007ED2,#00a0e9);border-radius:18px;padding:22px;margin-bottom:16px;color:#fff;">

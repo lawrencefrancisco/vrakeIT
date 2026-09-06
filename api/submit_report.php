@@ -1,6 +1,7 @@
 <?php
 require_once dirname(__DIR__) . '/includes/auth.php';
 require_once dirname(__DIR__) . '/includes/functions.php';
+require_once dirname(__DIR__) . '/includes/web_push.php';
 
 startSecureSession();
 header('Content-Type: application/json');
@@ -103,20 +104,35 @@ if (!empty($_FILES['media']['name'][0])) {
     }
 }
 
+// ── Send Web Push to All Enforcers ────────────────────────────
+$reporter = getUserById($userId);
+$reporterName = trim(($reporter['first_name'] ?? '') . ' ' . ($reporter['last_name'] ?? '')) ?: 'A user';
+$flowLabel = match($flowType) {
+    'good_citizen' => 'Good Citizen',
+    'first'        => 'With Injury',
+    'second'       => 'Standard',
+    default        => 'Standard',
+};
+
+$pushPayload = [
+    'title'     => '🚨 New ' . $flowLabel . ' Report',
+    'body'      => $reporterName . ' submitted a report — Ref: ' . $refNum,
+    'url'       => BASE_URL . '/admin/incidents.php',
+    'reportRef' => $refNum,
+    'icon'      => BASE_URL . '/assets/img/logo.png',
+    'tag'       => 'report-' . $reportId,
+];
+
+// Fire-and-forget — won't block the response
+sendPushToAllEnforcers($pushPayload);
+
 // Award points for Good Citizen flow (PENDING VERIFICATION)
 if ($flowType === 'good_citizen') {
-    // 1. Comment out the function that actually gives the points
-    // addPoints($userId, GOOD_CITIZEN_POINTS, 'Good Citizen Report submitted', $reportId);
-    
     $updatedUser = getUserById($userId);
-    
-    // 2. Update the audit log so your records show it's pending
     auditLog($userId, 'good_citizen_report', "Ref: {$refNum}, Pending +50 pts verification");
-    
-    // 3. Update the response message sent back to the user
     jsonResponse(true, 'Report submitted! Your 50 points are pending admin verification.', [
         'reference_number' => $refNum,
-        'points_earned'    => 0, // Changed to 0 so the UI doesn't animate an immediate point jump
+        'points_earned'    => 0,
         'total_points'     => $updatedUser['points'],
     ]);
 }

@@ -82,3 +82,8 @@ define('GOOD_CITIZEN_POINTS', 50);
 define('ALLOWED_IMAGE_TYPES', ['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
 define('ALLOWED_VIDEO_TYPES', ['video/mp4', 'video/quicktime', 'video/x-msvideo']);
 define('MAX_UPLOAD_SIZE', 20 * 1024 * 1024); // 20MB
+
+// --- Web Push VAPID Keys ---
+define('VAPID_PUBLIC_KEY',  'BGx5bgsN878EpSt0QdBcdDz6neaJ4swg-tKb0bCcPH7S-jJ33S9X0iOkj8iZ-_yMhPYMgrMNQKSpQw5arpFCXmM');
+define('VAPID_PRIVATE_KEY', 'q2UlpgpfDGErDO_lw84IAofy-sRwMIkUl3kfT1rLgoQ');
+define('VAPID_SUBJECT',     'mailto:vrakeit@gmail.com');

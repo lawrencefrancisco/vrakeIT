@@ -64,18 +64,21 @@ $reportCount = $totalReports->fetchColumn();
   </aside>
 
   <!-- Header -->
-  <header class="app-header">
-    <button onclick="openSidebar()" style="background:none;border:none;color:#fff;font-size:22px;padding:0;"><i class="bi bi-list"></i></button>
-    <span class="header-logo" style="display:flex;align-items:center;gap:8px;">
-      <img src="assets/img/system_logo.png" alt="VrakeIT" style="width:28px;height:28px;object-fit:contain;vertical-align:middle;">
-      <span><span style="color:var(--blue);">Vrake</span><span style="color:var(--red);">IT</span></span>
+  <header class="app-header" style="display:flex; align-items:center; justify-content:space-between; width:100%; box-sizing:border-box; overflow:hidden; padding:12px 16px;">
+    <button onclick="openSidebar()" style="background:none;border:none;color:#1e293b;font-size:24px;padding:0;flex-shrink:0;"><i class="bi bi-list"></i></button>
+    <span class="header-logo" style="display:flex;align-items:center;gap:6px; flex-shrink:1; overflow:hidden;">
+      <img src="assets/img/system_logo.png" alt="VrakeIT" style="width:26px;height:26px;object-fit:contain;vertical-align:middle; flex-shrink:0;">
+      <span style="font-weight:800; font-size:18px;"><span style="color:var(--blue);">Vrake</span><span style="color:var(--red);">IT</span></span>
     </span>
-    <div class="header-right">
-      <div class="points-badge" style="background: rgba(0,126,210,0.1); color: #007ED2;">
+    <div class="header-right" style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+      <button onclick="manualEnablePush()" style="width:34px; height:34px; flex-shrink:0; border-radius:50%; background:var(--blue-light); border:none; color:var(--blue); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 8px rgba(0,126,210,0.2);" title="Enable Push Alerts">
+        <i class="bi bi-bell-fill"></i>
+      </button>
+      <div class="points-badge" style="background: rgba(0,126,210,0.1); color: #007ED2; display:flex; align-items:center; gap:4px; flex-shrink:0;">
         <i class="bi bi-shield-lock-fill"></i>
-        <span>Enforcer</span>
+        <span class="d-none d-sm-inline">Enforcer</span>
       </div>
-      <img src="<?= getAvatarUrl($user['avatar']) ?>" class="user-avatar-sm" alt="Profile" onclick="window.location='profile.php'">
+      <img src="<?= getAvatarUrl($user['avatar']) ?>" class="user-avatar-sm" alt="Profile" onclick="window.location='profile.php'" style="width:34px; height:34px; flex-shrink:0;">
     </div>
   </header>
 
@@ -369,6 +372,210 @@ setInterval(rotateSafetyTip, 5000);
       el.style.transform = 'translateY(20px)';
       io.observe(el);
     });
+    
+    document.addEventListener('DOMContentLoaded', initWebPush);
   </script>
+  
+  
+<!-- ── WEB PUSH NOTIFICATION SYSTEM ────────────────────────────── -->
+<div id="push-permission-banner" style="
+  display:none;
+  position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+  z-index:9999; max-width:380px; width:calc(100% - 32px);
+  background: linear-gradient(135deg, #0f172a, #1e3a5f);
+  border: 1px solid rgba(0, 126, 210, 0.4);
+  border-radius:20px; padding:20px 20px 16px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+">
+  <div style="display:flex; align-items:flex-start; gap:14px; margin-bottom:14px;">
+    <div style="
+      width:48px; height:48px; min-width:48px; border-radius:14px;
+      background: linear-gradient(135deg, #007ED2, #0056a3);
+      display:flex; align-items:center; justify-content:center;
+      font-size:22px; box-shadow: 0 6px 20px rgba(0,126,210,0.35);
+    "><i class="bi bi-bell-fill" style="color:#fff;"></i></div>
+    <div>
+      <div style="font-weight:700; font-size:14px; color:#f1f5f9; margin-bottom:4px;">Stay Notified On-Duty</div>
+      <div style="font-size:12px; color:#94a3b8; line-height:1.4;">Enable push notifications to receive instant OS-level alerts when new incident reports are submitted — even when your browser is in the background.</div>
+    </div>
+  </div>
+  <div style="display:flex; gap:8px;">
+    <button onclick="enablePushNotifications()" style="
+      flex:1; background: linear-gradient(135deg, #007ED2, #0056a3);
+      color:#fff; border:none; border-radius:12px; padding:11px;
+      font-family:'DM Sans',sans-serif; font-weight:700; font-size:13px;
+      cursor:pointer; box-shadow:0 4px 15px rgba(0,126,210,0.3);
+    "><i class="bi bi-bell-fill"></i> Enable Alerts</button>
+    <button onclick="document.getElementById('push-permission-banner').style.display='none'; localStorage.setItem('pushDismissed','1');" style="
+      background:rgba(255,255,255,0.07); color:#94a3b8; border:1px solid rgba(255,255,255,0.1);
+      border-radius:12px; padding:11px 16px;
+      font-family:'DM Sans',sans-serif; font-weight:600; font-size:13px; cursor:pointer;
+    ">Later</button>
+  </div>
+</div>
+
+<style>
+@keyframes slideUp {
+  from { opacity:0; transform:translateX(-50%) translateY(30px); }
+  to   { opacity:1; transform:translateX(-50%) translateY(0); }
+}
+</style>
+
+<script>
+const VAPID_PUBLIC_KEY = '<?= VAPID_PUBLIC_KEY ?>';
+
+/**
+ * Convert a URL-safe base64 string to a Uint8Array.
+ */
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64  = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const raw     = atob(base64);
+  return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+}
+
+/**
+ * Initialise the push notification system.
+ * Registers the service worker and shows the permission banner if needed.
+ */
+async function initWebPush() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    console.log('[WebPush] Not supported in this browser.');
+    return;
+  }
+
+  // Show the permission banner if the user hasn't dismissed it and hasn't granted yet
+  if (Notification.permission === 'default' && !localStorage.getItem('pushDismissed')) {
+    setTimeout(() => {
+      document.getElementById('push-permission-banner').style.display = 'block';
+    }, 2000); // Small delay so it doesn't feel instant / intrusive
+  }
+
+  // If already granted, auto-subscribe silently
+  if (Notification.permission === 'granted') {
+    await subscribeEnforcer();
+  }
+}
+
+/**
+ * Called when the enforcer clicks "Enable Alerts".
+ */
+async function enablePushNotifications() {
+  document.getElementById('push-permission-banner').style.display = 'none';
+
+  const permission = await Notification.requestPermission();
+  if (permission === 'granted') {
+    await subscribeEnforcer();
+    showPushToast('🔔 Notifications enabled! You\'ll now receive instant report alerts.', 'success');
+  } else {
+    showPushToast('Notifications blocked. You can enable them in browser settings.', 'warn');
+    localStorage.setItem('pushDismissed', '1');
+  }
+}
+
+/**
+ * Registers the service worker and subscribes to push notifications.
+ */
+async function subscribeEnforcer() {
+  // Dynamically build base path from the current URL so it works on
+  // any domain (localhost, Cloudflare tunnel, production, etc.)
+  const basePath = window.location.pathname.substring(
+    0, window.location.pathname.lastIndexOf('/') + 1
+  );
+  // If we're in /vrakeit/enforcer_landing.php, basePath = /vrakeit/
+  // If we're at root /enforcer_landing.php, basePath = /
+  const swPath  = basePath + 'sw.js';
+  const apiPath = basePath + 'api/save_push_subscription.php';
+
+  console.log('[WebPush] SW path:', swPath);
+  console.log('[WebPush] API path:', apiPath);
+  console.log('[WebPush] Protocol:', window.location.protocol);
+
+  try {
+    console.log('[WebPush] Registering service worker...');
+    const reg = await navigator.serviceWorker.register(swPath, { scope: basePath });
+    console.log('[WebPush] SW registered, scope:', reg.scope);
+
+    // Wait for the SW to be ready
+    const readyReg = await navigator.serviceWorker.ready;
+    console.log('[WebPush] SW ready:', readyReg.scope);
+
+    // Check if already subscribed
+    let subscription = await readyReg.pushManager.getSubscription();
+    console.log('[WebPush] Existing subscription:', subscription ? 'YES' : 'NONE');
+
+    if (!subscription) {
+      console.log('[WebPush] Subscribing with VAPID key...');
+      subscription = await readyReg.pushManager.subscribe({
+        userVisibleOnly:      true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+      });
+      console.log('[WebPush] Subscribed! Endpoint:', subscription.endpoint.substring(0, 50) + '...');
+    }
+
+    // Save subscription to server
+    console.log('[WebPush] Saving to server at:', apiPath);
+    const res  = await fetch(apiPath, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(subscription.toJSON()),
+    });
+    const json = await res.json();
+    console.log('[WebPush] Server response:', json);
+
+    if (json.success) {
+      console.log('[WebPush] ✅ Subscription saved! Ready to receive push notifications.');
+    } else {
+      console.error('[WebPush] ❌ Server failed to save subscription:', json.message);
+    }
+  } catch (err) {
+    console.error('[WebPush] ❌ Subscription failed:', err.name, err.message, err);
+    // Show a visible error toast for debugging on mobile
+    showPushToast('⚠️ Push setup failed: ' + err.message, 'warn');
+  }
+}
+
+/**
+ * Show a small toast notification on-screen.
+ */
+function showPushToast(message, type = 'success') {
+  const toast = document.createElement('div');
+  const bg    = type === 'success' ? '#059669' : '#d97706';
+  toast.style.cssText = `
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:${bg}; color:#fff; padding:12px 22px; border-radius:50px;
+    font-family:'DM Sans',sans-serif; font-weight:600; font-size:14px;
+    z-index:10000; box-shadow:0 8px 30px rgba(0,0,0,0.25);
+    animation: slideUp 0.3s ease;
+  `;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 5000);
+}
+
+/**
+ * Triggered by the bell icon in the header.
+ */
+function manualEnablePush() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    // If they are on their cellphone accessing it via local IP instead of HTTPS
+    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+      alert("⚠️ Push notifications require a secure connection (HTTPS).\\n\\nYou are currently accessing this via an unsecured local IP (" + window.location.protocol + "//" + window.location.hostname + "). Please use the secure Cloudflare tunnel link (https://...) to enable alerts.");
+    } else {
+      alert("⚠️ Your browser does not support Web Push notifications. Please use a modern browser like Chrome or Safari.");
+    }
+    return;
+  }
+  
+  if (Notification.permission === 'granted') {
+    showPushToast('✅ Notifications are already enabled!', 'success');
+  } else {
+    // Show the banner if it was dismissed
+    document.getElementById('push-permission-banner').style.display = 'block';
+  }
+}
+</script>
+
 </body>
 </html>

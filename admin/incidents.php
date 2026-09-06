@@ -121,8 +121,110 @@ adminHead('Incident Monitoring');
   </div>
 </div>
 
+
+<!-- Action Confirm Modal -->
+<div class="modal fade" id="actionConfirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:400px;">
+    <div class="modal-content" style="background: linear-gradient(145deg, #0f172a, #1e293b); color:#f8fafc; border: 1px solid rgba(255,255,255,0.08); border-radius:24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+      <div class="modal-body" style="padding: 32px 24px 24px; text-align: center;">
+        <div id="confirmModalIcon" style="font-size:48px; color:#38bdf8; margin-bottom:16px; line-height:1;"><i class="bi bi-question-circle"></i></div>
+        <h5 id="confirmModalTitle" style="font-weight:700; font-size:18px; margin-bottom:12px; color:#f8fafc;">Confirm Action</h5>
+        <div id="confirmModalText" style="font-size:14px; color:#94a3b8; line-height:1.6; margin-bottom:24px;">Are you sure you want to proceed?</div>
+        
+        <div style="display:flex; gap:12px; justify-content:center;">
+          <button type="button" class="btn-admin btn-review" data-bs-dismiss="modal" style="border-radius:12px; padding:10px 24px; font-weight:600; flex:1;">Cancel</button>
+          <button type="button" class="btn-admin btn-primary-admin" id="confirmModalBtn" style="border-radius:12px; padding:10px 24px; font-weight:600; flex:1; border:none; box-shadow:0 4px 15px rgba(56,189,248,0.2);">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Alert Modal -->
+<div class="modal fade" id="alertModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:400px;">
+    <div class="modal-content" style="background: linear-gradient(145deg, #0f172a, #1e293b); color:#f8fafc; border: 1px solid rgba(255,255,255,0.08); border-radius:24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+      <div class="modal-body" style="padding: 32px 24px 24px; text-align: center;">
+        <div id="alertModalIcon" style="font-size:48px; color:#10b981; margin-bottom:16px; line-height:1;"><i class="bi bi-check-circle"></i></div>
+        <h5 id="alertModalTitle" style="font-weight:700; font-size:18px; margin-bottom:12px; color:#f8fafc;">Success</h5>
+        <div id="alertModalText" style="font-size:14px; color:#94a3b8; line-height:1.6; margin-bottom:24px;">Action completed successfully.</div>
+        
+        <button type="button" class="btn-admin btn-primary-admin" data-bs-dismiss="modal" id="alertModalBtn" style="border-radius:12px; padding:10px 32px; font-weight:600; border:none; box-shadow:0 4px 15px rgba(16,185,129,0.2);">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+
+function showCustomConfirm(title, text, iconHtml, confirmText, confirmClass, onConfirm) {
+  document.getElementById('confirmModalTitle').innerHTML = title;
+  document.getElementById('confirmModalText').innerHTML = text;
+  document.getElementById('confirmModalIcon').innerHTML = iconHtml;
+  
+  const btn = document.getElementById('confirmModalBtn');
+  btn.innerHTML = confirmText;
+  btn.className = 'btn-admin ' + confirmClass;
+  
+  // Set the shadow color based on the button class
+  if (confirmClass.includes('btn-approve') || confirmClass.includes('btn-primary-admin')) {
+    btn.style.boxShadow = '0 4px 15px rgba(56,189,248,0.2)';
+  } else if (confirmClass.includes('btn-reject')) {
+    btn.style.boxShadow = '0 4px 15px rgba(248,113,113,0.2)';
+  } else {
+    btn.style.boxShadow = 'none';
+  }
+  
+  const modalEl = document.getElementById('actionConfirmModal');
+  const modal = new bootstrap.Modal(modalEl);
+  
+  // Remove old event listeners by cloning
+  const newBtn = btn.cloneNode(true);
+  btn.parentNode.replaceChild(newBtn, btn);
+  
+  newBtn.addEventListener('click', () => {
+    modal.hide();
+    onConfirm();
+  });
+  
+  modal.show();
+}
+
+function showCustomAlert(title, text, iconHtml, isSuccess, onClose) {
+  document.getElementById('alertModalTitle').innerHTML = title;
+  document.getElementById('alertModalText').innerHTML = text;
+  document.getElementById('alertModalIcon').innerHTML = iconHtml;
+  
+  const btn = document.getElementById('alertModalBtn');
+  if(isSuccess) {
+    document.getElementById('alertModalIcon').style.color = '#10b981';
+    btn.style.boxShadow = '0 4px 15px rgba(16,185,129,0.2)';
+    btn.className = 'btn-admin btn-approve';
+  } else {
+    document.getElementById('alertModalIcon').style.color = '#f87171';
+    btn.style.boxShadow = '0 4px 15px rgba(248,113,113,0.2)';
+    btn.className = 'btn-admin btn-reject';
+  }
+  
+  const modalEl = document.getElementById('alertModal');
+  const modal = new bootstrap.Modal(modalEl);
+  
+  const newBtn = btn.cloneNode(true);
+  btn.parentNode.replaceChild(newBtn, btn);
+  
+  // Also handle modal close event (clicking outside)
+  modalEl.addEventListener('hidden.bs.modal', function handler() {
+    modalEl.removeEventListener('hidden.bs.modal', handler);
+    if(onClose) onClose();
+  });
+  
+  newBtn.addEventListener('click', () => {
+    modal.hide(); // this triggers hidden.bs.modal
+  });
+  
+  modal.show();
+}
+
 const enforcersList = <?= json_encode($enforcers) ?>;
 
 function getAdminStatusBadge(s) {
@@ -143,24 +245,45 @@ async function adminPost(data) {
   const res = await fetch('api/admin_action.php',{method:'POST',body:fd});
   return await res.json();
 }
-async function approveGC(rid, uid) {
-  if (!confirm('Approve this Good Citizen report?\n\nThis will:\n• Grant +' + <?= GOOD_CITIZEN_POINTS ?> + ' points to the reporter\n• Set status to <i class="bi bi-check-circle"></i> Verified')) return;
-  const d = await adminPost({action:'approve_gc', report_id:rid, user_id:uid});
-  if (d.success) { alert('<i class="bi bi-check-circle"></i> ' + d.message); location.reload(); } else alert(d.message);
+
+function approveGC(rid, uid) {
+  const points = <?= GOOD_CITIZEN_POINTS ?>;
+  const msg = `This will:<br>
+  <div style="text-align:left; display:inline-block; margin-top:8px;">
+    • Grant <span style="color:#fbbf24; font-weight:bold;">+${points} points</span> to the reporter<br>
+    • Set status to <span style="color:#10b981;"><i class="bi bi-check-circle-fill"></i> Verified</span>
+  </div>`;
+  
+  showCustomConfirm('Approve Report?', msg, '<i class="bi bi-star-fill" style="color:#fbbf24;"></i>', '<i class="bi bi-check2"></i> Approve', 'btn-approve', async () => {
+    const d = await adminPost({action:'approve_gc', report_id:rid, user_id:uid});
+    if (d.success) {
+      showCustomAlert('Approved!', d.message, '<i class="bi bi-check-circle-fill"></i>', true, () => location.reload());
+    } else {
+      showCustomAlert('Error', d.message, '<i class="bi bi-x-circle-fill"></i>', false);
+    }
+  });
 }
-async function updateStatus(rid, status) {
-  const d = await adminPost({action:'update_report_status', report_id:rid, status});
-  if (d.success) {
-    // Reload to reflect any auto-granted points (e.g. GC → verified)
-    location.reload();
-  } else {
-    alert(d.message);
-  }
+
+function updateStatus(rid, status) {
+  showCustomConfirm('Update Status?', 'Are you sure you want to change the status?', '<i class="bi bi-arrow-repeat" style="color:#38bdf8;"></i>', 'Update Status', 'btn-primary-admin', async () => {
+      const d = await adminPost({action:'update_report_status', report_id:rid, status});
+      if (d.success) {
+        showCustomAlert('Updated!', 'Status has been updated successfully.', '<i class="bi bi-check-circle-fill"></i>', true, () => location.reload());
+      } else {
+        showCustomAlert('Error', d.message, '<i class="bi bi-x-circle-fill"></i>', false);
+      }
+  });
 }
-async function denyReport(rid) {
-  if(!confirm('Mark report as closed?'))return;
-  const d = await adminPost({action:'update_report_status',report_id:rid,status:'closed'});
-  if(d.success) location.reload(); else alert(d.message);
+
+function denyReport(rid) {
+  showCustomConfirm('Close Report?', 'Are you sure you want to mark this report as closed?', '<i class="bi bi-x-circle-fill" style="color:#f87171;"></i>', '<i class="bi bi-x"></i> Close Report', 'btn-reject', async () => {
+    const d = await adminPost({action:'update_report_status',report_id:rid,status:'closed'});
+    if(d.success) {
+        showCustomAlert('Closed', 'Report has been closed successfully.', '<i class="bi bi-check-circle-fill"></i>', true, () => location.reload());
+    } else {
+        showCustomAlert('Error', d.message, '<i class="bi bi-x-circle-fill"></i>', false);
+    }
+  });
 }
 
 async function saveAdminManagement(rid) {
@@ -184,7 +307,7 @@ async function saveAdminManagement(rid) {
     alert('<i class="bi bi-check-circle"></i> ' + d.message);
     location.reload();
   } else {
-    alert('Error: ' + d.message);
+    showCustomAlert('Error', d.message, '<i class="bi bi-x-circle-fill"></i>', false);
     btn.innerHTML = '<i class="bi bi-save"></i> Save Changes';
     btn.disabled = false;
   }
@@ -226,7 +349,125 @@ async function viewReport(rid) {
   const r = d.report || (d.data && d.data.report);
 
   if (!d.success || !r) {
-    modalBody.innerHTML = `<div class="alert alert-danger">${d.message || 'Failed to load report details.'}</div>`;
+    modalBody.innerHTML = `
+    <div class="row g-4">
+      <div class="col-12">
+        <div id="aiSummaryContainer" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(14, 165, 233, 0.03)); border:1px solid rgba(56, 189, 248, 0.2); border-radius:16px; padding:20px; display:flex; align-items:center; gap:20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+          <div style="flex-shrink:0; font-size:32px; color:#38bdf8; background:rgba(56,189,248,0.1); width:64px; height:64px; display:flex; align-items:center; justify-content:center; border-radius:16px; border:1px solid rgba(56,189,248,0.2);"><i class="bi bi-robot"></i></div>
+          <div style="flex-grow:1;">
+            <div style="font-size:12px; font-weight:700; color:#38bdf8; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:4px;">AI Incident Summary</div>
+            <div id="aiSummaryText" style="font-size:14px; color:#94a3b8; line-height:1.5;">Click the button to generate an intelligent 1-sentence summary of this report.</div>
+          </div>
+          <div>
+            <button id="btnAiSummarize" class="btn-admin btn-primary-admin" onclick="generateAISummary(${r.id})" style="white-space:nowrap; border-radius:12px; padding:10px 20px; font-weight:600; box-shadow:0 4px 15px rgba(56,189,248,0.2);">
+              <i class="bi bi-magic"></i> Summarize
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+       <p class="mb-1" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Reference Number</p>
+        <h5 style="color:#f8fafc; font-family:'Courier New', monospace; font-weight:700; margin:0; letter-spacing:1px;">${r.reference_number}</h5>
+      </div>
+      <div class="col-md-6">
+        <p class="mb-1" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Reported On</p>
+        <h6 style="margin:0; color:#e2e8f0; font-weight:600;">${r.created_at_fmt}</h6>
+      </div>
+
+      <div class="col-md-6">
+        <p class="mb-1" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Reporter</p>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
+          <div style="position:relative; flex-shrink:0;">
+            <img src="${r.avatar_url}" alt="${r.reporter_name}"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+                 style="width:48px; height:48px; border-radius:12px; object-fit:cover;
+                        border:1px solid rgba(255,255,255,0.1); background:#1e293b; box-shadow:0 4px 10px rgba(0,0,0,0.2);">
+            <div style="display:none; width:48px; height:48px; border-radius:12px;
+                        background: linear-gradient(135deg, #1e293b, #0f172a); border:1px solid rgba(255,255,255,0.1);
+                        align-items:center; justify-content:center; font-weight:700;
+                        font-size:16px; color:#e2e8f0; box-shadow:0 4px 10px rgba(0,0,0,0.2);">
+              ${(r.reporter_name||'?').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase()}
+            </div>
+          </div>
+          <div>
+            <h6 style="margin:0; display:flex; align-items:center; gap:8px; flex-wrap:wrap; color:#f8fafc; font-weight:700;">
+              ${r.reporter_name}
+              ${r.assigned_enforcer_id !== null ? '<span style="font-size:10px;color:#94a3b8;font-weight:600;background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:4px;">ENFORCER</span>' : ''}
+            </h6>
+            ${r.account_verified == 1 ? `<span class="verified-badge-lg" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;" title="Identity Verified"><i class="bi bi-shield-check"></i> Verified</span>` : ''}
+            <div style="font-size:12px; color:#94a3b8; margin-top:2px;">${r.email} ${r.phone ? '• ' + r.phone : ''}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <p class="mb-1" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Status / Flow Type</p>
+        <h6 style="margin:0; display:flex; align-items:center; gap:8px;">
+          ${getAdminStatusBadge(r.status)}
+          <span style="display:inline-block; padding:4px 10px; border-radius:8px; background:rgba(96, 180, 255, 0.1); border:1px solid rgba(96, 180, 255, 0.2); color:#60b4ff; font-size:11px; font-weight:700;">${(r.flow_type || '').replace('_', ' ').toUpperCase()}</span>
+        </h6>
+      </div>
+
+      <div class="col-12"><hr style="border-color:rgba(255,255,255,0.08); margin:8px 0;"></div>
+      
+      <div class="col-md-6">
+        <p class="mb-1" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Incident Date & Time</p>
+        <h6 style="margin:0; color:#e2e8f0; font-weight:600;">${r.incident_date ? r.incident_date + ' ' + (r.incident_time||'') : '<span style="color:#64748b;font-weight:400;">Not provided</span>'}</h6>
+      </div>
+      <div class="col-md-6">
+        <p class="mb-1" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Location</p>
+        <h6 style="margin:0; color:#e2e8f0; font-weight:600; line-height:1.4;">${r.location_address || '<span style="color:#64748b;font-weight:400;">Not provided</span>'}</h6>
+      </div>
+      
+      <div class="col-md-4">
+        <p class="mb-1" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Weather / Road</p>
+        <h6 style="margin:0; color:#e2e8f0; font-weight:600;">${r.weather_condition || 'N/A'} <span style="color:rgba(255,255,255,0.1)">|</span> ${r.road_condition || 'N/A'}</h6>
+      </div>
+      <div class="col-md-4">
+        <p class="mb-1" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Injured Persons?</p>
+        <h6 style="margin:0; font-weight:600;">${r.is_injured == 1 ? '<span style="color:#ef4444;"><i class="bi bi-exclamation-circle-fill me-1"></i> Yes</span>' : '<span style="color:#94a3b8;font-weight:400;">No</span>'}</h6>
+      </div>
+      <div class="col-md-4">
+        <p class="mb-1" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Other Parties</p>
+        <h6 style="margin:0; font-weight:600;">${r.has_other_parties == 1 ? '<span style="color:#ef4444;">Yes</span>' : '<span style="color:#94a3b8;font-weight:400;">No</span>'}</h6>
+      </div>
+
+      <div class="col-12"><hr style="border-color:rgba(255,255,255,0.08); margin:8px 0;"></div>
+
+      <div class="col-md-4">
+        <p class="mb-1" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Law Enforcer</p>
+        <h6 style="margin:0; color:#e2e8f0; font-weight:600;">${r.enforcer_type ? r.enforcer_type.toUpperCase() : '<span style="color:#64748b;font-weight:400;">N/A</span>'}</h6>
+      </div>
+      <div class="col-md-4">
+        <p class="mb-1" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Emergency Services</p>
+        <h6 style="margin:0; color:#e2e8f0; font-weight:600;">${emergencySvcs}</h6>
+      </div>
+      <div class="col-md-4">
+        <p class="mb-1" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Insurance Type</p>
+        <h6 style="margin:0; color:#e2e8f0; font-weight:600;">${r.insurance_type ? r.insurance_type.toUpperCase() : '<span style="color:#64748b;font-weight:400;">N/A</span>'}</h6>
+      </div>
+
+      <div class="col-12"><hr style="border-color:rgba(255,255,255,0.08); margin:8px 0;"></div>
+
+      <div class="col-12">
+        <p class="mb-2" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Vehicles Involved</p>
+        ${vehiclesHtml.replace(/background:rgba\(255,255,255,0.05\)/g, 'background:rgba(15,23,42,0.4);border:1px solid rgba(255,255,255,0.05);box-shadow:inset 0 2px 10px rgba(0,0,0,0.1);')}
+      </div>
+      
+      <div class="col-12">
+        <p class="mb-2" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Event Details</p>
+        <div style="background:rgba(15,23,42,0.4); padding:20px; border-radius:16px; border:1px solid rgba(255,255,255,0.05); font-size:14px; line-height:1.6; color:#e2e8f0; box-shadow:inset 0 2px 10px rgba(0,0,0,0.1);">
+          ${descHtml}
+        </div>
+      </div>
+      <div class="col-12">
+        <p class="mb-2" style="color: #64748b; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Photo/Video Evidence</p>
+        <div class="text-center" style="background:rgba(15,23,42,0.4); padding:24px; border-radius:16px; border:1px solid rgba(255,255,255,0.05); box-shadow:inset 0 2px 10px rgba(0,0,0,0.1);">
+          ${mediaHtml}
+        </div>
+      </div>
+    </div>
+  `;
     return;
   }
 
