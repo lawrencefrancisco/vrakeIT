@@ -35,13 +35,13 @@ adminNav('personnel', $admin);
                 </button>
                 <button id="tabModerator" onclick="switchTab('moderator')"
                     style="flex:1; padding:10px 0; border-radius:10px; border:1.5px solid rgba(255,255,255,0.08);
-                           background:transparent; color:rgba(255,255,255,0.45); font-size:13px; font-weight:600;
+                           background:transparent; color:var(--muted); font-size:13px; font-weight:600;
                            cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px;">
                     <i class="bi bi-person-badge-fill" style="color:#a78bfa;"></i> Moderator
                 </button>
                 <button id="tabAdmin" onclick="switchTab('admin')"
                     style="flex:1; padding:10px 0; border-radius:10px; border:1.5px solid rgba(255,255,255,0.08);
-                           background:transparent; color:rgba(255,255,255,0.45); font-size:13px; font-weight:600;
+                           background:transparent; color:var(--muted); font-size:13px; font-weight:600;
                            cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px;">
                     <i class="bi bi-stars" style="color:#fbbf24;"></i> Admin
                 </button>
@@ -83,7 +83,7 @@ adminNav('personnel', $admin);
                             <div class="mb-4">
                                 <label class="form-lbl">Temporary Password</label>
                                 <input type="password" class="form-dark" name="password" placeholder="••••••••" required>
-                                <small style="color:rgba(255,255,255,0.4); font-size:11px; margin-top:4px; display:block;">
+                                <small style="color:var(--muted); font-size:11px; margin-top:4px; display:block;">
                                     Provide this password to the enforcer.
                                 </small>
                             </div>
@@ -101,12 +101,12 @@ adminNav('personnel', $admin);
                         <div class="section-title-text">
                             <i class="bi bi-shield-fill-check me-2" style="color:#60a5fa;"></i>Enforcer Accounts
                         </div>
-                        <span id="enforcerCount" style="font-size:11px; color:rgba(255,255,255,0.35); background:rgba(255,255,255,0.06); padding:3px 10px; border-radius:999px;">
+                        <span id="enforcerCount" style="font-size:11px; color:var(--muted); background:rgba(255,255,255,0.06); padding:3px 10px; border-radius:999px;">
                             Loading…
                         </span>
                     </div>
                     <div id="enforcerListWrap" style="overflow-x:auto;">
-                        <div style="padding:32px; text-align:center; color:rgba(255,255,255,0.3); font-size:13px;">
+                        <div style="padding:32px; text-align:center; color:var(--muted); font-size:13px;">
                             <span class="spinner-border spinner-border-sm me-2" role="status"></span>Loading enforcers…
                         </div>
                     </div>
@@ -128,12 +128,12 @@ adminNav('personnel', $admin);
                     <div style="padding:24px;">
                         <div style="background:rgba(167,139,250,0.08); border:1.5px solid rgba(167,139,250,0.22);
                                     border-radius:10px; padding:14px 16px; margin-bottom:20px; font-size:12px;
-                                    color:rgba(255,255,255,0.6); line-height:1.6;">
+                                    color:var(--muted); line-height:1.6;">
                             <div style="font-weight:700; color:#a78bfa; margin-bottom:6px; font-size:13px;">
                                 <i class="bi bi-lock-fill me-2"></i>Restricted Access Role
                             </div>
                             Moderators can review reports, manage incident statuses, and view user profiles.
-                            They <strong style="color:rgba(255,255,255,0.85);">cannot</strong> access:
+                            They <strong style="color:var(--muted);">cannot</strong> access:
                             <ul style="margin:8px 0 0 4px; padding-left:16px;">
                                 <li>Personnel Management</li>
                                 <li>User Management</li>
@@ -165,7 +165,7 @@ adminNav('personnel', $admin);
                             <div class="mb-4">
                                 <label class="form-lbl">Temporary Password</label>
                                 <input type="password" class="form-dark" name="password" placeholder="••••••••" required>
-                                <small style="color:rgba(255,255,255,0.4); font-size:11px; margin-top:4px; display:block;">
+                                <small style="color:var(--muted); font-size:11px; margin-top:4px; display:block;">
                                     Provide this password to the moderator.
                                 </small>
                             </div>
@@ -183,12 +183,12 @@ adminNav('personnel', $admin);
                         <div class="section-title-text">
                             <i class="bi bi-person-badge-fill me-2" style="color:#a78bfa;"></i>Moderator Accounts
                         </div>
-                        <span id="moderatorCount" style="font-size:11px; color:rgba(255,255,255,0.35); background:rgba(255,255,255,0.06); padding:3px 10px; border-radius:999px;">
+                        <span id="moderatorCount" style="font-size:11px; color:var(--muted); background:rgba(255,255,255,0.06); padding:3px 10px; border-radius:999px;">
                             Loading…
                         </span>
                     </div>
                     <div id="moderatorListWrap" style="overflow-x:auto;">
-                        <div style="padding:32px; text-align:center; color:rgba(255,255,255,0.3); font-size:13px;">
+                        <div style="padding:32px; text-align:center; color:var(--muted); font-size:13px;">
                             <span class="spinner-border spinner-border-sm me-2" role="status"></span>Loading moderators…
                         </div>
                     </div>
@@ -204,12 +204,12 @@ adminNav('personnel', $admin);
                         <div class="section-title-text">
                             <i class="bi bi-stars me-2" style="color:#fbbf24;"></i>Admin Accounts
                         </div>
-                        <span id="adminCount" style="font-size:11px; color:rgba(255,255,255,0.35); background:rgba(255,255,255,0.06); padding:3px 10px; border-radius:999px;">
+                        <span id="adminCount" style="font-size:11px; color:var(--muted); background:rgba(255,255,255,0.06); padding:3px 10px; border-radius:999px;">
                             Loading…
                         </span>
                     </div>
                     <div id="adminListWrap" style="overflow-x:auto;">
-                        <div style="padding:32px; text-align:center; color:rgba(255,255,255,0.3); font-size:13px;">
+                        <div style="padding:32px; text-align:center; color:var(--muted); font-size:13px;">
                             <span class="spinner-border spinner-border-sm me-2" role="status"></span>Loading admins…
                         </div>
                     </div>
@@ -246,7 +246,7 @@ function switchTab(role) {
 // ── Render a personnel table ─────────────────────────────────────────────────
 function renderTable(rows, accentColor) {
     if (!rows.length) {
-        return `<div style="padding:32px; text-align:center; color:rgba(255,255,255,0.3); font-size:13px;">
+        return `<div style="padding:32px; text-align:center; color:var(--muted); font-size:13px;">
                     <i class="bi bi-inbox" style="font-size:28px; display:block; margin-bottom:8px;"></i>No accounts found.
                 </div>`;
     }
@@ -271,7 +271,7 @@ function renderTable(rows, accentColor) {
             : `<span class="badge-status" style="background:rgba(248,113,113,0.15);color:#f87171;border:1px solid rgba(248,113,113,0.3);"><i class="bi bi-slash-circle me-1"></i>Inactive</span>`;
 
         return `<tr>
-            <td style="color:rgba(255,255,255,0.3); font-size:12px;">${i + 1}</td>
+            <td style="color:var(--muted); font-size:12px;">${i + 1}</td>
             <td>
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div style="width:32px; height:32px; border-radius:50%; background:${accentColor}22;
@@ -282,9 +282,9 @@ function renderTable(rows, accentColor) {
                     <span style="font-weight:600; font-size:13px;">${escHtml(u.first_name)} ${escHtml(u.last_name)}</span>
                 </div>
             </td>
-            <td style="font-size:12px; color:rgba(255,255,255,0.6);">${escHtml(u.email)}</td>
-            <td style="font-size:12px; color:rgba(255,255,255,0.6);">${escHtml(u.phone || '—')}</td>
-            <td style="font-size:12px; color:rgba(255,255,255,0.4);">${joined}</td>
+            <td style="font-size:12px; color:var(--muted);">${escHtml(u.email)}</td>
+            <td style="font-size:12px; color:var(--muted);">${escHtml(u.phone || '—')}</td>
+            <td style="font-size:12px; color:var(--muted);">${joined}</td>
             <td>${statusBadge}</td>
             <td>
                 <button onclick="confirmPersonnelDeactivate(${u.id}, ${u.is_active == 1 ? 1 : 0}, '${escHtml(u.first_name)} ${escHtml(u.last_name)}')"
@@ -315,7 +315,7 @@ async function loadPersonnel(role) {
     const wrap  = document.getElementById(wrapId);
     const count = document.getElementById(countId);
 
-    wrap.innerHTML = `<div style="padding:32px; text-align:center; color:rgba(255,255,255,0.3); font-size:13px;">
+    wrap.innerHTML = `<div style="padding:32px; text-align:center; color:var(--muted); font-size:13px;">
         <span class="spinner-border spinner-border-sm me-2" role="status"></span>Loading…
     </div>`;
 
@@ -433,9 +433,9 @@ function confirmPersonnelDeactivate(uid, currentActive, name) {
     document.getElementById('personnelDeactivateTitle').textContent = isDeactivating ? 'Deactivate Account' : 'Reactivate Account';
     document.getElementById('personnelDeactivateBody').innerHTML = isDeactivating
         ? `<p style="font-size:14px;margin-bottom:0;">Are you sure you want to <strong style="color:#f87171;">deactivate</strong> <strong>${name}</strong>?<br>
-           <small style="color:rgba(255,255,255,0.45);font-size:12px;">This account will be disabled and the user will not be able to log in.</small></p>`
+           <small style="color:var(--muted);font-size:12px;">This account will be disabled and the user will not be able to log in.</small></p>`
         : `<p style="font-size:14px;margin-bottom:0;">Are you sure you want to <strong style="color:#4ade80;">reactivate</strong> <strong>${name}</strong>?<br>
-           <small style="color:rgba(255,255,255,0.45);font-size:12px;">This account will be restored and the user can log in again.</small></p>`;
+           <small style="color:var(--muted);font-size:12px;">This account will be restored and the user can log in again.</small></p>`;
     const btn = document.getElementById('personnelDeactivateConfirmBtn');
     btn.style.cssText = isDeactivating
         ? 'background:rgba(248,113,113,0.2);color:#f87171;border:1.5px solid rgba(248,113,113,0.4);padding:7px 20px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;'

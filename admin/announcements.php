@@ -59,7 +59,7 @@ adminHead('Announcements');
                 <?php foreach ($announcements as $ann): ?>
                   <tr>
                     <td><strong><?= htmlspecialchars($ann['title']) ?></strong></td>
-                    <td style="color:rgba(255,255,255,0.6);font-size:12px;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                    <td style="color:var(--muted);font-size:12px;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                       <?= htmlspecialchars($ann['content']) ?>
                     </td>
                     <td>
@@ -69,7 +69,7 @@ adminHead('Announcements');
                         <span class="badge-status bs-closed">Inactive</span>
                       <?php endif; ?>
                     </td>
-                    <td style="font-size:12px;color:rgba(255,255,255,0.4);">
+                    <td style="font-size:12px;color:var(--muted);">
                       <?= date('M d, Y', strtotime($ann['created_at'])) ?>
                     </td>
                     <td style="display:flex;gap:6px;">
@@ -84,8 +84,8 @@ adminHead('Announcements');
                 <?php endforeach; ?>
               <?php else: ?>
                 <tr>
-                  <td colspan="5" style="text-align:center;padding:40px;color:rgba(255,255,255,0.4);">
-                    <i class="bi bi-megaphone" style="font-size:32px;display:block;margin-bottom:10px;color:rgba(255,255,255,0.2);"></i>
+                  <td colspan="5" style="text-align:center;padding:40px;color:var(--muted);">
+                    <i class="bi bi-megaphone" style="font-size:32px;display:block;margin-bottom:10px;color:var(--muted);"></i>
                     No announcements published yet.
                   </td>
                 </tr>

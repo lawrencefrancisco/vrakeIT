@@ -63,21 +63,21 @@ body{font-family:'Poppins',sans-serif;background:#060d1f;min-height:100vh;displa
 .logo-badge{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:transparent;}
 .logo-badge img{width:56px;height:56px;object-fit:contain;}
 .logo-text{font-size:20px;font-weight:800;color:#fff;}
-.logo-sub{font-size:11px;color:rgba(255,255,255,0.4);font-weight:500;margin-top:-2px;}
+.logo-sub{font-size:11px;color:var(--muted);font-weight:500;margin-top:-2px;}
 h2{font-size:24px;font-weight:800;color:#fff;margin-bottom:6px;}
-.sub{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:28px;}
+.sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
 .field{margin-bottom:16px;}
-label{display:block;font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
 input{width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:#fff;border-radius:12px;padding:12px 14px;font-family:'Poppins',sans-serif;font-size:14px;outline:none;transition:border .2s;}
 input:focus{border-color:#007ED2;background:rgba(255,255,255,0.1);}
-input::placeholder{color:rgba(255,255,255,0.25);}
+input::placeholder{color:var(--muted);}
 .btn{width:100%;background:linear-gradient(135deg,#007ED2,#005fa3);color:#fff;border:none;border-radius:12px;padding:14px;font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:8px;}
 .btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,126,210,.35);}
 .err{background:rgba(233,1,1,0.12);border:1px solid rgba(233,1,1,0.3);color:#f87171;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:16px;}
-.shield{text-align:center;margin-top:20px;font-size:12px;color:rgba(255,255,255,0.25);}
+.shield{text-align:center;margin-top:20px;font-size:12px;color:var(--muted);}
 /* Role hint badges */
 .role-hint{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
-.role-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:999px;padding:4px 12px;font-size:11px;color:rgba(255,255,255,0.45);}
+.role-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:999px;padding:4px 12px;font-size:11px;color:var(--muted);}
 </style>
 </head>
 <body>

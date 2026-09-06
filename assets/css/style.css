@@ -1639,146 +1639,176 @@ body::before {
   display: flex;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  /* Unified glassmorphism base */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* ── RED CTA: Circular Pulse Button ────────────────────── */
+/* ── RED CTA: Premium SOS Orb ────────────────────── */
 .saas-cta-btn.red-cta {
-  width: 250px;
-  height: 250px;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  /* Light-mode glass: stronger tint + visible red border */
-  background: linear-gradient(145deg, rgba(233,1,1,0.50), rgba(180,0,0,0.30));
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1.5px solid rgba(233,1,1,0.35);
-  box-shadow:
-    0 0 0 12px rgba(233,1,1,0.07),
-    0 0 40px rgba(233,1,1,0.22),
-    inset 0 2px 0 rgba(255,255,255,0.35);
-  animation: pulse-red 2.5s infinite;
+  gap: 12px;
+  
+  /* Vibrant 3D Sphere Effect */
+  background: radial-gradient(circle at 30% 30%, #ff4b4b 0%, #e90101 40%, #a60000 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  
+  /* Deep floating shadow + Inner glow */
+  box-shadow: 
+    0 15px 35px rgba(233, 1, 1, 0.35),
+    inset 0 4px 10px rgba(255, 255, 255, 0.4),
+    inset 0 -10px 20px rgba(0, 0, 0, 0.25);
+    
+  animation: premium-pulse-red 3s infinite cubic-bezier(0.66, 0, 0, 1);
   z-index: 2;
 }
 
 .saas-cta-btn.red-cta:hover { 
-  transform: translateY(-4px) scale(1.02); 
+  transform: translateY(-5px) scale(1.03); 
   box-shadow:
-    0 0 0 16px rgba(233,1,1,0.06),
-    0 12px 40px rgba(233,1,1,0.35),
-    inset 0 2px 0 rgba(255,255,255,0.4);
+    0 20px 45px rgba(233, 1, 1, 0.45),
+    inset 0 4px 15px rgba(255, 255, 255, 0.5),
+    inset 0 -10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .saas-cta-btn.red-cta:active {
-  transform: translateY(2px) scale(0.96);
-  box-shadow: 0 4px 15px rgba(233,1,1,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+  transform: translateY(2px) scale(0.97);
+  box-shadow: 
+    0 5px 15px rgba(233, 1, 1, 0.3),
+    inset 0 2px 5px rgba(255, 255, 255, 0.3),
+    inset 0 -5px 10px rgba(0, 0, 0, 0.4);
 }
 
-/* Keyframes for strong attention + constant glow */
-@keyframes pulse-red {
-  0%   { box-shadow: 0 0 0 0  rgba(233,1,1,0.35), 0 0 40px rgba(233,1,1,0.22), inset 0 2px 0 rgba(255,255,255,0.35); }
-  70%  { box-shadow: 0 0 0 22px rgba(233,1,1,0),   0 0 40px rgba(233,1,1,0.22), inset 0 2px 0 rgba(255,255,255,0.35); }
-  100% { box-shadow: 0 0 0 0  rgba(233,1,1,0),   0 0 40px rgba(233,1,1,0.22), inset 0 2px 0 rgba(255,255,255,0.35); }
+@keyframes premium-pulse-red {
+  0%   { box-shadow: 0 15px 35px rgba(233, 1, 1, 0.35), 0 0 0 0 rgba(233, 1, 1, 0.4), inset 0 4px 10px rgba(255, 255, 255, 0.4), inset 0 -10px 20px rgba(0, 0, 0, 0.25); }
+  70%  { box-shadow: 0 15px 35px rgba(233, 1, 1, 0.35), 0 0 0 25px rgba(233, 1, 1, 0), inset 0 4px 10px rgba(255, 255, 255, 0.4), inset 0 -10px 20px rgba(0, 0, 0, 0.25); }
+  100% { box-shadow: 0 15px 35px rgba(233, 1, 1, 0.35), 0 0 0 0 rgba(233, 1, 1, 0), inset 0 4px 10px rgba(255, 255, 255, 0.4), inset 0 -10px 20px rgba(0, 0, 0, 0.25); }
 }
 
-/* ── BLUE CTA: Minimalist Pill ─────────────────────────── */
-/* ── BLUE CTA: Glass Pill ─────────────────────────── */
-.saas-cta-btn.blue-cta {
-  border-radius: 14px;
-  padding: 12px 20px;
-  flex-direction: row;
-  align-items: center;
-  gap: 20px;
-  background: rgba(0, 126, 210, 0.45);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(0, 126, 210, 0.35);
-  box-shadow: 0 4px 20px rgba(0,126,210,0.18), inset 0 1px 0 rgba(255,255,255,0.6);
-  width: 100%;
-  max-width: auto;
-  margin-top: 40px;
-}
-.saas-cta-btn.blue-cta:hover {
-  transform: translateY(-2px);
-  background: rgba(0, 126, 210, 0.16);
-  border-color: rgba(0, 126, 210, 0.65);
-  box-shadow: 0 8px 28px rgba(0,126,210,0.22), inset 0 1px 0 rgba(255,255,255,0.6);
-}
-
-/* ── GREEN CTA: Glass Pill ─────────────────────────── */
-.saas-cta-btn.green-cta {
-  border-radius: 14px;
-  padding: 12px 20px;
-  flex-direction: row;
-  align-items: center;
-  gap: 1px;
-  background: rgba(0, 163, 68, 0.45);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(0, 163, 68, 0.35);
-  box-shadow: 0 4px 20px rgba(0,163,68,0.18), inset 0 1px 0 rgba(255,255,255,0.6);
-  width: 100%;
-  max-width: auto;
-}
-.saas-cta-btn.green-cta:hover {
-  transform: translateY(-2px);
-  background: rgba(0, 163, 68, 0.16);
-  border-color: rgba(0, 163, 68, 0.65);
-  box-shadow: 0 8px 28px rgba(0,163,68,0.22), inset 0 1px 0 rgba(255,255,255,0.6);
-}
-
-/* ── AMBER CTA: Glass Pill ────────────────────── */
+/* ── PREMIUM PILL CTAS: Unified Glassmorphism ─────────────────────────── */
+.saas-cta-btn.blue-cta,
+.saas-cta-btn.green-cta,
 .saas-cta-btn.amber-cta {
-  border-radius: 14px;
-  padding: 12px 20px;
+  border-radius: 18px;
+  padding: 14px 22px;
   flex-direction: row;
   align-items: center;
-  gap: 20px;
-  background: rgba(245, 158, 11, 0.45);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(245, 158, 11, 0.35);
-  box-shadow: 0 4px 20px rgba(245,158,11,0.18), inset 0 1px 0 rgba(255,255,255,0.6);
+  gap: 18px;
+  
+  /* Ultra-clean Frosted Glass */
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  
+  /* Glossy Edges */
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.06), 
+    inset 0 2px 0 rgba(255, 255, 255, 0.9);
+  
   width: 100%;
-  max-width: auto;
-}
-.saas-cta-btn.amber-cta:hover {
-  transform: translateY(-2px);
-  background: rgba(245, 158, 11, 0.16);
-  border-color: rgba(245, 158, 11, 0.65);
-  box-shadow: 0 8px 28px rgba(245,158,11,0.22), inset 0 1px 0 rgba(255,255,255,0.6);
-}
-.amber-cta .saas-cta-icon-wrap {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  box-shadow: 0 4px 12px rgba(245,158,11,0.35);
-  font-size: 16px;
-}
-.amber-cta .cta-text-wrap .cta-label {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  max-width: 100%;
 }
 
-/* Brand-colored text for glass CTA pills — readable on light-glass */
-.blue-cta  .cta-label  { color: #005fa3; font-weight: 700; }
-.blue-cta  .cta-sub    { color: rgba(0,95,163,0.7); }
-.green-cta .green-cta-label { color: #006830; font-weight: 700; }
-.green-cta .cta-sub    { color: rgba(0,104,48,0.7); }
-.amber-cta .cta-label  { color: #92400e; font-weight: 700; }
-.amber-cta .cta-sub    { color: rgba(146,64,14,0.7); }
+.saas-cta-btn.blue-cta { margin-top: 30px; } /* Separation from red orb */
+
+.saas-cta-btn.blue-cta:hover,
+.saas-cta-btn.green-cta:hover,
+.saas-cta-btn.amber-cta:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.1), 
+    inset 0 2px 0 rgba(255, 255, 255, 1);
+}
+
+/* ── ICON WRAPPERS ─────────────────────────────────────── */
+.saas-cta-icon-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.red-cta .saas-cta-icon-wrap { 
+  width: 52px; 
+  height: 52px; 
+  border-radius: 50%; 
+  background: rgba(255, 255, 255, 0.2); 
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.5); 
+  font-size: 24px; 
+}
+
+.blue-cta .saas-cta-icon-wrap { 
+  width: 42px; height: 42px; border-radius: 12px; 
+  background: linear-gradient(135deg, #0093ff, #005fa3); 
+  box-shadow: 0 6px 15px rgba(0,126,210,0.35), inset 0 2px 0 rgba(255,255,255,0.4); 
+  font-size: 18px;
+}
+
+.green-cta .saas-cta-icon-wrap {
+  width: 42px; height: 42px; border-radius: 12px; 
+  background: linear-gradient(135deg, #00e084, #009e41); 
+  box-shadow: 0 6px 15px rgba(0, 163, 68, 0.35), inset 0 2px 0 rgba(255,255,255,0.4); 
+  font-size: 18px;
+}
+
+.amber-cta .saas-cta-icon-wrap {
+  width: 42px; height: 42px; border-radius: 12px; 
+  background: linear-gradient(135deg, #ffb300, #e67e00);
+  box-shadow: 0 6px 15px rgba(245, 158, 11, 0.35), inset 0 2px 0 rgba(255,255,255,0.4); 
+  font-size: 18px;
+}
+
+/* ── TEXT & TYPOGRAPHY ─────────────────────────────────── */
+.cta-text-wrap {
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.red-cta .cta-text-wrap { align-items: center; text-align: center; }
+.blue-cta .cta-text-wrap, .green-cta .cta-text-wrap, .amber-cta .cta-text-wrap { align-items: flex-start; text-align: left; }
+
+.cta-label {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+.green-cta-label {
+  font-size: 15px;
+  font-weight: 700;
+  margin-left: 0;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+.cta-sub {
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+/* Brand-colored text for glass CTA pills */
+.blue-cta  .cta-label  { color: #004982; }
+.blue-cta  .cta-sub    { color: rgba(0, 73, 130, 0.7); }
+
+.green-cta .green-cta-label { color: #005426; }
+.green-cta .cta-sub    { color: rgba(0, 84, 38, 0.7); }
+
+.amber-cta .cta-label  { color: #78350f; }
+.amber-cta .cta-sub    { color: rgba(120, 53, 15, 0.7); }
+
 /* Red SOS labels */
-.red-cta   .cta-label  { color: #ffffff; font-weight: 800; }
-.red-cta   .cta-sub    { color: rgba(255, 255, 255, 0.85); }
+.red-cta   .cta-label  { color: #ffffff; font-weight: 800; font-size: 16px; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+.red-cta   .cta-sub    { color: rgba(255, 255, 255, 0.9); font-weight: 500; }
 
 /* ── ICON WRAPPERS ─────────────────────────────────────── */
 .saas-cta-icon-wrap {

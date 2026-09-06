@@ -27,13 +27,13 @@ adminHead('ID Verifications');
     <tr>
       <td>
         <div style="font-weight:600;"><?= htmlspecialchars($v['first_name'].' '.$v['last_name']) ?></div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.35);"><?= htmlspecialchars($v['email']) ?></div>
+        <div style="font-size:11px;color:var(--muted);"><?= htmlspecialchars($v['email']) ?></div>
       </td>
       <td><?= htmlspecialchars($v['id_type'] ?? '—') ?></td>
       <td><?= htmlspecialchars($v['full_name'] ?? '—') ?></td>
       <td style="font-size:12px;"><?= $v['birthdate'] ? date('M d, Y', strtotime($v['birthdate'])) : '—' ?></td>
       <td><span class="badge-status bs-<?= $v['status'] ?>"><?= ucfirst($v['status']) ?></span></td>
-      <td style="font-size:12px;color:rgba(255,255,255,0.4);"><?= date('M d, Y', strtotime($v['created_at'])) ?></td>
+      <td style="font-size:12px;color:var(--muted);"><?= date('M d, Y', strtotime($v['created_at'])) ?></td>
       <td>
         <button class="btn-admin btn-review" onclick='openVerifModal(<?= htmlspecialchars(json_encode($v), ENT_QUOTES) ?>)'>
           <i class="bi bi-eye"></i> View ID
@@ -43,7 +43,7 @@ adminHead('ID Verifications');
         <?php if (!empty($v['selfie_file'])): ?>
             <a href="../assets/uploads/<?= htmlspecialchars($v['selfie_file']) ?>" target="_blank" class="btn-admin btn-review"><i class="bi bi-person-bounding-box"></i> View Selfie</a>
         <?php else: ?>
-            <span style="font-size:12px;color:rgba(255,255,255,0.3);">No selfie</span>
+            <span style="font-size:12px;color:var(--muted);">No selfie</span>
         <?php endif; ?>
       </td>
       <td style="display:flex;gap:6px;">
@@ -51,7 +51,7 @@ adminHead('ID Verifications');
         <button class="btn-admin btn-approve" onclick="verifyAction(<?= $v['id'] ?>,'approved')"><i class="bi bi-check2"></i> Approve</button>
         <button class="btn-admin btn-reject"  onclick="verifyAction(<?= $v['id'] ?>,'rejected')"><i class="bi bi-x"></i> Reject</button>
         <?php else: ?>
-        <span style="font-size:12px;color:rgba(255,255,255,0.3);">—</span>
+        <span style="font-size:12px;color:var(--muted);">—</span>
         <?php endif; ?>
       </td>
     </tr>
@@ -74,7 +74,7 @@ adminHead('ID Verifications');
           <h5 class="modal-title" style="font-weight:700;font-size:16px;margin:0;">
             <i class="bi bi-shield-check me-2" style="color:#60b4ff;"></i>ID Verification Details
           </h5>
-          <div id="vm-ref" style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:3px;font-family:monospace;"></div>
+          <div id="vm-ref" style="font-size:11px;color:var(--muted);margin-top:3px;font-family:monospace;"></div>
         </div>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
@@ -101,7 +101,7 @@ adminHead('ID Verifications');
               style="width:100%;display:block;max-height:240px;object-fit:contain;cursor:zoom-in;"
               onclick="window.open(this.src,'_blank')">
           </div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.25);text-align:center;margin-top:5px;">Click image to open full size</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:5px;">Click image to open full size</div>
         </div>
 
         <!-- OCR Extracted -->
@@ -123,7 +123,7 @@ adminHead('ID Verifications');
         </div>
 
         <!-- Confidence Score -->
-        <div class="vm-section-label">📊 OCR Confidence</div>
+        <div class="vm-section-label"><i class="bi bi-graph-up"></i> OCR Confidence</div>
         <div class="vm-block">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
             <span id="vm-engine" style="font-size:12px;"></span>
@@ -141,7 +141,7 @@ adminHead('ID Verifications');
         </div>
 
         <!-- Image Hash -->
-        <div id="vm-hash-wrap" style="font-size:10px;color:rgba(255,255,255,0.15);font-family:monospace;word-break:break-all;text-align:center;margin-top:4px;"></div>
+        <div id="vm-hash-wrap" style="font-size:10px;color:var(--muted);font-family:monospace;word-break:break-all;text-align:center;margin-top:4px;"></div>
 
       </div>
 
@@ -153,7 +153,7 @@ adminHead('ID Verifications');
 <style>
 .vm-section-label {
   font-size:11px;font-weight:700;text-transform:uppercase;
-  letter-spacing:1px;color:rgba(255,255,255,0.35);margin-bottom:10px;
+  letter-spacing:1px;color:var(--muted);margin-bottom:10px;
 }
 .vm-block {
   background:rgba(255,255,255,0.04);border-radius:12px;
@@ -165,11 +165,11 @@ adminHead('ID Verifications');
   font-size:13px;flex-wrap:wrap;
 }
 .vm-label {
-  color:rgba(255,255,255,0.4);font-size:11px;font-weight:600;
+  color:var(--muted);font-size:11px;font-weight:600;
   min-width:120px;text-transform:uppercase;letter-spacing:0.4px;
 }
 .vm-val          { font-weight:600;flex:1; }
-.vm-val.empty    { color:rgba(255,255,255,0.25);font-weight:400;font-style:italic; }
+.vm-val.empty    { color:var(--muted);font-weight:400;font-style:italic; }
 .vm-badge        { font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap; }
 .vm-badge.match  { background:rgba(74,222,128,0.18);color:#4ade80; }
 .vm-badge.nomatch{ background:rgba(248,113,113,0.18);color:#f87171; }
@@ -186,7 +186,7 @@ function openVerifModal(v) {
   // Status banner
   const bannerStyles = {
     pending:  { bg:'rgba(251,191,36,0.12)',  border:'rgba(251,191,36,0.3)',  color:'#fbbf24', icon:'⏳', label:'Pending Review'  },
-    approved: { bg:'rgba(74,222,128,0.12)',  border:'rgba(74,222,128,0.3)', color:'#4ade80', icon:'✅', label:'Approved'        },
+    approved: { bg:'rgba(74,222,128,0.12)',  border:'rgba(74,222,128,0.3)', color:'#4ade80', icon:'<i class="bi bi-check-circle"></i>', label:'Approved'        },
     rejected: { bg:'rgba(248,113,113,0.12)', border:'rgba(248,113,113,0.3)',color:'#f87171', icon:'❌', label:'Rejected'        },
   };
   const s = bannerStyles[v.status] || { bg:'rgba(255,255,255,0.06)', border:'rgba(255,255,255,0.12)', color:'rgba(255,255,255,0.5)', icon:'🔘', label: v.status ? ucFirst(v.status) : 'Unknown' };

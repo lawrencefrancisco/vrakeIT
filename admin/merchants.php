@@ -13,6 +13,7 @@ $where = "WHERE 1=1";
 if ($filter === 'pending')     $where .= " AND status='pending'";
 if ($filter === 'approved')    $where .= " AND status='approved'";
 if ($filter === 'rejected')    $where .= " AND status='rejected'";
+if ($filter === 'deactivated') $where .= " AND status='deactivated'";
 
 $merchants = $db->query("SELECT * FROM merchants $where ORDER BY created_at DESC")->fetchAll();
 
@@ -27,7 +28,7 @@ adminHead('Merchant Oversight');
 
       <div class="section-card mb-4">
         <div class="section-header">
-          <?php foreach (['all' => 'All', 'pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected'] as $k => $v): ?>
+          <?php foreach (['all' => 'All', 'pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected', 'deactivated' => 'Deactivated'] as $k => $v): ?>
             <a href="?filter=<?= $k ?>" class="btn-admin <?= $filter === $k ? 'btn-primary-admin' : 'btn-review' ?> me-2"><?= $v ?></a>
           <?php endforeach; ?>
         </div>
@@ -52,11 +53,11 @@ adminHead('Merchant Oversight');
               <?php foreach ($merchants as $m): ?>
                 <tr>
                   <td><strong><?= htmlspecialchars($m['business_name']) ?></strong></td>
-                  <td style="font-size:12px;color:rgba(255,255,255,0.5);"><?= htmlspecialchars($m['business_type']) ?></td>
+                  <td style="font-size:12px;color:var(--muted);"><?= htmlspecialchars($m['business_type']) ?></td>
                   <td style="font-size:12px;"><?= htmlspecialchars($m['contact_number']) ?></td>
-                  <td style="font-size:12px;color:rgba(255,255,255,0.5);"><?= htmlspecialchars($m['email']) ?></td>
+                  <td style="font-size:12px;color:var(--muted);"><?= htmlspecialchars($m['email']) ?></td>
                   <td><span class="badge-status bs-<?= $m['status'] ?>"><?= ucfirst($m['status']) ?></span></td>
-                  <td style="font-size:12px;color:rgba(255,255,255,0.4);"><?= date('M d, Y', strtotime($m['created_at'])) ?></td>
+                  <td style="font-size:12px;color:var(--muted);"><?= date('M d, Y', strtotime($m['created_at'])) ?></td>
                   <td style="display:flex;gap:6px;flex-wrap:wrap;">
                     <?php if ($m['status'] !== 'approved'): ?>
                       <button class="btn-admin btn-approve" onclick="merchantAction(<?= $m['id'] ?>,'approved')"><i class="bi bi-check2"></i> Approve</button>
@@ -65,7 +66,7 @@ adminHead('Merchant Oversight');
                       <button class="btn-admin btn-reject" onclick="merchantAction(<?= $m['id'] ?>,'rejected')"><i class="bi bi-x"></i> Reject</button>
                     <?php endif; ?>
                     <?php if ($m['status'] === 'approved'): ?>
-                      <button class="btn-admin btn-danger-admin" onclick="merchantAction(1, 'deactivated')">
+                      <button class="btn-admin btn-danger-admin" onclick="merchantAction(<?= $m['id'] ?>, 'deactivated')">
                         <i class="bi bi-pause"></i> Deactivate
                       </button>
                     <?php endif; ?>

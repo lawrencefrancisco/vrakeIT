@@ -36,8 +36,8 @@ adminHead('Vouchers');
       <td><?= htmlspecialchars($v['reward_name']) ?></td>
       <td style="color:#fbbf24;font-weight:700;"><?= number_format($v['points_required']) ?></td>
       <td><span class="badge-status bs-<?= $v['status']==='active'?'approved':($v['status']==='redeemed'?'closed':'rejected') ?>"><?= ucfirst($v['status']) ?></span></td>
-      <td style="font-size:12px;color:rgba(255,255,255,0.4);"><?= date('M d, Y', strtotime($v['expires_at'])) ?></td>
-      <td style="font-size:12px;color:rgba(255,255,255,0.4);"><?= date('M d, Y', strtotime($v['created_at'])) ?></td>
+      <td style="font-size:12px;color:var(--muted);"><?= date('M d, Y', strtotime($v['expires_at'])) ?></td>
+      <td style="font-size:12px;color:var(--muted);"><?= date('M d, Y', strtotime($v['created_at'])) ?></td>
     </tr>
     <?php endforeach; ?>
     </tbody>

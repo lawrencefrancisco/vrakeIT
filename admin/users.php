@@ -64,7 +64,7 @@ adminHead('User Management');
     <?php foreach($users as $u): ?>
     <tr>
       <td><strong><?= htmlspecialchars($u['first_name'].' '.$u['last_name']) ?></strong></td>
-      <td style="color:rgba(255,255,255,0.5);font-size:12px;"><?= htmlspecialchars($u['email']) ?></td>
+      <td style="color:var(--muted);font-size:12px;"><?= htmlspecialchars($u['email']) ?></td>
       <td><span class="badge-status <?= $u['role']==='enforcer'?'bs-reviewing':'bs-approved' ?>"><?= ucfirst($u['role']) ?></span></td>
       <td><span style="color:#fbbf24;font-weight:700;"><?= number_format($u['points']) ?></span></td>
       <td><?= $u['report_count'] ?></td>
@@ -82,7 +82,7 @@ adminHead('User Management');
         <span class="badge-status" style="background:rgba(248,113,113,0.15);color:#f87171;border:1px solid rgba(248,113,113,0.3);white-space:nowrap;"><i class="bi bi-slash-circle me-1"></i>Inactive</span>
         <?php endif; ?>
       </td>
-      <td style="color:rgba(255,255,255,0.4);font-size:12px;"><?= date('M d, Y', strtotime($u['created_at'])) ?></td>
+      <td style="color:var(--muted);font-size:12px;"><?= date('M d, Y', strtotime($u['created_at'])) ?></td>
       <td style="display:flex;gap:6px;flex-wrap:wrap;">
         <button class="btn-admin btn-review" onclick="openPointsModal(<?= $u['id'] ?>, '<?= addslashes($u['first_name'].' '.$u['last_name']) ?>', <?= $u['points'] ?>)">
           <i class="bi bi-star"></i> Points
@@ -134,7 +134,7 @@ adminHead('User Management');
         <button class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <p style="font-size:13px;color:rgba(255,255,255,0.5);">Current balance: <strong id="currentPts" style="color:#fbbf24;"></strong> pts</p>
+        <p style="font-size:13px;color:var(--muted);">Current balance: <strong id="currentPts" style="color:#fbbf24;"></strong> pts</p>
         <input type="hidden" id="adjustUserId">
         <div class="mb-3">
           <label class="form-lbl">Points Adjustment (positive to add, negative to deduct)</label>
@@ -201,9 +201,9 @@ function confirmDeactivate(uid, currentActive, name) {
   document.getElementById('deactivateModalBody').innerHTML =
     isDeactivating
       ? `<p style="font-size:14px;margin-bottom:0;">Are you sure you want to <strong style="color:#f87171;">deactivate</strong> <strong>${name}</strong>?<br>
-         <small style="color:rgba(255,255,255,0.45);font-size:12px;">The user will no longer be able to log in until reactivated.</small></p>`
+         <small style="color:var(--muted);font-size:12px;">The user will no longer be able to log in until reactivated.</small></p>`
       : `<p style="font-size:14px;margin-bottom:0;">Are you sure you want to <strong style="color:#4ade80;">reactivate</strong> <strong>${name}</strong>?<br>
-         <small style="color:rgba(255,255,255,0.45);font-size:12px;">The user will regain access to their account.</small></p>`;
+         <small style="color:var(--muted);font-size:12px;">The user will regain access to their account.</small></p>`;
   const confirmBtn = document.getElementById('deactivateConfirmBtn');
   confirmBtn.style.cssText = isDeactivating
     ? 'background:rgba(248,113,113,0.2);color:#f87171;border:1.5px solid rgba(248,113,113,0.4);padding:7px 20px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;'
