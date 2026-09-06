@@ -67,11 +67,11 @@ adminHead('ID Verifications');
 ══════════════════════════════════════════ -->
 <div class="modal fade" id="verifModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width:520px;">
-    <div class="modal-content" style="background:var(--card-bg);border:1px solid var(--muted);border-radius:20px;color:var(--text);">
+    <div class="modal-content" style="background: linear-gradient(145deg, #0f172a, #1e293b); color:#f8fafc; border: 1px solid rgba(255,255,255,0.08); border-radius:24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
 
-      <div class="modal-header" style="border-bottom:1px solid var(--muted);padding:20px 24px;">
+      <div class="modal-header" style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 28px;">
         <div>
-          <h5 class="modal-title" style="font-weight:700;font-size:16px;margin:0;">
+          <h5 class="modal-title" style="font-weight:700;font-size:18px;margin:0;letter-spacing:0.5px;">
             <i class="bi bi-shield-check me-2" style="color:#60b4ff;"></i>ID Verification Details
           </h5>
           <div id="vm-ref" style="font-size:11px;color:var(--muted);margin-top:3px;font-family:monospace;"></div>
@@ -79,7 +79,7 @@ adminHead('ID Verifications');
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
 
-      <div class="modal-body" style="padding:24px;">
+      <div class="modal-body" style="padding:28px;">
 
         <!-- Status Banner -->
         <div id="vm-status-banner" style="border-radius:12px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:13px;"></div>
@@ -95,13 +95,13 @@ adminHead('ID Verifications');
 
         <!-- ID Image -->
         <div id="vm-image-wrap" style="display:none;margin-bottom:18px;">
-          <div class="vm-section-label"><i class="bi bi-person-badge-fill"></i> Submitted ID Image</div>
-          <div style="border-radius:12px;overflow:hidden;background:var(--bg);border:1px solid var(--muted);">
+          <div class="vm-section-label">🪪 Submitted ID Image</div>
+          <div style="border-radius:16px;overflow:hidden;background:rgba(15,23,42,0.4);border:1px solid rgba(255,255,255,0.05);box-shadow:inset 0 2px 10px rgba(0,0,0,0.1);padding:10px;">
             <img id="vm-id-image" src="" alt="ID Image"
-              style="width:100%;display:block;max-height:240px;object-fit:contain;cursor:zoom-in;"
+              style="width:100%;display:block;max-height:280px;object-fit:contain;cursor:zoom-in;border-radius:8px;"
               onclick="window.open(this.src,'_blank')">
           </div>
-          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:5px;">Click image to open full size</div>
+          <div style="font-size:11px;color:#64748b;text-align:center;margin-top:8px;font-weight:600;">Click image to open full size</div>
         </div>
 
         <!-- OCR Extracted -->
@@ -185,14 +185,14 @@ function openVerifModal(v) {
 
   // Status banner
   const bannerStyles = {
-    pending:  { bg:'rgba(251,191,36,0.12)',  border:'rgba(251,191,36,0.3)',  color:'#fbbf24', icon:'⏳', label:'Pending Review'  },
-    approved: { bg:'rgba(74,222,128,0.12)',  border:'rgba(74,222,128,0.3)', color:'#4ade80', icon:'<i class="bi bi-check-circle"></i>', label:'Approved'        },
-    rejected: { bg:'rgba(248,113,113,0.12)', border:'rgba(248,113,113,0.3)',color:'#f87171', icon:'❌', label:'Rejected'        },
+    pending:  { bg:'rgba(245,158,11,0.1)',  border:'rgba(245,158,11,0.2)',  color:'#f59e0b', icon:'<i class="bi bi-hourglass-split"></i>', label:'Pending Review'  },
+    approved: { bg:'rgba(16,185,129,0.1)',  border:'rgba(16,185,129,0.2)', color:'#10b981', icon:'<i class="bi bi-shield-check"></i>', label:'Approved'        },
+    rejected: { bg:'rgba(239,68,68,0.1)', border:'rgba(239,68,68,0.2)',color:'#ef4444', icon:'<i class="bi bi-x-circle"></i>', label:'Rejected'        },
   };
   const s = bannerStyles[v.status] || { bg:'var(--muted)', border:'var(--muted)', color:'var(--muted)', icon:'<i class="bi bi-question-circle-fill"></i>', label: v.status ? ucFirst(v.status) : 'Unknown' };
   const banner = document.getElementById('vm-status-banner');
-  banner.style.cssText = `background:${s.bg};border:1px solid ${s.border};color:${s.color};border-radius:12px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:13px;`;
-  banner.innerHTML = `<span style="font-size:18px;">${s.icon}</span> ${s.label}`;
+  banner.style.cssText = `background:${s.bg};border:1px solid ${s.border};color:${s.color};border-radius:16px;padding:14px 20px;margin-bottom:24px;display:flex;align-items:center;gap:12px;font-weight:700;font-size:14px;box-shadow:0 4px 15px rgba(0,0,0,0.1);`;
+  banner.innerHTML = `<span style="font-size:20px;">${s.icon}</span> <span style="letter-spacing:0.5px;">${s.label}</span>`;
 
   // Registrant info
   document.getElementById('vm-user-name').textContent  = (v.first_name + ' ' + v.last_name).trim() || '—';
@@ -259,15 +259,15 @@ function openVerifModal(v) {
   const footer = document.getElementById('vm-footer');
   if (v.status === 'pending') {
     footer.innerHTML = `
-      <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-      <button class="btn-admin btn-reject" onclick="verifyAction(${v.id},'rejected');_verifModal.hide()">
+      <button class="btn-admin btn-review" data-bs-dismiss="modal" style="border-radius:12px; padding:10px 24px; font-weight:600;">Close</button>
+      <button class="btn-admin btn-reject" onclick="verifyAction(${v.id},'rejected');_verifModal.hide()" style="border-radius:12px; padding:10px 20px; font-weight:600;">
         <i class="bi bi-x"></i> Reject
       </button>
-      <button class="btn-admin btn-approve" onclick="verifyAction(${v.id},'approved');_verifModal.hide()">
+      <button class="btn-admin btn-approve" onclick="verifyAction(${v.id},'approved');_verifModal.hide()" style="border-radius:12px; padding:10px 20px; font-weight:600;">
         <i class="bi bi-check2"></i> Approve
       </button>`;
   } else {
-    footer.innerHTML = `<button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>`;
+    footer.innerHTML = `<button class="btn-admin btn-review" data-bs-dismiss="modal" style="border-radius:12px; padding:10px 24px; font-weight:600;">Close</button>`;
   }
 
   _verifModal.show();

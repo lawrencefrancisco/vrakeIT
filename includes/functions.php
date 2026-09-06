@@ -46,8 +46,8 @@ function getUserById(int $id): ?array {
 function addPoints(int $userId, int $points, string $description, ?int $reportId = null): void {
     $db = getDB();
     $db->prepare("UPDATE users SET points = points + ? WHERE id = ?")->execute([$points, $userId]);
-    $db->prepare("INSERT INTO good_citizen_transactions (user_id, report_id, points, type, description) VALUES (?, ?, ?, 'earned', ?)")
-       ->execute([$userId, $reportId, $points, $description]);
+    $db->prepare("INSERT INTO good_citizen_transactions (user_id, points, type, description) VALUES (?, ?, 'earned', ?)")
+       ->execute([$userId, $points, $description]);
 }
 
 function formatDate(string $date): string {

@@ -27,13 +27,15 @@ header('Pragma: no-cache');
   <link href="assets/css/style.css" rel="stylesheet">
 </head>
 
-<body>
-  <div class="auth-bg" style="background-image: url('assets/img/background.png'); background-size: cover; background-position: center;">
-    <div class="auth-card" style="max-width:460px;">
+<body style="background-color: #f8fafc;">
+  <div class="auth-bg" style="background: radial-gradient(circle at top left, rgba(0, 126, 210, 0.22), transparent 45%), radial-gradient(circle at bottom right, rgba(233, 1, 1, 0.18), transparent 45%); background-color: #f8fafc; position: relative; min-height: 100vh; overflow: hidden;">
+    <div class="auth-card" style="max-width:460px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 20px 40px rgba(0,0,0,0.08);">
       <div class="auth-logo">
         <div class="logo-icon"><img src="assets/img/system_logo.png" alt="VrakeIT Logo"></div>
-        <h1>VrakeIT</h1>
-        <p class="text-white">Create your account</p>
+        <h1>
+          <span style="color: #007ED2;">Vrake</span><span style="color: #E90101;">IT</span>
+        </h1>
+        <p style="color: rgba(0,0,0,0.6); font-weight: 500; font-size: 14px;">Create your account</p>
       </div>
 
       <div id="alertBox" class="alert py-2 mb-3 d-none" style="font-size:13px;border-radius:10px;"></div>
@@ -79,7 +81,7 @@ header('Pragma: no-cache');
         </div>
 
         <!-- OTP Delivery Method -->
-        <p class="mb-2" style="font-size:13px;font-weight:600;color: white;">Send OTP via:</p>
+        <p class="mb-2" style="font-size:13px;font-weight:600;color: #0f172a;">Send OTP via:</p>
         <div class="d-flex gap-2 mb-3">
           <label class="flex-fill" style="cursor:pointer;">
             <input type="radio" name="delivery_method" value="sms" class="d-none" id="otpSms" checked>
@@ -99,15 +101,15 @@ header('Pragma: no-cache');
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" id="agree_tos" name="agree_tos" value="1" required>
-          <label class="form-check-label" for="agree_tos" style="font-size:13px; color:whitesmoke">
+          <label class="form-check-label" for="agree_tos" style="font-size:13px; color:#0f172a">
             I agree to the <a href="#" style="color:var(--red);">Terms and Conditions</a>
           </label>
         </div>
 
-        <button type="submit" class="btn-primary-vr mb-3" id="regBtn">
+        <button type="submit" class="btn-primary-vr mb-3" id="regBtn" style="background: linear-gradient(135deg, #007ED2, #005A9E); border: none; box-shadow: 0 4px 15px rgba(0, 126, 210, 0.3);">
           <i class="bi bi-arrow-right-circle me-1"></i> Continue
         </button>
-        <a href="index.php" class="btn-outline-vr d-block text-center text-decoration-none" style="padding:13px;">
+        <a href="index.php" class="btn-outline-vr d-block text-center text-decoration-none" style="padding:13px; border: 1px solid rgba(0,0,0,0.1); color: #0f172a; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.02); transition: all 0.3s ease;" onmouseover="this.style.background='#f8fafc'; this.style.borderColor='rgba(0, 126, 210, 0.3)'; this.style.color='#007ED2';" onmouseout="this.style.background='#fff'; this.style.borderColor='rgba(0,0,0,0.1)'; this.style.color='#0f172a';">
           <i class="bi bi-arrow-left me-1"></i> Back to Login
         </a>
       </form>

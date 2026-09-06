@@ -23,71 +23,77 @@ $ads = $stmt->fetchAll();
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
-    body { font-family: 'Poppins', sans-serif; background: #0a0f1e; color: #fff; margin: 0; min-height: 100vh; }
+    body { font-family: 'Poppins', sans-serif; background: #f8fafc; color: #0f172a; margin: 0; min-height: 100vh; }
 
     /* ── Header ──────────────────────────────────────── */
-    .m-header { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 14px 20px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; }
-    .m-header a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 20px; }
-    .m-header h5 { margin: 0; font-size: 16px; font-weight: 700; flex: 1; }
-    .btn-new-ad { background: linear-gradient(135deg, #ca8a04, #a16207); color: #fff; border: none; border-radius: 10px; padding: 8px 16px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; transition: opacity 0.2s; }
-    .btn-new-ad:hover { opacity: 0.88; }
+    .m-header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0, 0, 0, 0.05); padding: 14px 20px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+    .m-header a { color: #0f172a; text-decoration: none; font-size: 20px; transition: color 0.2s; }
+    .m-header a:hover { color: #f59e0b; }
+    .m-header h5 { margin: 0; font-size: 16px; font-weight: 700; flex: 1; color: #0f172a; }
+    .btn-new-ad { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; border: none; border-radius: 10px; padding: 10px 18px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; transition: opacity 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); }
+    .btn-new-ad:hover { opacity: 0.9; }
 
     /* ── Page body ───────────────────────────────────── */
-    .page-body { padding: 20px 16px 100px; max-width: 640px; margin: 0 auto; }
-    .section-title { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 1px; margin: 24px 0 12px; }
+    .page-body { padding: 24px 16px 100px; max-width: 640px; margin: 0 auto; }
+    .section-title { font-size: 11px; font-weight: 700; color: rgba(0,0,0,0.4); text-transform: uppercase; letter-spacing: 1px; margin: 24px 0 16px; }
 
     /* ── Ad cards ────────────────────────────────────── */
-    .ad-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); border-radius: 18px; overflow: hidden; margin-bottom: 14px; transition: border-color 0.2s; }
-    .ad-card:hover { border-color: rgba(253,224,71,0.25); }
-    .ad-card.inactive { opacity: 0.45; }
-    .ad-img { width: 100%; height: 160px; object-fit: cover; display: block; }
-    .ad-img-placeholder { width: 100%; height: 100px; background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; font-size: 36px; color: rgba(255,255,255,0.15); }
-    .ad-body { padding: 14px 16px 16px; }
-    .ad-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
-    .ad-desc { font-size: 12px; color: rgba(255,255,255,0.45); margin-bottom: 12px; line-height: 1.5; }
-    .ad-status-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; border-radius: 999px; padding: 2px 9px; margin-bottom: 12px; }
-    .chip-active   { background: rgba(74,222,128,0.12);  color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
-    .chip-inactive { background: rgba(248,113,113,0.10); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
+    .ad-card { background: #fff; border: 1px solid rgba(0,0,0,0.05); border-radius: 20px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.2s; }
+    .ad-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-color: rgba(245, 158, 11, 0.2); }
+    .ad-card.inactive { opacity: 0.6; background: #f8fafc; }
+    .ad-img { width: 100%; height: 180px; object-fit: cover; display: block; border-bottom: 1px solid rgba(0,0,0,0.03); }
+    .ad-img-placeholder { width: 100%; height: 140px; background: rgba(0,0,0,0.02); display: flex; align-items: center; justify-content: center; font-size: 40px; color: rgba(0,0,0,0.1); border-bottom: 1px solid rgba(0,0,0,0.03); }
+    .ad-body { padding: 20px; }
+    .ad-title { font-weight: 700; font-size: 15px; margin-bottom: 6px; color: #0f172a; }
+    .ad-desc { font-size: 13px; color: rgba(0,0,0,0.6); margin-bottom: 16px; line-height: 1.5; }
+    
+    .ad-status-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 4px 12px; margin-bottom: 16px; }
+    .chip-active   { background: rgba(16, 185, 129, 0.1);  color: #059669; }
+    .chip-inactive { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
+    
     .ad-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-    .btn-sm { border: none; border-radius: 8px; padding: 6px 13px; font-size: 11px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; font-family: 'Poppins', sans-serif; }
-    .btn-edit     { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
-    .btn-edit:hover     { background: rgba(251,191,36,0.22); }
-    .btn-toggle-off { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
-    .btn-toggle-off:hover { background: rgba(248,113,113,0.22); }
-    .btn-toggle-on  { background: rgba(74,222,128,0.12);  color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
-    .btn-toggle-on:hover  { background: rgba(74,222,128,0.22); }
-    .btn-delete   { background: rgba(248,113,113,0.08); color: #f87171; border: 1px solid rgba(248,113,113,0.2); }
-    .btn-delete:hover   { background: rgba(248,113,113,0.2); }
+    .btn-sm { border: none; border-radius: 10px; padding: 8px 16px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; font-family: 'Poppins', sans-serif; }
+    .btn-edit     { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+    .btn-edit:hover     { background: rgba(245, 158, 11, 0.15); }
+    .btn-toggle-off { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
+    .btn-toggle-off:hover { background: rgba(239, 68, 68, 0.15); }
+    .btn-toggle-on  { background: rgba(16, 185, 129, 0.1);  color: #059669; }
+    .btn-toggle-on:hover  { background: rgba(16, 185, 129, 0.15); }
+    .btn-delete   { background: #f8fafc; color: #ef4444; border: 1px solid rgba(0,0,0,0.05); }
+    .btn-delete:hover   { background: #fee2e2; }
 
     /* ── Empty state ─────────────────────────────────── */
-    .empty-state { text-align: center; padding: 48px 20px; color: rgba(255,255,255,0.3); }
-    .empty-state i { font-size: 48px; display: block; margin-bottom: 12px; color: rgba(253,224,71,0.25); }
+    .empty-state { text-align: center; padding: 48px 20px; color: rgba(0,0,0,0.4); }
+    .empty-state i { font-size: 48px; display: block; margin-bottom: 12px; color: rgba(0,0,0,0.1); }
 
     /* ── Modals ──────────────────────────────────────── */
-    .modal-content { background: #111827; border: 1px solid rgba(255,255,255,0.09); border-radius: 20px; color: #fff; }
-    .modal-header  { border-bottom: 1px solid rgba(255,255,255,0.08); padding: 16px 20px; }
-    .modal-footer  { border-top:    1px solid rgba(255,255,255,0.08); padding: 14px 20px; }
-    .btn-close     { filter: invert(1); }
-    .modal-title   { font-size: 15px; font-weight: 700; }
+    .modal-content { background: #fff; border: none; border-radius: 20px; color: #0f172a; box-shadow: 0 20px 40px rgba(0,0,0,0.1); overflow: hidden; }
+    .modal-header  { border-bottom: 1px solid rgba(0,0,0,0.05); padding: 16px 20px; background: rgba(0,0,0,0.01); }
+    .modal-footer  { border-top:    1px solid rgba(0,0,0,0.05); padding: 16px 20px; background: rgba(0,0,0,0.01); }
+    .btn-close     { opacity: 0.5; }
+    .btn-close:hover { opacity: 1; }
+    .modal-title   { font-size: 15px; font-weight: 700; color: #0f172a; }
 
     /* ── Form controls ───────────────────────────────── */
-    .form-label   { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; display: block; }
-    .form-ctrl    { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); color: #fff; border-radius: 10px; padding: 10px 12px; font-size: 13px; font-family: 'Poppins',sans-serif; width: 100%; outline: none; transition: border-color 0.2s; }
-    .form-ctrl::placeholder { color: rgba(255,255,255,0.3); }
-    .form-ctrl:focus { border-color: #fde047; background: rgba(255,255,255,0.1); }
-    .upload-zone { border: 2px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; color: rgba(255,255,255,0.4); transition: all 0.2s; }
-    .upload-zone:hover { border-color: #fde047; color: #fde047; background: rgba(253,224,71,0.04); }
+    .form-label   { font-size: 11px; font-weight: 700; color: rgba(0,0,0,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: block; }
+    .form-ctrl    { background: #f8fafc; border: 1px solid rgba(0,0,0,0.1); color: #0f172a; border-radius: 10px; padding: 10px 12px; font-size: 13px; font-family: 'Poppins',sans-serif; width: 100%; outline: none; transition: border-color 0.2s; }
+    .form-ctrl::placeholder { color: rgba(0,0,0,0.3); }
+    .form-ctrl:focus { border-color: #f59e0b; background: #fff; box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1); }
+    
+    .upload-zone { border: 2px dashed rgba(0,0,0,0.15); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; color: rgba(0,0,0,0.4); transition: all 0.2s; background: #f8fafc; }
+    .upload-zone:hover { border-color: #f59e0b; color: #d97706; background: #fffbeb; }
     .upload-zone input { display: none; }
-    .upload-fname { color: #fde047; font-size: 11px; margin-top: 5px; }
-    .img-preview  { width: 100%; max-height: 140px; object-fit: cover; border-radius: 10px; margin-top: 8px; display: none; }
+    .upload-fname { color: #d97706; font-size: 12px; font-weight: 600; margin-top: 8px; }
+    .img-preview  { width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px; margin-top: 12px; display: none; border: 1px solid rgba(0,0,0,0.05); }
 
     /* ── Submit buttons ──────────────────────────────── */
-    .btn-submit   { background: linear-gradient(135deg, #ca8a04, #a16207); color: #fff; border: none; border-radius: 10px; padding: 10px 20px; font-weight: 700; font-size: 13px; cursor: pointer; font-family: 'Poppins',sans-serif; transition: opacity 0.2s; }
+    .btn-submit   { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; border: none; border-radius: 10px; padding: 10px 20px; font-weight: 700; font-size: 13px; cursor: pointer; font-family: 'Poppins',sans-serif; transition: opacity 0.2s; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2); }
     .btn-submit:hover { opacity: 0.9; }
-    .btn-cancel   { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 10px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins',sans-serif; }
+    .btn-cancel   { background: transparent; color: rgba(0,0,0,0.6); border: none; border-radius: 10px; padding: 10px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins',sans-serif; transition: background 0.2s; }
+    .btn-cancel:hover { background: rgba(0,0,0,0.05); }
 
     /* ── Flash result ────────────────────────────────── */
-    .flash-result { font-size: 13px; padding: 0; margin-top: 8px; display: none; }
+    .flash-result { font-size: 13px; font-weight: 600; padding: 0; margin-top: 12px; display: none; }
   </style>
 </head>
 <body>
@@ -107,7 +113,7 @@ $ads = $stmt->fetchAll();
     <?php if (empty($ads)): ?>
       <div class="empty-state">
         <i class="bi bi-megaphone"></i>
-        <p style="margin:0;font-size:14px;">No ads yet — click <strong style="color:#fde047;"></strong> to publish your first one.</p>
+        <p style="margin:0;font-size:14px;">No ads yet — click <strong style="color:#f59e0b;"></strong> to publish your first one.</p>
       </div>
     <?php else: ?>
       <?php foreach ($ads as $ad): ?>
@@ -156,7 +162,7 @@ $ads = $stmt->fetchAll();
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content p-1">
         <div class="modal-header">
-          <h6 class="modal-title"><i class="bi bi-megaphone me-2" style="color:#fde047;"></i>Create New Ad</h6>
+          <h6 class="modal-title"><i class="bi bi-megaphone me-2" style="color:#f59e0b;"></i>Create New Ad</h6>
           <button class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <form id="createForm" enctype="multipart/form-data">
@@ -170,7 +176,7 @@ $ads = $stmt->fetchAll();
               <textarea class="form-ctrl" name="description" id="c-desc" rows="2" placeholder="What should drivers know?"></textarea>
             </div>
             <div class="mb-2">
-              <label class="form-label">Ad Image <span style="color:rgba(255,255,255,0.3);">(optional)</span></label>
+              <label class="form-label">Ad Image <span style="color:rgba(0,0,0,0.4);">(optional)</span></label>
               <label class="upload-zone" id="cImgZone">
                 <input type="file" name="image" id="cImgFile" accept="image/*">
                 <i class="bi bi-image" style="font-size:26px;display:block;margin-bottom:6px;"></i>
@@ -196,7 +202,7 @@ $ads = $stmt->fetchAll();
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content p-1">
         <div class="modal-header">
-          <h6 class="modal-title"><i class="bi bi-pencil me-2" style="color:#fbbf24;"></i>Edit Advertisement</h6>
+          <h6 class="modal-title"><i class="bi bi-pencil me-2" style="color:#d97706;"></i>Edit Advertisement</h6>
           <button class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <form id="editForm" enctype="multipart/form-data">
@@ -211,9 +217,9 @@ $ads = $stmt->fetchAll();
               <textarea class="form-ctrl" name="description" id="e-desc" rows="2"></textarea>
             </div>
             <div class="mb-2">
-              <label class="form-label">Replace Image <span style="color:rgba(255,255,255,0.3);">(leave blank to keep existing)</span></label>
+              <label class="form-label">Replace Image <span style="color:rgba(0,0,0,0.4);">(leave blank to keep existing)</span></label>
               <div id="eExistingImgWrap" style="margin-bottom:8px;display:none;">
-                <img id="eExistingImg" src="" alt="Current image" style="width:100%;max-height:120px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,0.1);">
+                <img id="eExistingImg" src="" alt="Current image" style="width:100%;max-height:120px;object-fit:cover;border-radius:10px;border:1px solid rgba(0,0,0,0.05);">
               </div>
               <label class="upload-zone" id="eImgZone">
                 <input type="file" name="image" id="eImgFile" accept="image/*">

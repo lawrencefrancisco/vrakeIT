@@ -16,42 +16,43 @@ requireMerchantGuest();
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="../assets/css/style.css" rel="stylesheet">
   <style>
-    body { background: linear-gradient(135deg, #052e16 0%, #064e3b 40%, #0f172a 100%); min-height: 100vh; font-family: 'Poppins', sans-serif; }
+    body { background: radial-gradient(circle at top left, rgba(16, 185, 129, 0.18), transparent 45%), radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.15), transparent 45%); background-color: #f8fafc; min-height: 100vh; font-family: 'Poppins', sans-serif; }
     .reg-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
     .reg-card {
-      background: rgba(255,255,255,0.06); backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.12); border-radius: 24px;
+      background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 24px;
       padding: 36px 28px; width: 100%; max-width: 520px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
     }
-    .merchant-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(22,163,74,0.18); border: 1px solid rgba(22,163,74,0.4); color: #4ade80; border-radius: 50px; padding: 6px 16px; font-size: 12px; font-weight: 600; margin-bottom: 16px; }
-    .reg-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 4px; }
-    .reg-sub { color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 24px; }
-    .form-label { color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .merchant-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #059669; border-radius: 50px; padding: 6px 16px; font-size: 12px; font-weight: 600; margin-bottom: 16px; }
+    .reg-title { font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
+    .reg-sub { color: rgba(0,0,0,0.6); font-size: 13px; margin-bottom: 24px; }
+    .form-label { display: block; color: rgba(0,0,0,0.7); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
     .form-control, .form-select {
-      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-      color: #fff; border-radius: 12px; padding: 12px 14px; font-size: 14px;
+      background: #ffffff; border: 1px solid rgba(0,0,0,0.1);
+      color: #0f172a; border-radius: 12px; padding: 12px 14px; font-size: 14px;
       font-family: 'Poppins', sans-serif;
     }
-    .form-control::placeholder { color: rgba(255,255,255,0.35); }
-    .form-control:focus, .form-select:focus { background: rgba(255,255,255,0.12); border-color: #4ade80; color: #fff; box-shadow: 0 0 0 3px rgba(74,222,128,0.15); }
-    .form-select option { background: #064e3b; color: #fff; }
+    .form-control::placeholder { color: rgba(0,0,0,0.4); }
+    .form-control:focus, .form-select:focus { background: #ffffff; border-color: #10b981; color: #0f172a; box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.15); }
+    .form-select option { background: #ffffff; color: #0f172a; }
     .upload-zone {
-      border: 2px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 20px;
-      text-align: center; cursor: pointer; transition: all 0.2s; color: rgba(255,255,255,0.5);
+      display: block; width: 100%; border: 2px dashed rgba(0,0,0,0.15); border-radius: 12px; padding: 20px; background: rgba(255,255,255,0.5);
+      text-align: center; cursor: pointer; transition: all 0.2s; color: rgba(0,0,0,0.6);
     }
-    .upload-zone:hover { border-color: #4ade80; color: #4ade80; background: rgba(74,222,128,0.05); }
+    .upload-zone:hover { border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.05); }
     .upload-zone input { display: none; }
     .upload-zone i { font-size: 28px; display: block; margin-bottom: 6px; }
     .upload-zone small { font-size: 11px; display: block; margin-top: 4px; opacity: 0.6; }
-    .upload-filename { color: #4ade80; font-size: 12px; margin-top: 6px; display: none; }
+    .upload-filename { color: #10b981; font-size: 12px; margin-top: 6px; display: none; }
     .btn-merchant { width: 100%; background: linear-gradient(135deg, #16a34a, #15803d); color: #fff; border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .btn-merchant:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(22,163,74,0.4); }
     .btn-merchant:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
-    .divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0; }
+    .divider { border: none; border-top: 1px solid rgba(0,0,0,0.1); margin: 20px 0; }
     .pw-wrap { position: relative; }
     .pw-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #4ade80; font-size: 16px; cursor: pointer; z-index: 5; }
-    .section-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 12px; display: flex; align-items: center; gap: 8px; }
+    .section-label { font-size: 11px; font-weight: 800; color: rgba(0,0,0,0.5); text-transform: uppercase; letter-spacing: 1px; margin: 24px 0 16px; display: flex; align-items: center; gap: 8px; }
+    
     .section-label::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
     .pending-notice { background: rgba(234,179,8,0.12); border: 1px solid rgba(234,179,8,0.3); border-radius: 12px; padding: 14px 16px; color: #fde047; font-size: 13px; display: none; margin-bottom: 16px; }
     .alert-box { border-radius: 10px; font-size: 13px; }
@@ -106,7 +107,7 @@ requireMerchantGuest();
         <div class="section-label">Business Documents</div>
 
         <div class="mb-3">
-          <label class="form-label">Business Permit <span style="color:#f87171;">*</span></label>
+          <label class="form-label">Business Permit <span style="color:#f59e0b;">*</span></label>
           <label class="upload-zone" id="permitZone">
             <input type="file" name="permit" id="permitFile" accept="image/*,.pdf" required>
             <i class="bi bi-file-earmark-text"></i>
@@ -116,7 +117,7 @@ requireMerchantGuest();
           <p class="upload-filename" id="permitName"></p>
         </div>
         <div class="mb-3">
-          <label class="form-label">Business Logo <span style="color:rgba(255,255,255,0.35);">(optional)</span></label>
+          <label class="form-label">Business Logo <span style="color:rgba(0,0,0,0.4);">(optional)</span></label>
           <label class="upload-zone" id="logoZone">
             <input type="file" name="logo" id="logoFile" accept="image/*">
             <i class="bi bi-image"></i>
@@ -132,17 +133,19 @@ requireMerchantGuest();
           <label class="form-label">Business Email</label>
           <input type="email" class="form-control" name="email" placeholder="you@yourbusiness.com" required>
         </div>
-        <div class="pw-wrap mb-3">
+        <div class="mb-3">
           <label class="form-label">Password</label>
-          <input type="password" class="form-control" name="password" id="password" placeholder="Minimum 8 characters" required>
-          <button type="button" class="pw-toggle" id="togglePass"><i class="bi bi-eye" id="eyeIcon"></i></button>
+          <div class="pw-wrap">
+            <input type="password" class="form-control" name="password" id="password" placeholder="Minimum 8 characters" required>
+            <button type="button" class="pw-toggle" id="togglePass"><i class="bi bi-eye" id="eyeIcon"></i></button>
+          </div>
         </div>
 
         <button type="submit" class="btn-merchant mb-3" id="regBtn">
           <i class="bi bi-send me-1"></i> Submit for Approval
         </button>
         <hr class="divider">
-        <a href="login.php" style="color:rgba(255,255,255,0.5);font-size:13px;text-decoration:none;display:block;text-align:center;">
+        <a href="login.php" style="color:rgba(0,0,0,0.6);font-size:13px;text-decoration:none;display:block;text-align:center;transition:color 0.2s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='rgba(0,0,0,0.6)'">
           <i class="bi bi-arrow-left me-1"></i> Back to Merchant Login
         </a>
       </form>
@@ -195,12 +198,12 @@ requireMerchantGuest();
           btn.disabled = false;
           btn.innerHTML = '<i class="bi bi-send me-1"></i> Submit for Approval';
         }
-      } // To this:
-      catch (error) {
-  console.error("Fetch Error:", error); // Check your browser console!
-  showAlert('Connection error. Please try again.');
-  // ...
-}
+      } catch (error) {
+        console.error("Fetch Error:", error);
+        showAlert('Connection error. Please try again.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-send me-1"></i> Submit for Approval';
+      }
     });
   </script>
 </body>

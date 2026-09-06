@@ -21,36 +21,36 @@ $timeout = isset($_GET['timeout']) ? 'Your session expired. Please log in again.
     :root { --m-green: #16a34a; --m-green-light: #22c55e; --m-dark: #052e16; }
     .auth-bg {
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(135deg, #052e16 0%, #064e3b 40%, #0f172a 100%);
+      background: radial-gradient(circle at top left, rgba(16, 185, 129, 0.18), transparent 45%), radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.15), transparent 45%); background-color: #f8fafc;
       padding: 20px;
     }
     .auth-card {
-      background: rgba(255,255,255,0.06); backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.12); border-radius: 24px;
+      background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 24px;
       padding: 40px 32px; width: 100%; max-width: 420px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
     }
     .merchant-badge {
       display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(22,163,74,0.18); border: 1px solid rgba(22,163,74,0.4);
-      color: #4ade80; border-radius: 50px; padding: 6px 16px;
+      background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #059669; border-radius: 50px; padding: 6px 16px;
       font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 20px;
     }
     .auth-logo .logo-img { width: 72px; height: 72px; object-fit: contain; margin-bottom: 10px; display: block; }
     .auth-logo h1 { font-size: 2rem; font-weight: 800; margin: 0; color: #fff; }
-    .auth-logo h1 span.v { color: #4ade80; }
-    .auth-logo h1 span.r { color: #f87171; }
-    .auth-logo p { color: rgba(255,255,255,0.6); font-size: 13px; margin: 6px 0 28px; }
+    .auth-logo h1 span.v { color: #10b981; }
+    .auth-logo h1 span.r { color: #f59e0b; }
+    .auth-logo p { color: rgba(0,0,0,0.6); font-size: 13px; margin: 6px 0 28px; }
     .form-control {
-      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-      color: #fff; border-radius: 12px; padding: 14px 16px; font-size: 14px;
+      background: #ffffff; border: 1px solid rgba(0,0,0,0.1);
+      color: #0f172a; border-radius: 12px; padding: 14px 16px; font-size: 14px;
       transition: all 0.2s;
     }
-    .form-control::placeholder { color: rgba(255,255,255,0.4); }
-    .form-control:focus { background: rgba(255,255,255,0.12); border-color: #4ade80; color: #fff; box-shadow: 0 0 0 3px rgba(74,222,128,0.15); }
-    .form-floating label { color: rgba(255,255,255,0.5); font-size: 13px; }
+    .form-control::placeholder { color: transparent; }
+    .form-control:focus { background: #ffffff; border-color: #10b981; color: #0f172a; box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.15); }
+    .form-floating label { color: rgba(0,0,0,0.6); font-size: 13px; }
     .form-floating > .form-control:focus ~ label,
-    .form-floating > .form-control:not(:placeholder-shown) ~ label { color: #4ade80; }
+    .form-floating > .form-control:not(:placeholder-shown) ~ label { color: rgba(0,0,0,0.6); }
     .form-floating > .form-control:focus ~ label::after,
 .form-floating > .form-control:not(:placeholder-shown) ~ label::after {
   background-color: transparent !important;
@@ -63,15 +63,15 @@ $timeout = isset($_GET['timeout']) ? 'Your session expired. Please log in again.
     .btn-merchant:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(22,163,74,0.4); }
     .btn-merchant:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
     .btn-outline-merchant {
-      width: 100%; background: transparent;
-      border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7);
-      border-radius: 12px; padding: 13px; font-size: 14px; font-weight: 500;
+      width: 100%; background: rgba(16, 185, 129, 0.05);
+      border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981;
+      border-radius: 12px; padding: 13px; font-size: 14px; font-weight: 600;
       cursor: pointer; transition: all 0.2s; text-decoration: none; display: block; text-align: center;
     }
-    .btn-outline-merchant:hover { background: rgba(255,255,255,0.08); color: #fff; border-color: rgba(255,255,255,0.4); }
-    .divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0; }
+    .btn-outline-merchant:hover { background: rgba(16, 185, 129, 0.1); color: #059669; border-color: rgba(16, 185, 129, 0.4); }
+    .divider { border: none; border-top: 1px solid rgba(0,0,0,0.1); margin: 20px 0; }
     .pw-wrap { position: relative; }
-    .pw-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #4ade80; font-size: 16px; cursor: pointer; z-index: 5; }
+    .pw-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #10b981; font-size: 16px; cursor: pointer; z-index: 5; }
     .alert-box { border-radius: 10px; font-size: 13px; }
     .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; margin-right: 6px; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -116,7 +116,7 @@ $timeout = isset($_GET['timeout']) ? 'Your session expired. Please log in again.
           <i class="bi bi-person-plus me-1"></i> Register Your Business
         </a>
         <div class="text-center mt-3">
-          <a href="../index.php" style="color:rgba(255,255,255,0.4);font-size:12px;text-decoration:none;">
+          <a href="../index.php" style="color:rgba(0,0,0,0.6);font-size:13px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='rgba(0,0,0,0.6)'">
             <i class="bi bi-arrow-left me-1"></i> Back to Driver Login
           </a>
         </div>
