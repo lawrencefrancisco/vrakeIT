@@ -52,11 +52,11 @@ adminHead('Merchant Oversight');
               <?php foreach ($merchants as $m): ?>
                 <tr>
                   <td><strong><?= htmlspecialchars($m['business_name']) ?></strong></td>
-                  <td style="font-size:12px;color:rgba(255,255,255,0.5);"><?= htmlspecialchars($m['business_type']) ?></td>
+                  <td style="font-size:12px;color:var(--muted);"><?= htmlspecialchars($m['business_type']) ?></td>
                   <td style="font-size:12px;"><?= htmlspecialchars($m['contact_number']) ?></td>
-                  <td style="font-size:12px;color:rgba(255,255,255,0.5);"><?= htmlspecialchars($m['email']) ?></td>
+                  <td style="font-size:12px;color:var(--muted);"><?= htmlspecialchars($m['email']) ?></td>
                   <td><span class="badge-status bs-<?= $m['status'] ?>"><?= ucfirst($m['status']) ?></span></td>
-                  <td style="font-size:12px;color:rgba(255,255,255,0.4);"><?= date('M d, Y', strtotime($m['created_at'])) ?></td>
+                  <td style="font-size:12px;color:var(--muted);"><?= date('M d, Y', strtotime($m['created_at'])) ?></td>
                   <td style="display:flex;gap:6px;flex-wrap:wrap;">
                     <?php if ($m['status'] !== 'approved'): ?>
                       <button class="btn-admin btn-approve" onclick="merchantAction(<?= $m['id'] ?>,'approved')"><i class="bi bi-check2"></i> Approve</button>

@@ -74,10 +74,10 @@ adminHead('Incident Monitoring');
           </span>
           <?php endif; ?>
         </div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.35);"><?= htmlspecialchars($r['email']) ?></div>
+        <div style="font-size:11px;color:var(--muted);"><?= htmlspecialchars($r['email']) ?></div>
       </td>
       <td><span style="color:<?= $typeClr[$ft] ?>;font-weight:600;font-size:12px;"><?= $typeMap[$ft] ?></span></td>
-      <td><?= $r['is_injured'] ? '<span style="color:#f87171;font-weight:600;">Yes</span>' : '<span style="color:rgba(255,255,255,0.3);">No</span>' ?></td>
+      <td><?= $r['is_injured'] ? '<span style="color:#f87171;font-weight:600;">Yes</span>' : '<span style="color:var(--muted);">No</span>' ?></td>
       <td>
         <select class="form-dark" style="padding:5px 10px;width:130px;font-size:12px;" onchange="updateStatus(<?= $r['id'] ?>, this.value)">
           <?php foreach(['pending','reviewing','verified','rejected','closed'] as $s): ?>
@@ -85,7 +85,7 @@ adminHead('Incident Monitoring');
           <?php endforeach; ?>
         </select>
       </td>
-      <td style="font-size:12px;color:rgba(255,255,255,0.4);"><?= date('M d, Y', strtotime($r['created_at'])) ?></td>
+      <td style="font-size:12px;color:var(--muted);"><?= date('M d, Y', strtotime($r['created_at'])) ?></td>
       <td style="display:flex;gap:6px;">
         <button class="btn-admin btn-review" onclick="viewReport(<?= $r['id'] ?>)" title="View Details"><i class="bi bi-eye"></i></button>
         <?php if($ft==='good_citizen' && in_array($r['status'], ['pending','reviewing'])): ?>
@@ -106,15 +106,15 @@ adminHead('Incident Monitoring');
 <!-- Modal for Viewing Report -->
 <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content" style="background:#1e1e2d; color:#fff; border: 1px solid rgba(255,255,255,0.1); border-radius:12px;">
-      <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+    <div class="modal-content" style="background:var(--card-bg); color:var(--text); border: 1px solid var(--muted); border-radius:12px;">
+      <div class="modal-header" style="border-bottom: 1px solid var(--muted);">
         <h5 class="modal-title"><i class="bi bi-card-text me-2"></i>Report Details</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="reportModalBody" style="min-height: 200px;">
         <div class="text-center mt-5"><div class="spinner-border text-primary" role="status"></div></div>
       </div>
-      <div class="modal-footer" style="border-top: 1px solid rgba(255,255,255,0.05);">
+      <div class="modal-footer" style="border-top: 1px solid var(--muted);">
         <button type="button" class="btn-admin btn-review" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
@@ -127,13 +127,13 @@ const enforcersList = <?= json_encode($enforcers) ?>;
 
 function getAdminStatusBadge(s) {
   const cfg = {
-    pending:   { cls: 'bs-pending',   icon: '⚠️', label: 'Pending'   },
-    reviewing: { cls: 'bs-reviewing', icon: '🔍', label: 'Reviewing' },
-    verified:  { cls: 'bs-verified',  icon: '✅', label: 'Verified'  },
-    rejected:  { cls: 'bs-rejected',  icon: '❌', label: 'Rejected'  },
-    closed:    { cls: 'bs-closed',    icon: '🔒', label: 'Closed'    },
+    pending:   { cls: 'bs-pending',   icon: '<i class="bi bi-exclamation-triangle-fill"></i>', label: 'Pending'   },
+    reviewing: { cls: 'bs-reviewing', icon: '<i class="bi bi-search"></i>', label: 'Reviewing' },
+    verified:  { cls: 'bs-verified',  icon: '<i class="bi bi-check-circle-fill"></i>', label: 'Verified'  },
+    rejected:  { cls: 'bs-rejected',  icon: '<i class="bi bi-x-circle-fill"></i>', label: 'Rejected'  },
+    closed:    { cls: 'bs-closed',    icon: '<i class="bi bi-lock-fill"></i>', label: 'Closed'    }
   };
-  const c = cfg[s] || { cls: 'bs-pending', icon: '⚠️', label: s || 'N/A' };
+  const c = cfg[s] || { cls: 'bs-pending', icon: '<i class="bi bi-exclamation-triangle-fill"></i>', label: s || 'N/A' };
   return `<span class="badge-status ${c.cls}" style="font-size:12px;">${c.icon} ${c.label}</span>`;
 }
 
@@ -144,9 +144,9 @@ async function adminPost(data) {
   return await res.json();
 }
 async function approveGC(rid, uid) {
-  if (!confirm('Approve this Good Citizen report?\n\nThis will:\n• Grant +' + <?= GOOD_CITIZEN_POINTS ?> + ' points to the reporter\n• Set status to ✅ Verified')) return;
+  if (!confirm('Approve this Good Citizen report?\n\nThis will:\n• Grant +' + <?= GOOD_CITIZEN_POINTS ?> + ' points to the reporter\n• Set status to [Verified]')) return;
   const d = await adminPost({action:'approve_gc', report_id:rid, user_id:uid});
-  if (d.success) { alert('✅ ' + d.message); location.reload(); } else alert(d.message);
+  if (d.success) { alert('[SUCCESS] ' + d.message); location.reload(); } else alert(d.message);
 }
 async function updateStatus(rid, status) {
   const d = await adminPost({action:'update_report_status', report_id:rid, status});
@@ -181,7 +181,7 @@ async function saveAdminManagement(rid) {
   });
   
   if(d.success) {
-    alert('✅ ' + d.message);
+    alert('[SUCCESS] ' + d.message);
     location.reload();
   } else {
     alert('Error: ' + d.message);
@@ -196,7 +196,7 @@ async function generateAISummary(rid) {
   
   btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Thinking...';
   btn.disabled = true;
-  textDiv.innerHTML = '<span style="color:rgba(255,255,255,0.5);">Analyzing incident details...</span>';
+  textDiv.innerHTML = '<span style="color:var(--muted);">Analyzing incident details...</span>';
   
   const d = await adminPost({ action: 'summarize_incident', report_id: rid });
   
@@ -204,7 +204,7 @@ async function generateAISummary(rid) {
   btn.disabled = false;
   
   if(d.success) {
-    textDiv.innerHTML = `<span style="color:#fff;">${d.summary}</span>`;
+    textDiv.innerHTML = `<span style="color:var(--text);">${d.summary}</span>`;
   } else {
     textDiv.innerHTML = `<span style="color:#f87171;">Error: ${d.message}</span>`;
   }
@@ -231,16 +231,16 @@ async function viewReport(rid) {
   }
 
   // 2. FIX IMAGE PATHS: Pointing to the correct assets folder
-  let mediaHtml = '<span style="color:rgba(255,255,255,0.4);">No media provided</span>';
+  let mediaHtml = '<span style="color:var(--muted);">No media provided</span>';
   if (r.media && r.media.length > 0) {
     mediaHtml = '<div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">';
     r.media.forEach(m => {
       // Ensure the path uses the correct assets folder
       const imgPath = m.file_path.includes('assets/') ? `../${m.file_path}` : `../assets/uploads/${m.file_path}`;
       if (m.file_type === 'image') {
-        mediaHtml += `<a href="${imgPath}" target="_blank"><img src="${imgPath}" style="height:150px; border-radius:8px; border:1px solid rgba(255,255,255,0.1); object-fit:cover;"></a>`;
+        mediaHtml += `<a href="${imgPath}" target="_blank"><img src="${imgPath}" style="height:150px; border-radius:8px; border:1px solid var(--muted); object-fit:cover;"></a>`;
       } else if (m.file_type === 'video') {
-        mediaHtml += `<video src="${imgPath}" controls style="height:150px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);"></video>`;
+        mediaHtml += `<video src="${imgPath}" controls style="height:150px; border-radius:8px; border:1px solid var(--muted);"></video>`;
       }
     });
     mediaHtml += '</div>';
@@ -250,11 +250,11 @@ async function viewReport(rid) {
   if (r.vehicles && r.vehicles.length > 0) {
     vehiclesHtml = '<ul style="list-style:none; padding:0; margin:0;">';
     r.vehicles.forEach(v => {
-      vehiclesHtml += `<li style="background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:6px; margin-bottom:5px; font-size:13px;">
+      vehiclesHtml += `<li style="background:var(--muted); padding:8px 12px; border-radius:6px; margin-bottom:5px; font-size:13px;">
         <span style="font-weight:bold;">${v.vehicle_type}</span> 
-        <span style="margin:0 8px; color:rgba(255,255,255,0.3);">|</span> 
+        <span style="margin:0 8px; color:var(--muted);">|</span> 
         <span style="font-family:monospace; color:#60b4ff;">${v.plate_number || 'No Plate'}</span>
-        ${v.vehicle_count > 1 ? ` <span style="margin:0 8px; color:rgba(255,255,255,0.3);">|</span> Qty: ${v.vehicle_count}` : ''}
+        ${v.vehicle_count > 1 ? ` <span style="margin:0 8px; color:var(--muted);">|</span> Qty: ${v.vehicle_count}` : ''}
       </li>`;
     });
     vehiclesHtml += '</ul>';
@@ -282,7 +282,7 @@ async function viewReport(rid) {
           <div style="flex-shrink:0; font-size:24px; color:#60b4ff;"><i class="bi bi-robot"></i></div>
           <div style="flex-grow:1;">
             <div style="font-size:12px; font-weight:bold; color:#60b4ff; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">AI Incident Summary</div>
-            <div id="aiSummaryText" style="font-size:14px; color:rgba(255,255,255,0.8);">Click the button to generate a 1-sentence summary of this report.</div>
+            <div id="aiSummaryText" style="font-size:14px; color:var(--muted);">Click the button to generate a 1-sentence summary of this report.</div>
           </div>
           <div>
             <button id="btnAiSummarize" class="btn-admin btn-primary-admin" onclick="generateAISummary(${r.id})" style="white-space:nowrap;">
@@ -308,7 +308,7 @@ async function viewReport(rid) {
             <img src="${r.avatar_url}" alt="${r.reporter_name}"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
                  style="width:48px; height:48px; border-radius:50%; object-fit:cover;
-                        border:2px solid rgba(96,180,255,0.4); background:#1e1e2d;">
+                        border:2px solid rgba(96,180,255,0.4); background:var(--card-bg);">
             <div style="display:none; width:48px; height:48px; border-radius:50%;
                         background:rgba(96,180,255,0.15); border:2px solid rgba(96,180,255,0.4);
                         align-items:center; justify-content:center; font-weight:700;
@@ -319,10 +319,10 @@ async function viewReport(rid) {
           <div>
             <h6 style="margin:0; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
               ${r.reporter_name}
-              ${r.assigned_enforcer_id !== null ? '<span style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:400;">— ENFORCER</span>' : ''}
+              ${r.assigned_enforcer_id !== null ? '<span style="font-size:10px;color:var(--muted);font-weight:400;">— ENFORCER</span>' : ''}
             </h6>
             ${r.account_verified == 1 ? `<span class="verified-badge-lg" title="This user has a verified identity"><i class="bi bi-shield-check"></i> Identity Verified</span>` : ''}
-            <div style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:2px;">${r.email} ${r.phone ? '• ' + r.phone : ''}</div>
+            <div style="font-size:12px; color:var(--muted); margin-top:2px;">${r.email} ${r.phone ? '• ' + r.phone : ''}</div>
           </div>
         </div>
       </div>
@@ -334,7 +334,7 @@ async function viewReport(rid) {
         </h6>
       </div>
 
-      <div class="col-12"><hr style="border-color:rgba(255,255,255,0.1); margin:0;"></div>
+      <div class="col-12"><hr style="border-color:var(--muted); margin:0;"></div>
       
       <div class="col-md-6">
         <p class="mb-1" style="color: #007ED2; font-size:12px; text-transform:uppercase; letter-spacing:1px;">Incident Date & Time</p>
@@ -358,7 +358,7 @@ async function viewReport(rid) {
         <h6 style="margin:0;">${r.has_other_parties == 1 ? '<span style="color:#f87171;">Yes</span>' : '<span style="color:rgba(255, 255, 255, 0.73);">No</span>'}</h6>
       </div>
 
-      <div class="col-12"><hr style="border-color:rgba(255,255,255,0.1); margin:0;"></div>
+      <div class="col-12"><hr style="border-color:var(--muted); margin:0;"></div>
 
       <div class="col-md-4">
         <p class="mb-1" style="color: #007ED2; font-size:12px; text-transform:uppercase; letter-spacing:1px;">Law Enforcer</p>
@@ -374,7 +374,7 @@ async function viewReport(rid) {
         <h6 style="margin:0;">${r.insurance_type ? r.insurance_type.toUpperCase() : '<span style="color:#cbd5e1;">N/A</span>'}</h6>
       </div>
 
-      <div class="col-12"><hr style="border-color:rgba(255,255,255,0.1); margin:0;"></div>
+      <div class="col-12"><hr style="border-color:var(--muted); margin:0;"></div>
 
       <div class="col-12">
         <p class="mb-1" style="color: #007ED2; font-size:12px; text-transform:uppercase; letter-spacing:1px;">Vehicles Involved</p>

@@ -43,22 +43,22 @@ adminHead('Dashboard', 'dashboard');
 <div class="row g-3 mb-4">
   <?php
   $stats = [
-    ['icon'=>'👤','bg'=>'rgba(0,126,210,.2)','num'=>number_format($totalUsers),'lbl'=>'Standard Users','delta'=>'','color'=>'#60b4ff'],
-    ['icon'=>'👮','bg'=>'rgba(251,191,36,.15)','num'=>number_format($totalEnforcers),'lbl'=>'Law Enforcers','delta'=>'','color'=>'#fbbf24'],
-    ['icon'=>'📋','bg'=>'rgba(74,222,128,.15)','num'=>number_format($totalReports),'lbl'=>'Total Reports','delta'=>$pendingReports.' pending','color'=>'#4ade80'],
-    ['icon'=>'🏪','bg'=>'rgba(167,139,250,.15)','num'=>number_format($totalMerchants),'lbl'=>'Merchants','delta'=>$pendingMerchants.' awaiting approval','color'=>'#a78bfa'],
-    ['icon'=>'⭐','bg'=>'rgba(251,191,36,.15)','num'=>number_format($totalPoints),'lbl'=>'Points in Circulation','delta'=>'','color'=>'#fbbf24'],
-    ['icon'=>'🛡️','bg'=>'rgba(248,113,113,.15)','num'=>number_format($pendingVerifs),'lbl'=>'Pending Verifications','delta'=>'Needs review','color'=>'#f87171'],
-    ['icon'=>'🌟','bg'=>'rgba(0,126,210,.2)','num'=>number_format($gcPending),'lbl'=>'Good Citizen Pending','delta'=>'Approve to grant 50pts','color'=>'#60b4ff'],
-    ['icon'=>'🎫','bg'=>'rgba(74,222,128,.15)','num'=>number_format($vouchersIssued),'lbl'=>'Vouchers Issued','delta'=>'','color'=>'#4ade80'],
+    ['icon'=>'<i class="bi bi-people-fill"></i>','bg'=>'rgba(0,126,210,.2)','num'=>number_format($totalUsers),'lbl'=>'Standard Users','delta'=>'','color'=>'#007ED2'],
+    ['icon'=>'<i class="bi bi-shield-lock-fill"></i>','bg'=>'rgba(251,191,36,.15)','num'=>number_format($totalEnforcers),'lbl'=>'Law Enforcers','delta'=>'','color'=>'#d97706'],
+    ['icon'=>'<i class="bi bi-file-earmark-text-fill"></i>','bg'=>'rgba(74,222,128,.15)','num'=>number_format($totalReports),'lbl'=>'Total Reports','delta'=>$pendingReports.' pending','color'=>'#16a34a'],
+    ['icon'=>'<i class="bi bi-shop"></i>','bg'=>'rgba(167,139,250,.15)','num'=>number_format($totalMerchants),'lbl'=>'Merchants','delta'=>$pendingMerchants.' awaiting approval','color'=>'#7c3aed'],
+    ['icon'=>'<i class="bi bi-star-fill"></i>','bg'=>'rgba(251,191,36,.15)','num'=>number_format($totalPoints),'lbl'=>'Points in Circulation','delta'=>'','color'=>'#d97706'],
+    ['icon'=>'<i class="bi bi-shield-check"></i>','bg'=>'rgba(248,113,113,.15)','num'=>number_format($pendingVerifs),'lbl'=>'Pending Verifications','delta'=>'Needs review','color'=>'#dc2626'],
+    ['icon'=>'<i class="bi bi-stars"></i>','bg'=>'rgba(0,126,210,.2)','num'=>number_format($gcPending),'lbl'=>'Good Citizen Pending','delta'=>'Approve to grant 50pts','color'=>'#007ED2'],
+    ['icon'=>'<i class="bi bi-ticket-perforated-fill"></i>','bg'=>'rgba(74,222,128,.15)','num'=>number_format($vouchersIssued),'lbl'=>'Vouchers Issued','delta'=>'','color'=>'#16a34a'],
   ];
   foreach($stats as $s): ?>
   <div class="col-6 col-md-3">
     <div class="stat-card">
-      <div class="stat-icon" style="background:<?= $s['bg'] ?>;"><span><?= $s['icon'] ?></span></div>
+      <div class="stat-icon" style="background:<?= $s['bg'] ?>; color:<?= $s['color'] ?>"><?= $s['icon'] ?></div>
       <div class="stat-num" style="color:<?= $s['color'] ?>"><?= $s['num'] ?></div>
       <div class="stat-lbl"><?= $s['lbl'] ?></div>
-      <?php if($s['delta']): ?><div class="stat-delta" style="color:rgba(255,255,255,0.35);"><?= htmlspecialchars($s['delta']) ?></div><?php endif; ?>
+      <?php if($s['delta']): ?><div class="stat-delta" style="color:var(--muted);"><?= htmlspecialchars($s['delta']) ?></div><?php endif; ?>
     </div>
   </div>
   <?php endforeach; ?>
@@ -99,7 +99,7 @@ adminHead('Dashboard', 'dashboard');
       <div style="position: relative; height: 450px; border-radius: 0 0 12px 12px; overflow: hidden;">
         
         <!-- Floating Legend -->
-        <div style="position: absolute; top: 15px; right: 15px; z-index: 1000; background: rgba(30, 30, 45, 0.95); padding: 10px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+        <div style="position: absolute; top: 15px; right: 15px; z-index: 1000; background: rgba(30, 30, 45, 0.95); padding: 10px 15px; border-radius: 8px; border: 1px solid var(--muted); color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
           <div style="font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #a78bfa;">Status Legend</div>
           <div style="font-size: 11px;"><span style="color: #f87171; font-size: 16px; vertical-align: middle;">●</span> Pending</div>
           <div style="font-size: 11px;"><span style="color: #fbbf24; font-size: 16px; vertical-align: middle;">●</span> Reviewing</div>
@@ -155,16 +155,16 @@ adminHead('Dashboard', 'dashboard');
     <tbody>
     <?php foreach($recentReports as $r): ?>
     <tr>
-      <td><span style="font-family:monospace;color:#60b4ff;"><?= htmlspecialchars($r['reference_number']) ?></span></td>
+      <td><span style="font-family:monospace;color:#007ED2;font-weight:600;"><?= htmlspecialchars($r['reference_number']) ?></span></td>
       <td><?= htmlspecialchars($r['first_name'].' '.$r['last_name']) ?></td>
       <td><?php
         $labels = ['standard'=>'Standard','good_citizen'=>'Good Citizen'];
-        $colors = ['standard'=>'#f87171','good_citizen'=>'#4ade80'];
-        $ft = $r['flow_type'];
+        $colors = ['standard'=>'#e90101','good_citizen'=>'#16a34a'];
+        $ft = $r['flow_type'] ?? 'standard';
         echo "<span style='color:{$colors[$ft]};font-weight:600;font-size:12px;'>{$labels[$ft]}</span>";
       ?></td>
       <td><span class="badge-status bs-<?= $r['status'] ?>"><?= ucfirst($r['status']) ?></span></td>
-      <td style="color:rgba(255,255,255,0.45);font-size:12px;"><?= date('M d, Y', strtotime($r['created_at'])) ?></td>
+      <td style="color:var(--muted);font-size:12px;"><?= date('M d, Y', strtotime($r['created_at'])) ?></td>
       <td>
         <?php if($r['flow_type']==='good_citizen' && in_array($r['status'], ['pending','reviewing'])): ?>
         <button class="btn-admin btn-approve" onclick="approveGC(<?= $r['id'] ?>, <?= $r['user_id'] ?>)"
@@ -365,8 +365,15 @@ async function approveGC(reportId, userId) {
 
 // Chart Configurations
 document.addEventListener('DOMContentLoaded', function() {
-  Chart.defaults.color = 'rgba(255, 255, 255, 0.7)';
+  // Shared Chart Configuration
   Chart.defaults.font.family = "'Inter', sans-serif";
+  Chart.defaults.color = 'rgba(26, 26, 46, 0.65)';
+  Chart.defaults.scale.grid.color = 'rgba(0, 0, 0, 0.05)';
+  Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+  Chart.defaults.plugins.tooltip.titleColor = '#1a1a2e';
+  Chart.defaults.plugins.tooltip.bodyColor = '#1a1a2e';
+  Chart.defaults.plugins.tooltip.borderColor = 'rgba(0,0,0,0.1)';
+  Chart.defaults.plugins.tooltip.borderWidth = 1;
   
   // Prepare trend data
   const trendData = <?= json_encode($trend) ?>;
@@ -395,7 +402,7 @@ document.addEventListener('DOMContentLoaded', function() {
       responsive: true,
       plugins: { legend: { display: false } },
       scales: {
-        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
         x: { grid: { display: false } }
       }
     }
@@ -435,3 +442,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 </body></html>
+
