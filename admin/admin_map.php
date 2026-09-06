@@ -210,5 +210,5 @@ requireAdminLogin();
     setInterval(loadAdminMap, 30000);
   </script>
 </body>
-<!-- Inupdate ko now -->
+<!-- Test update -->
 </html>
