@@ -304,21 +304,30 @@ body::before {
 
 /* ── APP HEADER ────────────────────────────── */
 .app-header {
-  /* Adds a 15% dark overlay on top of your red-to-blue gradient */
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-              linear-gradient(135deg, #E90101 0%, #007ED2 100%);
-              
-  color: #fff;
-  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  color: #1e293b;
+  padding: 14px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: sticky;
   top: 0;
   z-index: 100;
-  
-  /* Changed from a red shadow to a neutral dark shadow so it blends better */
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.04),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.02);
+}
+
+/* Force icons in header to be dark, overriding inline styles */
+.app-header button, 
+.app-header button i, 
+.app-header .back-btn, 
+.app-header .back-btn i,
+.app-header h1 {
+  color: #1e293b !important;
 }
 
 .header-logo { font-size: 22px; font-weight: 800; letter-spacing: 0.5px; }
@@ -327,7 +336,7 @@ body::before {
 .user-avatar-sm {
   width: 36px; height: 36px;
   border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.7);
+  border: 2px solid #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   object-fit: cover;
   cursor: pointer;
   transition: transform .2s;
@@ -336,29 +345,25 @@ body::before {
 
 /* --- PREMIUM POINTS BADGE --- */
 .points-badge {
-  /* ADDED: Required to contain the sweeping light animation */
   position: relative;
   overflow: hidden; 
-
-  /* Layout & Sizing */
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 6px 16px;
   border-radius: 30px; 
   cursor: pointer;
-
-  /* Typography */
   font-size: 13px;
   font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.3px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); 
-
-  /* Advanced Glassmorphism */
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.03) 100%);
+  color: #1e293b;
+  letter-spacing: 0.2px;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 
   /* 3D Borders & Lighting */
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1242,16 +1247,19 @@ body::before {
 /* ── SAAS HERO ─────────────────────────────────────────── */
 .saas-hero {
   position: relative;
-  background: linear-gradient(145deg, #020b18 0%, #061a35 45%, #0a2250 100%);
+  /* Premium Glassmorphism Mesh Gradient */
+  background: linear-gradient(135deg, rgba(0, 126, 210, 0.85) 0%, rgba(10, 34, 80, 0.8) 50%, rgba(233, 1, 1, 0.85) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   overflow: hidden;
-  /* display: flex; */
   flex-direction: column;
   justify-content: flex-end;
-  /* padding: 0 0 36px 0; */
-  border-radius: 0 0 36px 36px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
- /* min-height: 190px !important; smaller hero height */
-  padding-top: 8px !important;
+  border-radius: 0 0 40px 40px;
+  /* Glossy bottom lip and deep soft shadow */
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.15),
+    inset 0 -2px 0 rgba(255, 255, 255, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* Soft glowing mesh orbs */
@@ -1337,16 +1345,14 @@ body::before {
   border-radius: 20px;
 
   /* Light card with brand-color glow */
-  background: #ffffff;
-
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(0,0,0,0.08);
-
-  /* Subtle shadow */
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  /* Premium Glass Shadow */
   box-shadow:
-    0 4px 20px rgba(0,0,0,0.08),
-    0 0 18px rgba(0,126,210,0.07);
+    0 12px 32px rgba(0, 0, 0, 0.08),
+    inset 0 2px 0 rgba(255, 255, 255, 0.9);
 
   overflow: hidden;
 
@@ -1487,17 +1493,18 @@ body::before {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
-  padding: 5px 13px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  padding: 6px 14px;
   border-radius: 30px;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: #a8d8ff;
+  color: #ffffff;
   margin-bottom: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 .saas-status-chip .pulse-dot {
   width: 7px; height: 7px;
@@ -1546,13 +1553,19 @@ body::before {
 }
 .metric-pill {
   flex: 1;
-  background: #ffffff;
-  border: 1px solid rgba(0,0,0,0.08);
-  backdrop-filter: blur(14px);
-  border-radius: 14px;
-  padding: 12px 10px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 18px;
+  padding: 16px 10px;
   text-align: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), inset 0 2px 0 rgba(255, 255, 255, 0.8);
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.metric-pill:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12), inset 0 2px 0 rgba(255, 255, 255, 1);
 }
 .metric-pill .m-val {
   font-size: 17px;
