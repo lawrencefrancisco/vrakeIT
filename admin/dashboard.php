@@ -55,7 +55,7 @@ adminHead('Dashboard', 'dashboard');
   foreach($stats as $s): ?>
   <div class="col-6 col-md-3 d-flex">
     <div class="stat-card w-100 d-flex flex-column">
-      <div class="stat-icon" style="background:<?= $s['bg'] ?>;"><span><?= $s['icon'] ?></span></div>
+      <div class="stat-icon" style="background:<?= $s['bg'] ?>; color:<?= $s['color'] ?>;"><span><?= $s['icon'] ?></span></div>
       <div class="stat-num" style="color:<?= $s['color'] ?>"><?= $s['num'] ?></div>
       <div class="stat-lbl"><?= $s['lbl'] ?></div>
       <div class="stat-delta mt-auto" style="color:var(--muted); min-height: 18px;"><?= $s['delta'] ? htmlspecialchars($s['delta']) : '&nbsp;' ?></div>

@@ -28,19 +28,19 @@ adminNav('personnel', $admin);
             <!-- ── Role Tabs ───────────────────────────────────────── -->
             <div style="display:flex; gap:8px; margin-bottom:20px;">
                 <button id="tabEnforcer" onclick="switchTab('enforcer')"
-                    style="flex:1; padding:10px 0; border-radius:10px; border:1.5px solid rgba(255,255,255,0.22);
-                           background:rgba(255,255,255,0.08); color:#fff; font-size:13px; font-weight:600;
+                    style="flex:1; padding:10px 0; border-radius:10px; border:1.5px solid #bfdbfe;
+                           background:#eff6ff; color:#3b82f6; font-size:13px; font-weight:600;
                            cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px;">
                     <i class="bi bi-shield-fill-check" style="color:#60a5fa;"></i> Enforcer
                 </button>
                 <button id="tabModerator" onclick="switchTab('moderator')"
-                    style="flex:1; padding:10px 0; border-radius:10px; border:1.5px solid rgba(255,255,255,0.08);
+                    style="flex:1; padding:10px 0; border-radius:10px; border:1.5px solid rgba(0,0,0,0.08);
                            background:transparent; color:var(--muted); font-size:13px; font-weight:600;
                            cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px;">
                     <i class="bi bi-person-badge-fill" style="color:#a78bfa;"></i> Moderator
                 </button>
                 <button id="tabAdmin" onclick="switchTab('admin')"
-                    style="flex:1; padding:10px 0; border-radius:10px; border:1.5px solid rgba(255,255,255,0.08);
+                    style="flex:1; padding:10px 0; border-radius:10px; border:1.5px solid rgba(0,0,0,0.08);
                            background:transparent; color:var(--muted); font-size:13px; font-weight:600;
                            cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px;">
                     <i class="bi bi-stars" style="color:#fbbf24;"></i> Admin
@@ -223,11 +223,11 @@ adminNav('personnel', $admin);
 <script>
 // ── Tab switcher ─────────────────────────────────────────────────────────────
 const tabStyles = {
-    enforcer:  { bg: 'rgba(255,255,255,0.08)',       color: '#fff',      border: 'rgba(255,255,255,0.22)' },
-    moderator: { bg: 'rgba(167,139,250,0.12)',        color: '#c4b5fd',   border: 'rgba(167,139,250,0.35)' },
-    admin:     { bg: 'rgba(251,191,36,0.10)',          color: '#fbbf24',   border: 'rgba(251,191,36,0.35)' },
+    enforcer:  { bg: '#eff6ff', color: '#3b82f6', border: '#bfdbfe' },
+    moderator: { bg: '#f3e8ff', color: '#9333ea', border: '#e9d5ff' },
+    admin:     { bg: '#fef3c7', color: '#d97706', border: '#fde68a' },
 };
-const tabInactive = { bg: 'transparent', color: 'rgba(255,255,255,0.45)', border: 'rgba(255,255,255,0.08)' };
+const tabInactive = { bg: 'transparent', color: 'var(--muted)', border: 'rgba(0,0,0,0.08)' };
 
 function applyTabStyle(btnId, style) {
     const btn = document.getElementById(btnId);

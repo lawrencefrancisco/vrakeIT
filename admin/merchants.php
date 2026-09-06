@@ -27,9 +27,9 @@ adminHead('Merchant Oversight');
     <div class="page-body">
 
       <div class="section-card mb-4">
-        <div class="section-header">
+        <div class="section-header" style="justify-content: flex-start; gap: 8px; flex-wrap: wrap;">
           <?php foreach (['all' => 'All', 'pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected', 'deactivated' => 'Deactivated'] as $k => $v): ?>
-            <a href="?filter=<?= $k ?>" class="btn-admin <?= $filter === $k ? 'btn-primary-admin' : 'btn-review' ?> me-2"><?= $v ?></a>
+            <a href="?filter=<?= $k ?>" class="btn-admin <?= $filter === $k ? 'btn-primary-admin' : 'btn-review' ?> m-0"><?= $v ?></a>
           <?php endforeach; ?>
         </div>
       </div>
