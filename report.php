@@ -3183,12 +3183,12 @@ if (($user['role'] ?? 'user') !== 'user') {
         [14.6945, 121.0165],  // Paso de Blas east
         // ─ Southern boundary (E → W) ───────────────────────────────
         [14.6905, 121.0070],  // Gen. T. De Leon SE
-        [14.6870, 120.9990],  // Gen. T. De Leon south
-        [14.6845, 120.9910],  // Parada / Marulas E
-        [14.6820, 120.9845],  // Marulas south (southernmost)
-        [14.6825, 120.9750],  // Karuhatan south (Tullahan River)
-        [14.6845, 120.9640],  // Malinta south (Tullahan River)
-        [14.6870, 120.9565],  // Malinta / Rincon SW
+        [14.6750, 120.9990],  // Gen. T. De Leon south (expanded)
+        [14.6720, 120.9910],  // Parada / Marulas E (expanded)
+        [14.6700, 120.9845],  // Marulas south (expanded southernmost)
+        [14.6715, 120.9750],  // Karuhatan south (expanded)
+        [14.6735, 120.9640],  // Malinta south (expanded)
+        [14.6760, 120.9565],  // Malinta / Rincon SW
         // ─ Western boundary (S → N) ────────────────────────────────
         [14.6935, 120.9530],  // Rincon west
         [14.7020, 120.9505],  // Polo west

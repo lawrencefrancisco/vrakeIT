@@ -1884,12 +1884,12 @@ body::before {
 
 
 
-/* ── VERIFICATION BANNER (glass) ───────────────────────── */
+/* ── VERIFICATION BANNER (glass -> solid premium) ────────── */
 .glass-verify-banner {
   margin: 0 18px 18px;
-  background: rgba(255,152,0,0.08);
-  border: 1px solid rgba(255,152,0,0.25);
-  backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border: none;
+  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.3);
   border-radius: 16px;
   padding: 14px 16px;
   display: flex;
@@ -1898,23 +1898,23 @@ body::before {
 }
 .glass-verify-banner .vb-icon {
   width: 40px; height: 40px; min-width: 40px;
-  background: rgba(255,152,0,0.18);
+  background: rgba(255,255,255,0.25);
   border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px; color: #FFB74D;
+  font-size: 18px; color: #fff;
 }
-.glass-verify-banner .vb-text h6 { font-size: 13px; font-weight: 700; color: #FFB74D; margin: 0 0 2px; }
-.glass-verify-banner .vb-text p  { font-size: 11px; color: rgba(255,200,100,0.75); margin: 0; }
+.glass-verify-banner .vb-text h6 { font-size: 14px; font-weight: 700; color: #fff; margin: 0 0 2px; }
+.glass-verify-banner .vb-text p  { font-size: 11px; color: rgba(255,255,255,0.9); margin: 0; line-height: 1.4; }
 .glass-verify-banner .vb-arrow {
   margin-left: auto;
   width: 32px; height: 32px; min-width: 32px;
-  background: rgba(255,152,0,0.2);
+  background: rgba(255,255,255,0.25);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  color: #FFB74D; text-decoration: none; font-size: 15px;
-  transition: background 0.2s;
+  color: #fff; text-decoration: none; font-size: 15px;
+  transition: all 0.2s;
 }
-.glass-verify-banner .vb-arrow:hover { background: rgba(255,152,0,0.35); }
+.glass-verify-banner .vb-arrow:hover { background: rgba(255,255,255,0.4); transform: translateX(2px); }
 
 /* ── GLASS SECTION CARDS ───────────────────────────────── */
 .glass-section {
@@ -2478,4 +2478,10 @@ body::before {
 }
 .leaflet-container {
     background: #000 !important;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(138,43,226, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(138,43,226, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(138,43,226, 0); }
 }

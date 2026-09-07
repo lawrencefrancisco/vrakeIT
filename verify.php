@@ -66,16 +66,18 @@ $justRegistered = !empty($_SESSION['just_registered']);
       --vr-blue-glow:  rgba(0,126,210,0.25);
       --vr-green:      #00c853;
       --vr-green-glow: rgba(0,200,83,0.25);
-      --vr-dark:       #0d0d14;
-      --vr-card:       rgba(255,255,255,0.06);
-      --vr-border:     rgba(255,255,255,0.10);
-      --vr-text:       #f0f0f8;
-      --vr-muted:      rgba(240,240,248,0.55);
+      --vr-dark:       #ffffff;
+      --vr-card:       rgba(255,255,255,0.85);
+      --vr-border:     rgba(0,0,0,0.08);
+      --vr-text:       #1e293b;
+      --vr-muted:      #64748b;
     }
 
-    html, body { height: 100%; }
+    html, body { height: 100%; overflow-x: hidden; }
     body {
-      background: linear-gradient(145deg, #0d0d18 0%, #111126 50%, #0a0a12 100%);
+      background: #f8fafc;
+      background-image: radial-gradient(at 0% 0%, rgba(0,126,210,0.05) 0px, transparent 50%),
+                        radial-gradient(at 100% 0%, rgba(233,1,1,0.05) 0px, transparent 50%);
       font-family: 'Poppins', sans-serif;
       color: var(--vr-text);
       min-height: 100vh;
@@ -91,9 +93,10 @@ $justRegistered = !empty($_SESSION['just_registered']);
       align-items: center;
       justify-content: space-between;
       padding: 14px 20px;
-      background: rgba(13,13,20,0.85);
+      background: rgba(255,255,255,0.85);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--vr-border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.02);
     }
     .vfy-header-logo {
       display: flex;
@@ -101,7 +104,7 @@ $justRegistered = !empty($_SESSION['just_registered']);
       gap: 10px;
       font-size: 18px;
       font-weight: 700;
-      color: #fff;
+      color: #0f172a;
       text-decoration: none;
     }
     .vfy-header-logo span.dot { color: var(--vr-red); }
@@ -216,7 +219,7 @@ $justRegistered = !empty($_SESSION['just_registered']);
     .vfy-dob-wrap { display: none; }
     .vfy-dob-wrap.show { display: block; }
     .vfy-input {
-      background: rgba(255,255,255,0.07);
+      background: #ffffff;
       border: 1.5px solid var(--vr-border);
       border-radius: 12px;
       color: var(--vr-text);
@@ -224,12 +227,13 @@ $justRegistered = !empty($_SESSION['just_registered']);
       font-family: 'Poppins', sans-serif;
       font-size: 14px;
       width: 100%;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     }
     .vfy-input:focus {
       outline: none;
       border-color: var(--vr-blue);
-      background: rgba(0,126,210,0.08);
+      box-shadow: 0 0 0 4px var(--vr-blue-glow);
     }
     .vfy-input-label {
       display: block;
@@ -241,27 +245,28 @@ $justRegistered = !empty($_SESSION['just_registered']);
 
     /* ── UPLOAD ZONE ── */
     .vfy-drop-zone {
-      border: 2px dashed rgba(0,126,210,0.45);
+      border: 2px dashed rgba(0,126,210,0.3);
       border-radius: 16px;
       padding: 36px 20px;
       text-align: center;
       cursor: pointer;
-      background: rgba(0,126,210,0.05);
+      background: #ffffff;
       transition: all 0.25s ease;
       position: relative;
     }
     .vfy-drop-zone:hover, .vfy-drop-zone.dragover {
       border-color: var(--vr-blue);
-      background: rgba(0,126,210,0.12);
+      background: rgba(0,126,210,0.03);
       transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,126,210,0.08);
     }
     .vfy-drop-zone.has-file {
       border-color: var(--vr-green);
-      background: rgba(0,200,83,0.07);
+      background: rgba(0,200,83,0.04);
     }
     .vfy-drop-icon {
       width: 56px; height: 56px;
-      background: rgba(0,126,210,0.15);
+      background: rgba(0,126,210,0.08);
       border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 14px;
@@ -270,7 +275,7 @@ $justRegistered = !empty($_SESSION['just_registered']);
       transition: all 0.25s;
     }
     .vfy-drop-zone.has-file .vfy-drop-icon {
-      background: rgba(0,200,83,0.15);
+      background: rgba(0,200,83,0.1);
       color: var(--vr-green);
     }
     .vfy-drop-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
@@ -291,21 +296,23 @@ $justRegistered = !empty($_SESSION['just_registered']);
       padding: 11px;
       border-radius: 12px;
       border: 1.5px solid var(--vr-border);
-      background: rgba(255,255,255,0.05);
+      background: #ffffff;
       color: var(--vr-text);
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       font-family: 'Poppins', sans-serif;
       transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     }
     .vfy-btn-ghost:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.25);
+      background: #f8fafc;
+      border-color: rgba(0,0,0,0.15);
+      transform: translateY(-1px);
     }
     .vfy-btn-ghost i { font-size: 16px; }
     .vfy-btn-ghost.camera-btn i { color: var(--vr-blue); }
-    .vfy-btn-ghost.file-btn   i { color: #a78bfa; }
+    .vfy-btn-ghost.file-btn   i { color: #8a2be2; }
 
     /* Preview */
     .vfy-preview-wrap {
@@ -345,12 +352,12 @@ $justRegistered = !empty($_SESSION['just_registered']);
       gap: 10px;
     }
     .vfy-tip {
-      background: rgba(255,255,255,0.04);
+      background: #f1f5f9;
       border: 1px solid var(--vr-border);
       border-radius: 12px;
       padding: 12px;
       font-size: 12px;
-      color: var(--vr-muted);
+      color: var(--vr-text);
       display: flex;
       gap: 8px;
       align-items: flex-start;
@@ -370,10 +377,10 @@ $justRegistered = !empty($_SESSION['just_registered']);
       align-items: flex-start;
       gap: 10px;
     }
-    .vfy-alert.danger  { background: rgba(233,1,1,0.12); border: 1px solid rgba(233,1,1,0.30); color: #ff8a8a; }
-    .vfy-alert.success { background: rgba(0,200,83,0.12); border: 1px solid rgba(0,200,83,0.30); color: #4dde8a; }
-    .vfy-alert.warning { background: rgba(255,193,7,0.12); border: 1px solid rgba(255,193,7,0.30); color: #ffc107; }
-    .vfy-alert.info    { background: rgba(0,126,210,0.12); border: 1px solid rgba(0,126,210,0.30); color: #60b8ff; }
+    .vfy-alert.danger  { background: #fef2f2; border: 1px solid #fca5a5; color: #b91c1c; }
+    .vfy-alert.success { background: #f0fdf4; border: 1px solid #86efac; color: #15803d; }
+    .vfy-alert.warning { background: #fefce8; border: 1px solid #fde047; color: #a16207; }
+    .vfy-alert.info    { background: #eff6ff; border: 1px solid #93c5fd; color: #1d4ed8; }
     .vfy-alert i { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
 
     /* ── SUBMIT BUTTON ── */
@@ -410,8 +417,8 @@ $justRegistered = !empty($_SESSION['just_registered']);
     .vfy-progress-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(13,13,20,0.90);
-      backdrop-filter: blur(8px);
+      background: rgba(255,255,255,0.90);
+      backdrop-filter: blur(12px);
       z-index: 1000;
       display: none;
       flex-direction: column;
@@ -425,7 +432,7 @@ $justRegistered = !empty($_SESSION['just_registered']);
     .vfy-progress-ring {
       width: 90px; height: 90px;
       border-radius: 50%;
-      border: 3px solid rgba(255,255,255,0.08);
+      border: 3px solid rgba(0,0,0,0.08);
       border-top-color: var(--vr-blue);
       border-right-color: var(--vr-red);
       animation: vfy-spin 1s linear infinite;
@@ -440,9 +447,9 @@ $justRegistered = !empty($_SESSION['just_registered']);
       color: var(--vr-muted);
       transition: color 0.3s;
     }
-    .vfy-progress-step.active  { color: var(--vr-text); }
-    .vfy-progress-step.done    { color: var(--vr-green); }
-    .vfy-progress-step.current { color: var(--vr-blue); animation: vfy-pulse 1.5s ease-in-out infinite; }
+    .vfy-progress-step.active  { color: var(--vr-text); font-weight: 600; }
+    .vfy-progress-step.done    { color: #15803d; font-weight: 600; }
+    .vfy-progress-step.current { color: var(--vr-blue); font-weight: 600; animation: vfy-pulse 1.5s ease-in-out infinite; }
     @keyframes vfy-pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
     .vfy-step-dot {
       width: 8px; height: 8px;
@@ -450,7 +457,7 @@ $justRegistered = !empty($_SESSION['just_registered']);
       background: currentColor;
       flex-shrink: 0;
     }
-    .vfy-progress-step.done .vfy-step-dot::before { content: '✓'; font-size: 10px; }
+    .vfy-progress-step.done .vfy-step-dot::before { content: '✓'; font-size: 10px; color: #fff; display: flex; align-items: center; justify-content: center; width:100%; height:100%; }
 
     /* ── RESULT STATES ── */
     .vfy-result-card {
@@ -465,21 +472,23 @@ $justRegistered = !empty($_SESSION['just_registered']);
       margin: 0 auto 20px;
     }
     .vfy-result-icon.success {
-      background: radial-gradient(circle, rgba(0,200,83,0.25) 0%, rgba(0,200,83,0.05) 70%);
-      border: 2px solid rgba(0,200,83,0.35);
-      box-shadow: 0 0 40px var(--vr-green-glow);
+      background: #f0fdf4;
+      border: 2px solid #86efac;
+      color: #15803d;
+      box-shadow: 0 0 40px rgba(0,200,83,0.15);
       animation: vfy-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
     }
     .vfy-result-icon.error {
-      background: radial-gradient(circle, rgba(233,1,1,0.20) 0%, rgba(233,1,1,0.05) 70%);
-      border: 2px solid rgba(233,1,1,0.35);
-      box-shadow: 0 0 40px var(--vr-red-glow);
+      background: #fef2f2;
+      border: 2px solid #fca5a5;
+      color: #b91c1c;
+      box-shadow: 0 0 40px rgba(233,1,1,0.15);
     }
     @keyframes vfy-pop {
       0%   { transform: scale(0.5); opacity: 0; }
       100% { transform: scale(1);   opacity: 1; }
     }
-    .vfy-result-title { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+    .vfy-result-title { font-size: 22px; font-weight: 700; margin-bottom: 10px; color: var(--vr-text); }
     .vfy-result-msg   { font-size: 14px; color: var(--vr-muted); line-height: 1.6; margin-bottom: 24px; }
     .vfy-result-ref   { font-size: 11px; color: var(--vr-muted); margin-bottom: 20px; font-family: monospace; }
 
@@ -492,29 +501,30 @@ $justRegistered = !empty($_SESSION['just_registered']);
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      background: rgba(0,200,83,0.12);
-      border: 1.5px solid rgba(0,200,83,0.30);
+      background: #f0fdf4;
+      border: 1.5px solid #86efac;
       border-radius: 20px;
       padding: 10px 24px;
       font-size: 14px;
       font-weight: 700;
-      color: #4dde8a;
+      color: #15803d;
       margin-bottom: 20px;
     }
     .vfy-shield-big {
       width: 100px; height: 100px;
-      background: radial-gradient(circle, rgba(0,200,83,0.20) 0%, transparent 70%);
-      border: 2px solid rgba(0,200,83,0.30);
+      background: radial-gradient(circle, #f0fdf4 0%, transparent 70%);
+      border: 2px solid #86efac;
+      color: #15803d;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-size: 48px;
       margin: 0 auto 24px;
-      box-shadow: 0 0 50px rgba(0,200,83,0.20);
+      box-shadow: 0 0 50px rgba(0,200,83,0.10);
       animation: vfy-glow-pulse 3s ease-in-out infinite;
     }
     @keyframes vfy-glow-pulse {
-      0%,100% { box-shadow: 0 0 50px rgba(0,200,83,0.20); }
-      50%      { box-shadow: 0 0 70px rgba(0,200,83,0.35); }
+      0%,100% { box-shadow: 0 0 50px rgba(0,200,83,0.10); }
+      50%      { box-shadow: 0 0 70px rgba(0,200,83,0.20); }
     }
 
     /* ── PENDING ── */
@@ -559,12 +569,13 @@ $justRegistered = !empty($_SESSION['just_registered']);
 
     /* ── OCR RESULTS PANEL ── */
     .ocr-results-panel {
-      background: rgba(255,255,255,0.04);
+      background: #f8fafc;
       border: 1px solid var(--vr-border);
       border-radius: 16px;
       padding: 18px;
       margin-bottom: 16px;
       animation: vfy-pop 0.4s cubic-bezier(0.175,0.885,0.32,1.275) both;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
     }
     .ocr-results-title {
       font-size: 12px;
@@ -582,7 +593,7 @@ $justRegistered = !empty($_SESSION['just_registered']);
       align-items: flex-start;
       gap: 10px;
       padding: 9px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
       font-size: 13px;
     }
     .ocr-field-row:last-child { border-bottom: none; }
@@ -597,13 +608,16 @@ $justRegistered = !empty($_SESSION['just_registered']);
     }
     .ocr-field-value {
       flex: 1;
+      min-width: 0;
       font-weight: 600;
       word-break: break-word;
+      color: var(--vr-text);
     }
     .ocr-field-value.empty { color: var(--vr-muted); font-weight: 400; font-style: italic; }
     .ocr-match-badge {
       display: inline-flex;
       align-items: center;
+      flex-shrink: 0;
       gap: 4px;
       font-size: 10px;
       font-weight: 700;
@@ -612,13 +626,13 @@ $justRegistered = !empty($_SESSION['just_registered']);
       white-space: nowrap;
       margin-left: 6px;
     }
-    .ocr-match-badge.match   { background: rgba(0,200,83,0.18); color: #4dde8a; }
-    .ocr-match-badge.no-match { background: rgba(233,1,1,0.18);  color: #ff8a8a; }
-    .ocr-match-badge.neutral { background: rgba(255,255,255,0.08); color: var(--vr-muted); }
+    .ocr-match-badge.match   { background: #f0fdf4; color: #15803d; border: 1px solid #86efac; }
+    .ocr-match-badge.no-match { background: #fef2f2; color: #b91c1c; border: 1px solid #fca5a5; }
+    .ocr-match-badge.neutral { background: #f1f5f9; color: var(--vr-muted); border: 1px solid #cbd5e1; }
     .ocr-confidence-bar {
       height: 4px;
       border-radius: 2px;
-      background: rgba(255,255,255,0.08);
+      background: #e2e8f0;
       overflow: hidden;
       margin-top: 10px;
     }
@@ -637,12 +651,12 @@ $justRegistered = !empty($_SESSION['just_registered']);
     }
     /* failure reason box */
     .ocr-fail-reason {
-      background: rgba(233,1,1,0.08);
-      border: 1px solid rgba(233,1,1,0.22);
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
       border-radius: 12px;
       padding: 12px 14px;
       font-size: 12px;
-      color: #ff8a8a;
+      color: #b91c1c;
       margin-top: 10px;
       line-height: 1.6;
     }
@@ -861,7 +875,7 @@ $justRegistered = !empty($_SESSION['just_registered']);
   <div class="vfy-progress-overlay" id="progressOverlay">
     <div class="vfy-progress-ring"></div>
     <div>
-      <div style="font-size:17px;font-weight:700;margin-bottom:6px;">Verifying Your Identity</div>
+      <div style="font-size:17px;font-weight:700;margin-bottom:6px;color:var(--vr-text);">Verifying Your Identity</div>
       <div style="font-size:13px;color:var(--vr-muted);">Please wait, do not close this page.</div>
     </div>
     <div class="vfy-progress-steps">
