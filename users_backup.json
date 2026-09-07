@@ -187,5 +187,15 @@
         "points": 0,
         "verified": 0,
         "role": "user"
+    },
+    {
+        "first": "Mark",
+        "last": "Salario",
+        "email": "salariomark123@gmail.com",
+        "phone": "09777210423",
+        "password": "$2y$10$8NsgIXvqoKXBWh9WXq0t.uDrvnM6BHUqDwPuaB9gCtaOkVHDvI9KO",
+        "points": 0,
+        "verified": 0,
+        "role": "user"
     }
 ]

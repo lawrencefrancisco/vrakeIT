@@ -66,6 +66,7 @@ adminHead('ID Verifications');
      Verification Detail Modal
 ══════════════════════════════════════════ -->
 <div class="modal fade" id="verifModal" tabindex="-1">
+<<<<<<< Updated upstream
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width:520px;">
     <div class="modal-content" style="background:var(--card-bg);border:1px solid var(--muted);border-radius:20px;color:var(--text);">
 
@@ -73,16 +74,29 @@ adminHead('ID Verifications');
         <div>
           <h5 class="modal-title" style="font-weight:700;font-size:16px;margin:0;">
             <i class="bi bi-shield-check me-2" style="color:#60b4ff;"></i>ID Verification Details
+=======
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width:580px;">
+    <div class="modal-content" style="background: #ffffff; color: #1e293b; border: none; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);">
+
+      <div class="modal-header" style="border-bottom: 1px solid #f1f5f9; padding: 24px 28px;">
+        <div>
+          <h5 class="modal-title" style="font-weight: 700; font-size: 20px; margin: 0; color: #0f172a; letter-spacing: -0.3px;">
+            <i class="bi bi-shield-check me-2" style="color: #0ea5e9;"></i>ID Verification Details
+>>>>>>> Stashed changes
           </h5>
-          <div id="vm-ref" style="font-size:11px;color:var(--muted);margin-top:3px;font-family:monospace;"></div>
+          <div id="vm-ref" style="font-size: 12px; color: #64748b; margin-top: 4px; font-family: monospace;"></div>
         </div>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
+<<<<<<< Updated upstream
       <div class="modal-body" style="padding:24px;">
+=======
+      <div class="modal-body" style="padding: 28px; background: #f8fafc;">
+>>>>>>> Stashed changes
 
         <!-- Status Banner -->
-        <div id="vm-status-banner" style="border-radius:12px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:13px;"></div>
+        <div id="vm-status-banner"></div>
 
         <!-- Registrant Info -->
         <div class="vm-section-label"><i class="bi bi-person-fill"></i> Registrant Info</div>
@@ -94,6 +108,7 @@ adminHead('ID Verifications');
         </div>
 
         <!-- ID Image -->
+<<<<<<< Updated upstream
         <div id="vm-image-wrap" style="display:none;margin-bottom:18px;">
           <div class="vm-section-label"><i class="bi bi-person-badge-fill"></i> Submitted ID Image</div>
           <div style="border-radius:12px;overflow:hidden;background:var(--bg);border:1px solid var(--muted);">
@@ -102,6 +117,16 @@ adminHead('ID Verifications');
               onclick="window.open(this.src,'_blank')">
           </div>
           <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:5px;">Click image to open full size</div>
+=======
+        <div id="vm-image-wrap" style="display:none; margin-bottom: 24px;">
+          <div class="vm-section-label"><i class="bi bi-person-badge"></i> Submitted ID Image</div>
+          <div style="border-radius: 16px; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); padding: 12px;">
+            <img id="vm-id-image" src="" alt="ID Image"
+              style="width: 100%; display: block; max-height: 320px; object-fit: contain; cursor: zoom-in; border-radius: 10px;"
+              onclick="window.open(this.src,'_blank')">
+          </div>
+          <div style="font-size: 12px; color: #94a3b8; text-align: center; margin-top: 10px; font-weight: 500;">Click image to open full size</div>
+>>>>>>> Stashed changes
         </div>
 
         <!-- OCR Extracted -->
@@ -125,54 +150,56 @@ adminHead('ID Verifications');
         <!-- OCR Confidence -->
         <div class="vm-section-label"><i class="bi bi-bar-chart-fill"></i> OCR Confidence</div>
         <div class="vm-block">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <span id="vm-engine" style="font-size:12px;"></span>
-            <span id="vm-conf-pct" style="font-size:20px;font-weight:800;"></span>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span id="vm-engine" style="font-size: 13px; font-weight: 600;"></span>
+            <span id="vm-conf-pct" style="font-size: 24px; font-weight: 800; letter-spacing: -1px;"></span>
           </div>
-          <div style="height:8px;border-radius:4px;background:var(--muted);overflow:hidden;">
-            <div id="vm-conf-bar" style="height:100%;border-radius:4px;transition:width 0.8s ease;width:0%;"></div>
+          <div style="height: 10px; border-radius: 5px; background: #e2e8f0; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);">
+            <div id="vm-conf-bar" style="height: 100%; border-radius: 5px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); width: 0%;"></div>
           </div>
         </div>
 
         <!-- Failure Reason -->
-        <div id="vm-failure-wrap" style="display:none;margin-top:16px;">
-          <div class="vm-section-label" style="color:rgba(248,113,113,0.7);"><i class="bi bi-x-circle-fill"></i> Failure Reason</div>
-          <div id="vm-fail-reason" style="background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:12px;padding:14px;font-size:13px;color:#f87171;line-height:1.6;margin-bottom:18px;"></div>
+        <div id="vm-failure-wrap" style="display:none; margin-top: 24px;">
+          <div class="vm-section-label" style="color: #ef4444;"><i class="bi bi-x-circle-fill"></i> Failure Reason</div>
+          <div id="vm-fail-reason" style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 16px; font-size: 14px; color: #b91c1c; line-height: 1.6; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.05);"></div>
         </div>
 
         <!-- Image Hash -->
-        <div id="vm-hash-wrap" style="font-size:10px;color:var(--muted);font-family:monospace;word-break:break-all;text-align:center;margin-top:4px;"></div>
+        <div id="vm-hash-wrap" style="font-size: 11px; color: #94a3b8; font-family: monospace; word-break: break-all; text-align: center; margin-top: 16px;"></div>
 
       </div>
 
-      <div class="modal-footer" style="border-top:1px solid var(--muted);gap:8px;padding:16px 24px;" id="vm-footer"></div>
+      <div class="modal-footer" style="border-top: 1px solid #f1f5f9; background: #ffffff; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; gap: 12px; padding: 20px 28px;" id="vm-footer"></div>
     </div>
   </div>
 </div>
 
 <style>
 .vm-section-label {
-  font-size:11px;font-weight:700;text-transform:uppercase;
-  letter-spacing:1px;color:var(--muted);margin-bottom:10px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: #64748b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
 }
 .vm-block {
-  background:var(--muted);border-radius:12px;
-  padding:14px;margin-bottom:18px;
+  background: #ffffff; border-radius: 16px;
+  padding: 18px 20px; margin-bottom: 24px;
+  border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 .vm-row {
-  display:flex;align-items:center;gap:10px;
-  padding:8px 0;border-bottom:1px solid var(--muted);
-  font-size:13px;flex-wrap:wrap;
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid #f1f5f9;
+  font-size: 14px; flex-wrap: nowrap;
 }
 .vm-label {
-  color:var(--muted);font-size:11px;font-weight:600;
-  min-width:120px;text-transform:uppercase;letter-spacing:0.4px;
+  color: #64748b; font-size: 12px; font-weight: 600;
+  min-width: 130px; text-transform: uppercase; letter-spacing: 0.5px;
+  padding-top: 2px;
 }
-.vm-val          { font-weight:600;flex:1; }
-.vm-val.empty    { color:var(--muted);font-weight:400;font-style:italic; }
-.vm-badge        { font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap; }
-.vm-badge.match  { background:rgba(74,222,128,0.18);color:#4ade80; }
-.vm-badge.nomatch{ background:rgba(248,113,113,0.18);color:#f87171; }
+.vm-val { font-weight: 600; flex: 1; color: #0f172a; word-break: break-word; min-width: 0; }
+.vm-val.empty { color: #94a3b8; font-weight: 400; font-style: italic; }
+.vm-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; white-space: nowrap; flex-shrink: 0; margin-left: auto; }
+.vm-badge.match { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.vm-badge.nomatch { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -185,14 +212,25 @@ function openVerifModal(v) {
 
   // Status banner
   const bannerStyles = {
+<<<<<<< Updated upstream
     pending:  { bg:'rgba(251,191,36,0.12)',  border:'rgba(251,191,36,0.3)',  color:'#fbbf24', icon:'<i class="bi bi-hourglass-split"></i>', label:'Pending Review'  },
     approved: { bg:'rgba(74,222,128,0.12)',  border:'rgba(74,222,128,0.3)', color:'#4ade80', icon:'<i class="bi bi-check-circle-fill"></i>', label:'Approved'        },
     rejected: { bg:'rgba(248,113,113,0.12)', border:'rgba(248,113,113,0.3)',color:'#f87171', icon:'<i class="bi bi-x-circle-fill"></i>', label:'Rejected'        },
+=======
+    pending:  { bg:'#fffbeb',  border:'#fde68a', color:'#d97706', icon:'<i class="bi bi-hourglass-split"></i>', label:'Pending Review'  },
+    approved: { bg:'#f0fdf4',  border:'#bbf7d0', color:'#16a34a', icon:'<i class="bi bi-shield-check"></i>', label:'Approved'        },
+    rejected: { bg:'#fef2f2', border:'#fecaca',color:'#dc2626', icon:'<i class="bi bi-x-circle"></i>', label:'Rejected'        },
+>>>>>>> Stashed changes
   };
-  const s = bannerStyles[v.status] || { bg:'var(--muted)', border:'var(--muted)', color:'var(--muted)', icon:'<i class="bi bi-question-circle-fill"></i>', label: v.status ? ucFirst(v.status) : 'Unknown' };
+  const s = bannerStyles[v.status] || { bg:'#f1f5f9', border:'#e2e8f0', color:'#64748b', icon:'<i class="bi bi-question-circle-fill"></i>', label: v.status ? ucFirst(v.status) : 'Unknown' };
   const banner = document.getElementById('vm-status-banner');
+<<<<<<< Updated upstream
   banner.style.cssText = `background:${s.bg};border:1px solid ${s.border};color:${s.color};border-radius:12px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:13px;`;
   banner.innerHTML = `<span style="font-size:18px;">${s.icon}</span> ${s.label}`;
+=======
+  banner.style.cssText = `background:${s.bg};border:1px solid ${s.border};color:${s.color};border-radius:16px;padding:14px 20px;margin-bottom:24px;display:flex;align-items:center;gap:12px;font-weight:700;font-size:15px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);`;
+  banner.innerHTML = `<span style="font-size:20px;">${s.icon}</span> <span style="letter-spacing:0.2px;">${s.label}</span>`;
+>>>>>>> Stashed changes
 
   // Registrant info
   document.getElementById('vm-user-name').textContent  = (v.first_name + ' ' + v.last_name).trim() || '—';
@@ -223,20 +261,26 @@ function openVerifModal(v) {
   const engineEl = document.getElementById('vm-engine');
   if (v.ocr_engine) {
     const label = v.ocr_engine === 'tesseract' ? '<i class="bi bi-pc-display"></i> Tesseract (Local)'
-                : v.ocr_engine === 'gemini'    ? '<i class="bi bi-robot"></i> Gemini Vision (AI)'
+                : v.ocr_engine === 'gemini_vision' ? '<i class="bi bi-robot"></i> Gemini Vision (AI)'
                 : v.ocr_engine.toUpperCase();
     engineEl.innerHTML = label;
-    engineEl.style.color = '#60b4ff';
   } else {
-    engineEl.textContent = 'Engine unknown';
-    engineEl.style.color = 'var(--muted)';
+    // Default to Gemini since it's the primary engine now
+    engineEl.innerHTML = '<i class="bi bi-robot"></i> Gemini Vision (AI)';
   }
+  engineEl.style.color = '#0ea5e9';
 
   // Failure reason
   const failWrap = document.getElementById('vm-failure-wrap');
   if (v.ocr_failure_reason) {
     failWrap.style.display = 'block';
-    document.getElementById('vm-fail-reason').textContent = v.ocr_failure_reason;
+    
+    let niceReason = v.ocr_failure_reason
+      .replace(/name_mismatch/g, '<strong>Name Mismatch:</strong> The name on the ID does not match the registered user.<br>')
+      .replace(/dob_mismatch/g, '<strong>DOB Mismatch:</strong> The date of birth on the ID does not match the registered user.<br>')
+      .replace(/ \(score=([0-9.]+)\)/, '<br><span style="font-size:12px;color:#ef4444;opacity:0.8;">Internal Match Score: $1</span>');
+      
+    document.getElementById('vm-fail-reason').innerHTML = niceReason;
   } else {
     failWrap.style.display = 'none';
   }

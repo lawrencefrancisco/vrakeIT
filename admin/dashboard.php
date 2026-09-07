@@ -93,8 +93,11 @@ adminHead('Dashboard', 'dashboard');
 <div class="row g-3 mb-4">
   <div class="col-12">
     <div class="section-card">
-      <div class="section-header">
+      <div class="section-header" style="display:flex; justify-content:space-between; align-items:center;">
         <span class="section-title-text"><i class="bi bi-map-fill me-2" style="color:#60b4ff;"></i>Live Incident Map (Valenzuela)</span>
+        <button id="analyzeHotspotsBtn" onclick="analyzeHotspots()" style="background: linear-gradient(135deg, #8a2be2, #4b0082); color:#fff; border:none; padding:8px 16px; border-radius:12px; font-weight:700; font-size:12px; display:flex; align-items:center; gap:6px; box-shadow: 0 4px 15px rgba(138,43,226,0.3); transition:all 0.2s;">
+            <i class="bi bi-stars"></i> Analyze Hotspots
+        </button>
       </div>
       <div style="position: relative; height: 450px; border-radius: 0 0 12px 12px; overflow: hidden;">
         
@@ -183,6 +186,25 @@ adminHead('Dashboard', 'dashboard');
 </div>
 
 </div><!-- /page-body -->
+
+<!-- AI Hotspot Analysis Modal -->
+<div class="modal fade" id="hotspotModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content" style="border-radius:24px; border:1px solid var(--border-light); background:var(--card-bg); backdrop-filter:blur(24px);">
+      <div class="modal-header" style="border-bottom:1px solid rgba(0,0,0,0.05); padding:24px 32px;">
+        <h5 class="modal-title" style="font-weight:800; color:var(--text); display:flex; align-items:center; gap:10px;">
+            <div style="width:40px; height:40px; background:linear-gradient(135deg, #8a2be2, #4b0082); border-radius:12px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:20px; box-shadow: 0 4px 12px rgba(138,43,226,0.3);">🧠</div>
+            AI Hotspot Infrastructure Analysis
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="hotspotModalBody" style="padding:32px;">
+        <!-- AI content injected here -->
+      </div>
+    </div>
+  </div>
+</div>
+
 </div><!-- /main -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -225,12 +247,12 @@ const VALENZUELA_POLY = [
   [14.6945, 121.0165],  // Paso de Blas east
   // ─ Southern boundary (E → W) ───────────────────────────────
   [14.6905, 121.0070],  // Gen. T. De Leon SE
-  [14.6870, 120.9990],  // Gen. T. De Leon south
-  [14.6845, 120.9910],  // Parada / Marulas E
-  [14.6820, 120.9845],  // Marulas south (southernmost)
-  [14.6825, 120.9750],  // Karuhatan south (Tullahan River)
-  [14.6845, 120.9640],  // Malinta south (Tullahan River)
-  [14.6870, 120.9565],  // Malinta / Rincon SW
+  [14.6750, 120.9990],  // Gen. T. De Leon south (expanded)
+  [14.6720, 120.9910],  // Parada / Marulas E (expanded)
+  [14.6700, 120.9845],  // Marulas south (expanded southernmost)
+  [14.6715, 120.9750],  // Karuhatan south (expanded)
+  [14.6735, 120.9640],  // Malinta south (expanded)
+  [14.6760, 120.9565],  // Malinta / Rincon SW
   // ─ Western boundary (S → N) ────────────────────────────────
   [14.6935, 120.9530],  // Rincon west
   [14.7020, 120.9505],  // Polo west
@@ -440,6 +462,61 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
+let hotspotMarkers = [];
+
+async function analyzeHotspots() {
+    const btn = document.getElementById('analyzeHotspotsBtn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Analyzing...';
+    btn.disabled = true;
+    
+    try {
+        const res = await fetch('api/analyze_hotspots.php', { method: 'POST' });
+        const data = await res.json();
+        
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        
+        if(!data.success) {
+            alert(data.message || 'Error running analysis');
+            return;
+        }
+        
+        // Display AI Modal
+        document.getElementById('hotspotModalBody').innerHTML = data.ai_html;
+        const modal = new bootstrap.Modal(document.getElementById('hotspotModal'));
+        modal.show();
+        
+        // Remove old markers
+        hotspotMarkers.forEach(m => map.removeLayer(m));
+        hotspotMarkers = [];
+        
+        // Add hotspot markers to map
+        if(data.hotspots && data.hotspots.length > 0) {
+            data.hotspots.forEach((hs, index) => {
+                const pulsingIcon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div style="background:rgba(138,43,226,0.2); border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center; animation: pulse 2s infinite;"><div style="background:#8a2be2; width:16px; height:16px; border-radius:50%; border:2px solid #fff;"></div></div>`,
+                    iconSize: [40, 40],
+                    iconAnchor: [20, 20]
+                });
+                
+                const marker = L.marker([hs.lat, hs.lng], {icon: pulsingIcon}).addTo(map);
+                marker.bindPopup(`<strong>Hotspot #${index+1}</strong><br>${hs.address}<br><em>${hs.count} incidents</em>`);
+                hotspotMarkers.push(marker);
+            });
+            // Fly to first hotspot
+            map.flyTo([data.hotspots[0].lat, data.hotspots[0].lng], 16, { duration: 1.5 });
+        }
+        
+    } catch (err) {
+        console.error(err);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        alert('Network error while analyzing hotspots.');
+    }
+}
 </script>
 </body></html>
 
