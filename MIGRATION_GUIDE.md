@@ -16,8 +16,10 @@ Before you start, make sure you have the exported `vrakeit` project folder (whic
 
 ---
 
-## Step 2: Install ImageMagick (For ID Image Processing)
-VrakeIT uses ImageMagick to clean and sharpen ID uploads before scanning them for text.
+## Step 2: Install ImageMagick (Optional, For Local Tesseract OCR)
+> **Note:** VrakeIT now uses Gemini AI for OCR by default. ImageMagick is only required if you want a local, offline fallback.
+
+VrakeIT uses ImageMagick to clean and sharpen ID uploads before scanning them for text using Tesseract.
 1. Download the **ImageMagick Windows Installer** from [imagemagick.org/script/download.php#windows](https://imagemagick.org/script/download.php#windows).
    *(Look for a file like `ImageMagick-7.1.x-x-Q16-HDRI-x64-dll.exe`)*
 2. Run the installer.
@@ -25,8 +27,10 @@ VrakeIT uses ImageMagick to clean and sharpen ID uploads before scanning them fo
 
 ---
 
-## Step 3: Install Tesseract OCR (For Reading ID Cards)
-VrakeIT uses Tesseract to actually read the text from the uploaded IDs.
+## Step 3: Install Tesseract OCR (Optional, For Local Fallback)
+> **Note:** VrakeIT now uses Gemini AI for OCR by default. Tesseract is only required if you want a local, offline fallback.
+
+VrakeIT uses Tesseract to actually read the text from the uploaded IDs locally.
 1. Download the **Tesseract OCR Windows Installer** from [UB-Mannheim's GitHub](https://github.com/UB-Mannheim/tesseract/wiki).
    *(Download the 64-bit installer `tesseract-ocr-w64-setup-5.3.x.exe`)*
 2. Run the installer. When asked where to install, leave the default directory as `C:\Program Files\Tesseract-OCR`.
