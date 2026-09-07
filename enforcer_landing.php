@@ -27,6 +27,12 @@ $announcements = $db->query("SELECT * FROM announcements WHERE is_active = 1 ORD
 $totalReports  = $db->prepare("SELECT COUNT(*) FROM reports WHERE user_id = ?");
 $totalReports->execute([$user['id']]);
 $reportCount = $totalReports->fetchColumn();
+
+// Get live incident count for notification badge (new unread incidents)
+$lastViewed = $user['last_incident_viewed_at'] ?? '2000-01-01 00:00:00';
+$liveReportsStmt = $db->prepare("SELECT COUNT(*) FROM reports WHERE status IN ('pending', 'reviewing') AND created_at > ?");
+$liveReportsStmt->execute([$lastViewed]);
+$liveReportCount = $liveReportsStmt->fetchColumn();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -265,7 +271,10 @@ setInterval(rotateSafetyTip, 5000);
         <span class="cta-sub">File on behalf of victim</span>
       </div>
     </a>
-    <a href="enforcer_live.php" class="saas-cta-btn blue-cta" id="btn-live-incidents">
+    <a href="enforcer_live.php" class="saas-cta-btn blue-cta" id="btn-live-incidents" style="position:relative;">
+      <?php if ($liveReportCount > 0): ?>
+        <span style="position:absolute; top:8px; right:8px; background:#ef4444; color:white; border-radius:50%; min-width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; box-shadow:0 2px 8px rgba(239, 68, 68, 0.4); padding: 0 6px; z-index:10; animation: pulse-red 2s infinite; border: 2px solid white;"><?= $liveReportCount ?></span>
+      <?php endif; ?>
       <div class="saas-cta-icon-wrap" style="color:#007ED2; background:rgba(0,126,210,0.1);"><i class="bi bi-geo-alt-fill"></i></div>
       <div class="cta-text-wrap">
         <span class="cta-label" style="color:#007ED2;">Live Incidents</span>

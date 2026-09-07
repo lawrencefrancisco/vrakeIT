@@ -10,6 +10,11 @@ if ($user['role'] !== 'enforcer') {
     header("Location: landing.php");
     exit;
 }
+
+// Mark incidents as viewed
+$db = getDB();
+$db->prepare("UPDATE users SET last_incident_viewed_at = NOW() WHERE id = ?")->execute([$user['id']]);
+$user['last_incident_viewed_at'] = date('Y-m-d H:i:s');
 ?>
 <!DOCTYPE html>
 <html lang="en">
