@@ -230,7 +230,7 @@ $activeAds = $db->query("
   <a href="contract.php" class="saas-cta-btn green-cta" id="btn-track-report">
     <div class="saas-cta-icon-wrap"><i class="bi bi-clipboard-check"></i></div>
     <div class="cta-text-wrap">
-      <span class="green-cta-label"> Track Settlement</span>
+      <span class="cta-label">Track Settlement</span>
       <!-- <span class="cta-sub">View your reports</span> -->
     </div>
   </a>

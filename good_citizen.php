@@ -375,8 +375,8 @@ body {
 </style>
 </head>
 <body>
-<header class="app-header";">
-  <a href="landing.php" style="color:#fff;font-size:22px;"><i class="bi bi-arrow-left"></i></a>
+<header class="app-header">
+  <a href="landing.php" class="back-btn" style="font-size:22px;"><i class="bi bi-arrow-left"></i></a>
   <span class="header-logo">Good Citizen</span>
   <span style="width:32px;"></span>
 </header>

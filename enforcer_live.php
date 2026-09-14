@@ -34,7 +34,7 @@ $user['last_incident_viewed_at'] = date('Y-m-d H:i:s');
 <body style="background-color: #f8fafc;">
 
 <header class="app-header">
-  <a href="enforcer_landing.php" style="color:#fff;font-size:22px;"><i class="bi bi-arrow-left"></i></a>
+  <a href="enforcer_landing.php" class="back-btn" style="font-size:22px;"><i class="bi bi-arrow-left"></i></a>
   <span class="header-title">Live Incidents</span>
   <span style="width:32px;"></span>
 </header>
