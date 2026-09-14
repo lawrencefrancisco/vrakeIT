@@ -1797,7 +1797,7 @@ body::before {
 .blue-cta  .cta-label  { color: #004982; }
 .blue-cta  .cta-sub    { color: rgba(0, 73, 130, 0.7); }
 
-.green-cta .green-cta-label { color: #005426; }
+.green-cta .cta-label { color: #005426; }
 .green-cta .cta-sub    { color: rgba(0, 84, 38, 0.7); }
 
 .amber-cta .cta-label  { color: #78350f; }

@@ -21,7 +21,7 @@ $user = getLoggedInUser();
 <body>
   <header class="app-header">
     <?php $backLink = (($user['role'] ?? 'user') === 'enforcer') ? 'enforcer_landing.php' : 'landing.php'; ?>
-    <a href="<?= $backLink ?>" style="color:#fff;font-size:22px;"><i class="bi bi-arrow-left"></i></a>
+    <a href="<?= $backLink ?>" class="back-btn" style="font-size:22px;"><i class="bi bi-arrow-left"></i></a>
     <span class="header-logo">My Profile</span>
     <span style="width:32px;"></span>
   </header>
