@@ -1077,7 +1077,7 @@ if (($user['role'] ?? 'user') !== 'user') {
              STEP 1 — How many are involved?
         ═══════════════════════════════════════════════════════ -->
         <div class="wizard-step active" id="step-1">
-          <div class="step-title">How many people are involved?</div>
+          <div class="step-title">How many drivers are involved?</div>
           <p class="step-sub">This helps us guide you through the right reporting process.</p>
 
           <div class="choice-card-grid">
@@ -1910,7 +1910,7 @@ if (($user['role'] ?? 'user') !== 'user') {
 
       // Step 1
       's1-title': {
-        en: 'How many people are involved?',
+        en: 'How many drivers are involved?',
         tl: 'Ilang tao ang sangkot?'
       },
       's1-sub': {
