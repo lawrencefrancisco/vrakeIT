@@ -18,6 +18,8 @@ if ($filter === 'reviewing')    $where .= " AND r.status='reviewing'";
 if ($filter === 'verified')     $where .= " AND r.status='verified'";
 if ($filter === 'rejected')     $where .= " AND r.status='rejected'";
 if ($filter === 'injured')      $where .= " AND r.is_injured=1";
+if ($filter === 'citizen')      $where .= " AND r.reporter_role='citizen'";
+if ($filter === 'driver')       $where .= " AND (r.reporter_role='driver' OR r.reporter_role IS NULL)";
 if ($search) { $where .= " AND (r.reference_number LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)"; $s="%$search%"; $params=[$s,$s,$s]; }
 
 $stmt = $db->prepare("SELECT r.*, u.first_name, u.last_name, u.email, u.account_verified FROM reports r JOIN users u ON r.user_id=u.id $where ORDER BY r.created_at DESC LIMIT 100");
@@ -38,7 +40,7 @@ adminHead('Incident Monitoring');
 <div class="section-card mb-4">
   <div class="section-header" style="flex-wrap:wrap;gap:10px;">
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <?php foreach(['all'=>'All','good_citizen'=>'Good Citizen','pending'=>'Pending','reviewing'=>'Reviewing','verified'=>'Verified','rejected'=>'Rejected','injured'=>'With Injury'] as $k=>$v): ?>
+      <?php foreach(['all'=>'All','citizen'=>'Citizen/Witness','driver'=>'Driver','good_citizen'=>'Good Citizen','pending'=>'Pending','reviewing'=>'Reviewing','verified'=>'Verified','rejected'=>'Rejected','injured'=>'With Injury'] as $k=>$v): ?>
       <a href="?filter=<?= $k ?>" class="btn-admin <?= $filter===$k?'btn-primary-admin':'btn-review' ?>"><?= $v ?></a>
       <?php endforeach; ?>
     </div>
@@ -56,7 +58,7 @@ adminHead('Incident Monitoring');
   </div>
   <div style="overflow-x:auto;">
   <table class="data-table">
-    <thead><tr><th>Ref #</th><th>Reporter</th><th>Type</th><th>Injured</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+    <thead><tr><th>Ref #</th><th>Reporter</th><th>Role</th><th>Type</th><th>Injured</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
     <tbody>
     <?php foreach($reports as $r):
       $typeMap  = ['standard' =>'Standard','contract'=>'Contract','good_citizen'=>'Good Citizen'];
@@ -75,6 +77,17 @@ adminHead('Incident Monitoring');
           <?php endif; ?>
         </div>
         <div style="font-size:11px;color:var(--muted);"><?= htmlspecialchars($r['email']) ?></div>
+      </td>
+      <td>
+        <?php
+          $rRole = $r['reporter_role'] ?? 'driver';
+          $roleLabel = $rRole === 'citizen' ? 'Citizen/Witness' : 'Driver';
+          $roleColor = $rRole === 'citizen' ? '#a78bfa' : '#60b4ff';
+          $roleIcon  = $rRole === 'citizen' ? 'bi-eye-fill' : 'bi-car-front-fill';
+        ?>
+        <span style="color:<?= $roleColor ?>;font-weight:600;font-size:12px;">
+          <i class="bi <?= $roleIcon ?>"></i> <?= $roleLabel ?>
+        </span>
       </td>
       <td><span style="color:<?= $typeClr[$ft] ?>;font-weight:600;font-size:12px;"><?= $typeMap[$ft] ?></span></td>
       <td><?= $r['is_injured'] ? '<span style="color:#f87171;font-weight:600;">Yes</span>' : '<span style="color:var(--muted);">No</span>' ?></td>
@@ -106,15 +119,15 @@ adminHead('Incident Monitoring');
 <!-- Modal for Viewing Report -->
 <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content" style="background:var(--card-bg); color:var(--text); border: 1px solid var(--muted); border-radius:12px;">
-      <div class="modal-header" style="border-bottom: 1px solid var(--muted);">
-        <h5 class="modal-title"><i class="bi bi-card-text me-2"></i>Report Details</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-content" style="background:#ffffff; color:#333333; border: 1px solid #e2e8f0; border-radius:12px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+      <div class="modal-header" style="border-bottom: 1px solid #e2e8f0; background: #f8fafc; border-radius: 12px 12px 0 0;">
+        <h5 class="modal-title" style="color:#0f172a; font-weight: 600;"><i class="bi bi-card-text me-2"></i>Report Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="reportModalBody" style="min-height: 200px;">
         <div class="text-center mt-5"><div class="spinner-border text-primary" role="status"></div></div>
       </div>
-      <div class="modal-footer" style="border-top: 1px solid var(--muted);">
+      <div class="modal-footer" style="border-top: 1px solid #e2e8f0; background: #f8fafc; border-radius: 0 0 12px 12px;">
         <button type="button" class="btn-admin btn-review" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
@@ -572,6 +585,16 @@ async function viewReport(rid) {
         <h6 style="margin:0;">
           ${getAdminStatusBadge(r.status)}
           <span style="display:inline-block; padding:3px 8px; border-radius:4px; background:rgba(96, 180, 255, 0.1); color:#60b4ff; font-size:11px; margin-left:5px;">${(r.flow_type || '').replace('_', ' ').toUpperCase()}</span>
+        </h6>
+      </div>
+
+      <div class="col-md-6">
+        <p class="mb-1" style="color: #007ED2; font-size:12px; text-transform:uppercase; letter-spacing:1px;">Reporter Role</p>
+        <h6 style="margin:0;">
+          ${ r.reporter_role === 'citizen'
+            ? '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;font-size:12px;font-weight:600;"><i class=\'bi bi-eye-fill\'></i> Citizen / Witness</span>'
+            : '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;background:rgba(96,180,255,0.1);border:1px solid rgba(96,180,255,0.3);color:#60b4ff;font-size:12px;font-weight:600;"><i class=\'bi bi-car-front-fill\'></i> Driver</span>'
+          }
         </h6>
       </div>
 

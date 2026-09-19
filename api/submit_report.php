@@ -26,14 +26,14 @@ $refNum = generateReferenceNumber();
 // Base insert
 $stmt = $db->prepare("
     INSERT INTO reports (
-        user_id, reference_number, flow_type,
+        user_id, reference_number, flow_type, reporter_role,
         is_injured, enforcer_type, enforcer_documented, emergency_services,
         is_safe, incident_date, incident_time,
         location_lat, location_lng, location_address,
         has_other_parties, other_parties_present,
         weather_condition, road_condition, insurance_type,
         event_details, damage_category, status
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending')
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending')
 ");
 
 $emergencyServices = !empty($data['emergency_services']) ? json_encode((array)$data['emergency_services']) : null;
@@ -43,6 +43,7 @@ try {
         $userId,
         $refNum,
         $flowType,
+        in_array($data['reporter_role'] ?? '', ['driver','citizen']) ? $data['reporter_role'] : 'driver',
         (int)($data['is_injured'] ?? 0),
         sanitize($data['enforcer_type'] ?? null),
         $data['enforcer_documented'] ?? null,

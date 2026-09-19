@@ -52,7 +52,7 @@ $user = getLoggedInUser();
   </div>
 
   <div id="emptyState" style="display:none;text-align:center;padding:60px 20px;">
-    <i class="bi bi-clipboard-x" style="font-size:56px;color:#ddd;display:block;margin-bottom:12px;"></i>
+    <i class="bi bi-clipboard-x" style="font-size:56px;color:var(--red);display:block;margin-bottom:12px;"></i>
     <h5 style="color:var(--muted);font-weight:600;">No Reports Yet</h5>
     <p style="color:#aaa;font-size:14px;">File your first report to see it here.</p>
     <a href="report.php" class="btn-primary-vr d-inline-block" style="padding:12px 24px;text-decoration:none;margin-top:8px;">File a Report</a>
@@ -163,11 +163,17 @@ function renderReports() {
         <div>
           <div class="ref">${r.reference_number}</div>
           <div class="flow-type">${r.flow_label}</div>
+          <div style="margin-top:4px;">
+            ${ r.reporter_role === 'citizen'
+              ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#7c3aed;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);padding:2px 8px;border-radius:20px;"><i class="bi bi-eye-fill"></i> Citizen / Witness</span>`
+              : `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#1d4ed8;background:rgba(29,78,216,0.08);border:1px solid rgba(29,78,216,0.2);padding:2px 8px;border-radius:20px;"><i class="bi bi-car-front-fill"></i> Driver</span>`
+            }
+          </div>
         </div>
         ${getStatusBadge(r.status)}
       </div>
       <div class="date"><i class="bi bi-calendar3 me-1"></i>${r.formatted_date}</div>
-      ${r.location_address ? `<div style="font-size:12px;color:var(--muted);margin-top:4px;"><i class="bi bi-geo-alt me-1"></i>${r.location_address.substring(0,60)}...</div>` : ''}
+      ${r.location_address ? `<div style="font-size:12px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><i class="bi bi-geo-alt me-1"></i>${r.location_address}</div>` : ''}
       <div style="text-align:right;margin-top:8px;font-size:12px;color:var(--blue);">Tap for details &rarr;</div>
     </div>
   `).join('');
@@ -225,10 +231,15 @@ function showDetail(r) {
     }
   }
 
+  const roleLabel = r.reporter_role === 'citizen'
+    ? `<span style="display:inline-flex;align-items:center;gap:5px;color:#7c3aed;font-weight:600;"><i class="bi bi-eye-fill"></i> Citizen / Witness</span>`
+    : `<span style="display:inline-flex;align-items:center;gap:5px;color:#1d4ed8;font-weight:600;"><i class="bi bi-car-front-fill"></i> Driver</span>`;
+
   const rows = [
     ['Reference', r.reference_number],
     ['Status', r.status.charAt(0).toUpperCase() + r.status.slice(1)],
     ['Type', r.flow_label],
+    ['Role', roleLabel],
     ['Submitted', r.formatted_date],
     ['Injured?', r.is_injured ? 'Yes' : 'No'],
     ['Date of Incident', r.incident_date || '-'],

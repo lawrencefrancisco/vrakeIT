@@ -212,7 +212,7 @@ $activeAds = $db->query("
   <a href="report.php" class="saas-cta-btn red-cta" id="btn-file-report">
     <div class="saas-cta-icon-wrap"><i class="bi bi-exclamation-triangle-fill"></i></div>
     <div class="cta-text-wrap">
-      <span class="cta-label">I'M IN AN ACCIDENT</span>
+      <span class="cta-label">REPORT AN ACCIDENT</span>
       <span class="cta-sub">Tap here to get help/report</span>
     </div>
   </a>
