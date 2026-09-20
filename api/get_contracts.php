@@ -13,8 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 $userId = (int)$_SESSION['user_id'];
 $db     = getDB();
 
-$stmt = $db->prepare("SELECT * FROM contracts WHERE user_id = ? ORDER BY created_at DESC");
-$stmt->execute([$userId]);
+$stmt = $db->prepare("SELECT * FROM contracts WHERE party1_user_id = ? OR party2_user_id = ? ORDER BY created_at DESC");
+$stmt->execute([$userId, $userId]);
 $contracts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 foreach ($contracts as &$c) {

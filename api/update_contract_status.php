@@ -23,15 +23,15 @@ if (!$ref || !in_array($status, $allowed, true)) {
 $db = getDB();
 
 // Make sure the contract belongs to this user before updating
-$stmt = $db->prepare("SELECT id FROM contracts WHERE reference_number = ? AND user_id = ?");
-$stmt->execute([$ref, $userId]);
+$stmt = $db->prepare("SELECT id FROM contracts WHERE reference_number = ? AND (party1_user_id = ? OR party2_user_id = ?)");
+$stmt->execute([$ref, $userId, $userId]);
 $contract = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$contract) {
     jsonResponse(false, 'Contract not found.');
 }
 
-$update = $db->prepare("UPDATE contracts SET status = ?, updated_at = NOW() WHERE reference_number = ? AND user_id = ?");
-$update->execute([$status, $ref, $userId]);
+$update = $db->prepare("UPDATE contracts SET status = ?, updated_at = NOW() WHERE reference_number = ? AND (party1_user_id = ? OR party2_user_id = ?)");
+$update->execute([$status, $ref, $userId, $userId]);
 
 jsonResponse(true, 'Contract status updated.');
