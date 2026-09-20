@@ -51,7 +51,7 @@ if ($action === 'approve_gc') {
     $userId   = (int)($_POST['user_id']   ?? 0);
     if (!$reportId || !$userId) jsonResponse(false, 'Missing parameters.');
 
-    $report = $db->prepare("SELECT * FROM reports WHERE id=? AND flow_type='good_citizen' AND status='pending'");
+    $report = $db->prepare("SELECT * FROM reports WHERE id=? AND flow_type='good_citizen' AND status IN ('pending','ongoing')");
     $report->execute([$reportId]);
     $r = $report->fetch();
     if (!$r) jsonResponse(false, 'Report not found or already processed.');
@@ -59,7 +59,7 @@ if ($action === 'approve_gc') {
     $db->beginTransaction();
     try {
         addPoints($userId, GOOD_CITIZEN_POINTS, 'Good Citizen Report Approved — Ref: ' . $r['reference_number'], $reportId);
-        $db->prepare("UPDATE reports SET status='verified' WHERE id=?")->execute([$reportId]);
+        $db->prepare("UPDATE reports SET status='closed' WHERE id=?")->execute([$reportId]);
         $db->commit();
         auditLog($adminId, 'gc_approved', "Report #{$reportId}, User #{$userId}, +" . GOOD_CITIZEN_POINTS . " pts");
         jsonResponse(true, 'Good Citizen report approved! ' . GOOD_CITIZEN_POINTS . ' points granted to user.', ['points_granted' => GOOD_CITIZEN_POINTS]);
@@ -142,35 +142,15 @@ if ($action === 'create_moderator') {
 if ($action === 'update_report_status') {
     $reportId = (int)($_POST['report_id'] ?? 0);
     $status   = $_POST['status'] ?? '';
-    if (!in_array($status, ['pending', 'reviewing', 'verified', 'rejected', 'closed'])) jsonResponse(false, 'Invalid status.');
+    if (!in_array($status, ['pending', 'ongoing', 'escalated', 'closed'])) jsonResponse(false, 'Invalid status.');
 
-    // Fetch current report to check flow_type and whether points were already awarded
+    // Fetch current report to check flow_type
     $cur = $db->prepare("SELECT flow_type, status, user_id, reference_number FROM reports WHERE id=?");
     $cur->execute([$reportId]);
     $report = $cur->fetch();
     if (!$report) jsonResponse(false, 'Report not found.');
 
     $db->prepare("UPDATE reports SET status=? WHERE id=?")->execute([$status, $reportId]);
-
-    // Auto-grant points when a Good Citizen report is manually set to 'verified'
-    // Only grant if it wasn't already verified/closed (to prevent duplicate points)
-    if ($status === 'verified'
-        && $report['flow_type'] === 'good_citizen'
-        && !in_array($report['status'], ['verified', 'closed'])
-    ) {
-        $db->beginTransaction();
-        try {
-            addPoints((int)$report['user_id'], GOOD_CITIZEN_POINTS,
-                'Good Citizen Report Verified — Ref: ' . $report['reference_number'], $reportId);
-            $db->commit();
-            auditLog($adminId, 'gc_verified_manual',
-                "Report #{$reportId} manually set to verified, +" . GOOD_CITIZEN_POINTS . " pts to User #{$report['user_id']}");
-        } catch (Exception $e) {
-            $db->rollBack();
-            // Don't fail the status update — just log
-            error_log('Points grant failed for report #' . $reportId . ': ' . $e->getMessage());
-        }
-    }
 
     auditLog($adminId, 'report_status_changed', "Report #{$reportId} → {$status}");
     jsonResponse(true, 'Report status updated to ' . ucfirst($status) . '.');
@@ -194,7 +174,7 @@ if ($action === 'manage_report') {
     $updateFields = [];
     $params = [];
 
-    if (in_array($status, ['pending', 'reviewing', 'verified', 'rejected', 'closed'])) {
+    if (in_array($status, ['pending', 'ongoing', 'escalated', 'closed'])) {
         $updateFields[] = "status=?";
         $params[] = $status;
     }
@@ -210,24 +190,6 @@ if ($action === 'manage_report') {
         $sql = "UPDATE reports SET " . implode(", ", $updateFields) . " WHERE id=?";
         $db->prepare($sql)->execute($params);
         auditLog($adminId, 'report_managed', "Report #{$reportId} updated by admin.");
-    }
-
-    // Auto-grant points when a Good Citizen report is manually set to 'verified' via modal
-    if ($status === 'verified'
-        && $report['flow_type'] === 'good_citizen'
-        && !in_array($report['status'], ['verified', 'closed'])
-    ) {
-        $db->beginTransaction();
-        try {
-            addPoints((int)$report['user_id'], GOOD_CITIZEN_POINTS,
-                'Good Citizen Report Verified — Ref: ' . $report['reference_number'], $reportId);
-            $db->commit();
-            auditLog($adminId, 'gc_verified_modal',
-                "Report #{$reportId} verified via modal, +" . GOOD_CITIZEN_POINTS . " pts to User #{$report['user_id']}");
-        } catch (Exception $e) {
-            $db->rollBack();
-            error_log('Points grant failed (modal) for report #' . $reportId . ': ' . $e->getMessage());
-        }
     }
 
     jsonResponse(true, 'Report successfully updated.');

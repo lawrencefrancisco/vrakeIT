@@ -1701,13 +1701,13 @@ if (($user['role'] ?? 'user') !== 'user') {
 
         <!-- INJURY-HOTLINE — Want to call the hotline? -->
         <div class="wizard-step" id="step-injury-hotline">
-          <div class="center-screen" style="padding-bottom:0;">
+          <div class="center-screen">
             <div class="hero-icon amber pulse"><i class="bi bi-telephone-fill"></i></div>
-            <div class="step-title">Want to call the hotline for help now?</div>
+            <div class="step-title" style="margin-bottom:0.5rem; line-height:1.3;">Want to call the hotline for help now?</div>
             <p class="step-sub">We strongly recommend calling TMO or emergency services before continuing.</p>
           </div>
 
-          <div class="call-grid" style="margin-top:1rem;">
+          <div class="call-grid">
             <a href="tel:136" class="call-btn amber">
               <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
               <strong>TMO Hotline</strong>
@@ -1721,11 +1721,37 @@ if (($user['role'] ?? 'user') !== 'user') {
           </div>
 
           <hr class="divider">
-          <div class="btn-row">
-            <button class="btn-primary" onclick="setHotlineChoice(true)"><i class="bi bi-telephone-fill"></i> Yes, I called / calling now</button>
-            <button class="btn-outline" style="width:100%;" onclick="setHotlineChoice(false)"><i class="bi bi-arrow-right"></i> Skip — Continue</button>
+          
+          <div class="btn-row" style="margin-top:0;">
+            <button class="btn-outline" style="width:100%; margin-bottom:0;" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+            <button class="btn-primary" style="width:100%; margin-bottom:0;" onclick="setHotlineChoice(false)">Skip, File a Report Anyway <i class="bi bi-arrow-right"></i></button>
           </div>
-          <button class="btn-outline" style="margin-top:0.35rem;" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- MINOR-CALL-TMO — Minor injury, user chose to call TMO first -->
+        <div class="wizard-step" id="step-minor-call-tmo">
+          <div class="center-screen">
+            <div class="hero-icon amber pulse"><i class="bi bi-stoplights"></i></div>
+            <div class="step-title">Contact TMO</div>
+            <p class="step-sub">Please contact your local Traffic Management Officer. Once done, you can proceed to file your report.</p>
+          </div>
+
+          <div class="call-grid">
+            <a href="tel:136" class="call-btn amber">
+              <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
+              <strong>TMO Hotline</strong>
+              <span class="ca-label">Speed Dial 136</span>
+            </a>
+            <a href="tel:911" class="call-btn red">
+              <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
+              <strong>Call 911</strong>
+              <span class="ca-label">Emergency</span>
+            </a>
+          </div>
+
+          <hr class="divider">
+          <button class="btn-primary" onclick="goToFormFlow()"><i class="bi bi-arrow-right"></i> Continue to Report</button>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
         </div>
 
         <!-- INJURY-DECEASED — Are there any deceased? -->
@@ -1752,6 +1778,28 @@ if (($user['role'] ?? 'user') !== 'user') {
               <div class="cc-sub">No deaths at this time</div>
             </button>
           </div>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- INJURY-CONFIRM-REPORT — No deceased: ask if they still want to report -->
+        <div class="wizard-step" id="step-injury-confirm-report">
+          <div class="center-screen" style="padding-bottom:0;">
+            <div class="hero-icon amber pulse" id="injury-confirm-icon"><i class="bi bi-file-earmark-text"></i></div>
+            <div class="step-title" id="injury-confirm-title">Do you still want to file a report?</div>
+            <p class="step-sub" id="injury-confirm-sub">You can still document this incident for the record — even if it has already been handled.</p>
+          </div>
+
+          <div class="alert-banner warn" id="injury-confirm-banner" style="margin-top:1rem;">
+            <i class="bi bi-info-circle-fill" style="color:#f59e0b;"></i>
+            <div>
+              <div class="ab-title" id="injury-confirm-banner-title">Minor Injury Noted</div>
+              <div class="ab-body" id="injury-confirm-banner-body">Filing a report creates an official record and may help with insurance or legal processes later.</div>
+            </div>
+          </div>
+
+          <hr class="divider">
+          <button class="btn-primary" onclick="setConfirmReport(true)"><i class="bi bi-file-earmark-text" style="color:#fbbf24;"></i> Yes, I want to file a report</button>
+          <button class="btn-outline" onclick="setConfirmReport(false)"><i class="bi bi-x-circle"></i> No, I'm done</button>
           <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
         </div>
 
@@ -2238,6 +2286,10 @@ if (($user['role'] ?? 'user') !== 'user') {
             <div class="ov-row">
               <span class="ov-label">Photos</span>
               <div class="ov-value" id="ov-photos" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;">None</div>
+            </div>
+            <div class="ov-row" id="ov-vehicles-row" style="display:none;">
+              <span class="ov-label">Vehicles</span>
+              <div class="ov-value" id="ov-vehicles" style="text-align:right;">—</div>
             </div>
           </div>
 
@@ -3246,9 +3298,9 @@ if (($user['role'] ?? 'user') !== 'user') {
       syncSidebar();
       setTimeout(() => {
         if (state.parties === 'self') {
-          goToStep('step-s2');    // Solo: how many injured?
+          goToStep('step-s-attended');   // Solo: first check if TMO/Police is attending
         } else {
-          goToStep('step-m1');    // Multi: how many injured?
+          goToStep('step-m1');           // Multi: how many injured?
         }
       }, 180);
     }
@@ -3267,7 +3319,9 @@ if (($user['role'] ?? 'user') !== 'user') {
           goToStep('step-s-property');  // Good Citizen report
         }
       } else {
-        // Driver (solo, not used in new flow but kept for compat)
+        // Driver Self flow:
+        // YES — hurt → Speed Dial → "Do you still wish to report?"
+        // NO  — not hurt → Good Citizen report (+50 pts)
         goToStep(hurt ? 'step-s-speed-dial' : 'step-s-property');
       }
     }
@@ -3302,7 +3356,15 @@ if (($user['role'] ?? 'user') !== 'user') {
     function setSelfAttended(attended) {
       state.self_attended = attended;
       syncSidebar();
-      goToStep(attended ? 'step-s-doc-note' : 'step-s3');
+      if (state.parties === 'self') {
+        // Driver Self flow:
+        // YES — attended by TMO/Police → go straight to file the report
+        // NO  — not attended → ask if they are hurt
+        goToStep(attended ? 'step-s-doc-note' : 'step-s3');
+      } else {
+        // Legacy / multi path
+        goToStep(attended ? 'step-s-doc-note' : 'step-s3');
+      }
     }
 
     // ══════════════════════════════════════════════════════════
@@ -3339,7 +3401,9 @@ if (($user['role'] ?? 'user') !== 'user') {
     }
 
     // ══════════════════════════════════════════════════════════
-    //  INJURY BRANCH — Severity → Hotline → Deceased → Reporter
+    //  INJURY BRANCH
+    //  Minor:  Severity → Hotline → (No: form | Yes: Call TMO → form)
+    //  Major:  Severity → Hotline → Deceased → (Fatal: escalate | Alive: confirm → reporter → form)
     // ══════════════════════════════════════════════════════════
     function setInjurySeverity(severity, btn) {
       document.querySelectorAll('#step-injury-severity .choice-card').forEach(b => b.classList.remove('active'));
@@ -3351,8 +3415,19 @@ if (($user['role'] ?? 'user') !== 'user') {
     }
 
     function setHotlineChoice(called) {
-      // Whether or not they called, next step is the deceased check
-      goToStep('step-injury-deceased');
+      if (state.injury_severity === 'minor') {
+        // Minor injury: skip the deceased check entirely
+        if (called) {
+          // User wants to call TMO first — show the TMO call screen
+          goToStep('step-minor-call-tmo');
+        } else {
+          // User skips calling — go straight to the report form
+          goToFormFlow();
+        }
+      } else {
+        // Major injury: keep the original flow (deceased check)
+        goToStep('step-injury-deceased');
+      }
     }
 
     function setDeceased(deceased, btn) {
@@ -3363,10 +3438,46 @@ if (($user['role'] ?? 'user') !== 'user') {
           // Fatal — escalate immediately
           goToStep('step-injury-escalate');
         } else {
-          // No deaths — check who is making the report
-          goToStep('step-injury-who-reports');
+          // No deceased — for minor OR major injury without fatalities,
+          // ask if they still want to file a report.
+          const severity = state.injury_severity; // 'minor' | 'major'
+
+          // Update the confirm-report step dynamically based on severity
+          const title  = document.getElementById('injury-confirm-title');
+          const sub    = document.getElementById('injury-confirm-sub');
+          const btitle = document.getElementById('injury-confirm-banner-title');
+          const bbody  = document.getElementById('injury-confirm-banner-body');
+          const icon   = document.getElementById('injury-confirm-icon');
+          const banner = document.getElementById('injury-confirm-banner');
+
+          if (severity === 'minor') {
+            icon.className  = 'hero-icon amber pulse';
+            banner.className = 'alert-banner warn';
+            banner.querySelector('i').style.color = '#f59e0b';
+            btitle.textContent = 'Minor Injury Noted';
+            bbody.textContent  = 'Even for minor injuries, filing a report creates an official record that can help with insurance or legal matters later.';
+          } else {
+            // major
+            icon.className  = 'hero-icon red pulse';
+            banner.className = 'alert-banner danger';
+            banner.querySelector('i').style.color = '#E90101';
+            btitle.textContent = 'Major Injury Noted';
+            bbody.textContent  = 'This is a serious incident. Filing an official report is strongly recommended to protect all parties involved.';
+          }
+
+          goToStep('step-injury-confirm-report');
         }
       }, 180);
+    }
+
+    function setConfirmReport(wantsToReport) {
+      if (wantsToReport) {
+        // Go straight to the report form
+        goToFormFlow();
+      } else {
+        // User does not want to file — end session
+        goToStep('step-end-no-report');
+      }
     }
 
     function setReporter(type, btn) {
@@ -3749,6 +3860,19 @@ if (($user['role'] ?? 'user') !== 'user') {
         ovPhotos.textContent = 'None';
       }
 
+      // Vehicles summary
+      const ovVehiclesRow = document.getElementById('ov-vehicles-row');
+      const ovVehicles    = document.getElementById('ov-vehicles');
+      if (state.vehicle_types && state.vehicle_types.length > 0) {
+        ovVehiclesRow.style.display = '';
+        ovVehicles.innerHTML = state.vehicle_types.map((v, i) => {
+          const plate = state.plate_numbers[i] || 'No plate';
+          return `<div style="margin-bottom:2px;"><strong>${v}</strong> &mdash; <span style="font-family:monospace;color:var(--primary);">${plate}</span></div>`;
+        }).join('');
+      } else {
+        ovVehiclesRow.style.display = 'none';
+      }
+
       goToStep('step-form-overview');
     }
 
@@ -3765,6 +3889,8 @@ if (($user['role'] ?? 'user') !== 'user') {
       // Derive has_other_parties from state.parties
       fd.append('has_other_parties', (state.parties === 'two' || state.parties === 'multiple') ? 1 : 0);
       fd.append('is_injured', state.has_injury ? 1 : 0);
+      fd.append('injury_severity', state.injury_severity || '');
+      fd.append('has_deceased', state.has_deceased === true ? 1 : (state.has_deceased === false ? 0 : ''));
       fd.append('self_hurt', state.self_hurt ?? '');
       fd.append('self_attended', state.self_attended ?? '');
       fd.append('multi_attended', state.multi_attended ?? '');

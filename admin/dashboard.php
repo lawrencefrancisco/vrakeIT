@@ -84,10 +84,7 @@ adminHead('Dashboard', 'dashboard');
 <!-- ========================================== -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-  /* Custom Marker Colors */
-  .marker-pending { filter: hue-rotate(150deg); }   /* Red */
-  .marker-reviewing { filter: hue-rotate(20deg); }  /* Orange */
-  .marker-closed { filter: hue-rotate(250deg); }    /* Green */
+  .leaflet-div-icon { background: transparent; border: none; }
 </style>
 
 <div class="row g-3 mb-4">
@@ -105,7 +102,8 @@ adminHead('Dashboard', 'dashboard');
         <div style="position: absolute; top: 15px; right: 15px; z-index: 1000; background: rgba(30, 30, 45, 0.95); padding: 10px 15px; border-radius: 8px; border: 1px solid var(--muted); color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
           <div style="font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #a78bfa;">Status Legend</div>
           <div style="font-size: 11px;"><span style="color: #f87171; font-size: 16px; vertical-align: middle;">●</span> Pending</div>
-          <div style="font-size: 11px;"><span style="color: #fbbf24; font-size: 16px; vertical-align: middle;">●</span> Reviewing</div>
+          <div style="font-size: 11px;"><span style="color: #fbbf24; font-size: 16px; vertical-align: middle;">●</span> Ongoing</div>
+          <div style="font-size: 11px;"><span style="color: #a78bfa; font-size: 16px; vertical-align: middle;">●</span> Escalated</div>
           <div style="font-size: 11px;"><span style="color: #4ade80; font-size: 16px; vertical-align: middle;">●</span> Closed</div>
         </div>
 
@@ -169,7 +167,7 @@ adminHead('Dashboard', 'dashboard');
       <td><span class="badge-status bs-<?= $r['status'] ?>"><?= ucfirst($r['status']) ?></span></td>
       <td style="color:var(--muted);font-size:12px;"><?= date('M d, Y', strtotime($r['created_at'])) ?></td>
       <td>
-        <?php if($r['flow_type']==='good_citizen' && in_array($r['status'], ['pending','reviewing'])): ?>
+        <?php if($r['flow_type']==='good_citizen' && in_array($r['status'], ['pending','ongoing'])): ?>
         <button class="btn-admin btn-approve" onclick="approveGC(<?= $r['id'] ?>, <?= $r['user_id'] ?>)"
                 title="Grant +50pts &amp; set Verified">
           <i class="bi bi-star-fill"></i> +50pts
@@ -310,18 +308,28 @@ L.polygon([WORLD_OUTER, VALENZUELA_POLY], {
 let markerGroup = L.layerGroup().addTo(map);
 
 function getCustomIcon(status) {
-  let colorClass = 'marker-closed';
-  if (status === 'pending') colorClass = 'marker-pending';
-  if (status === 'reviewing') colorClass = 'marker-reviewing';
+  const colors = {
+    pending:   '#f87171',   // Red
+    ongoing:   '#fbbf24',   // Orange
+    escalated: '#a78bfa',   // Purple
+    closed:    '#4ade80',   // Green
+  };
+  const color = colors[status] || colors.closed;
 
-  return L.icon({
-    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-    className: colorClass 
+  // SVG map pin shape matching legend colors exactly
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="38" viewBox="0 0 28 38">
+      <path d="M14 0C6.27 0 0 6.27 0 14c0 9.625 14 24 14 24S28 23.625 28 14C28 6.27 21.73 0 14 0z"
+            fill="${color}" stroke="rgba(0,0,0,0.3)" stroke-width="1.5"/>
+      <circle cx="14" cy="14" r="5" fill="#fff" opacity="0.9"/>
+    </svg>`;
+
+  return L.divIcon({
+    html: svg,
+    className: '',
+    iconSize:   [28, 38],
+    iconAnchor: [14, 38],
+    popupAnchor:[0, -38]
   });
 }
 

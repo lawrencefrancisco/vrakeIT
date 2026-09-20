@@ -1,188 +1,4 @@
-<?php
-require_once dirname(__DIR__) . '/includes/auth.php';
-require_once dirname(__DIR__) . '/includes/admin_auth.php';
-require_once dirname(__DIR__) . '/includes/functions.php';
-require_once __DIR__ . '/layout.php';
-startSecureSession();
-requireAdminLogin();
-$admin = getAdminUser();
-$db = getDB();
 
-$filter = $_GET['filter'] ?? 'all';
-$search = trim($_GET['search'] ?? '');
-$where = "WHERE 1=1";
-$params = [];
-if ($filter === 'good_citizen') $where .= " AND r.flow_type='good_citizen'";
-if ($filter === 'standard')     $where .= " AND (r.flow_type='standard' OR r.flow_type='first' OR r.flow_type='second')";
-if ($filter === 'pending')      $where .= " AND r.status='pending'";
-if ($filter === 'ongoing')      $where .= " AND r.status='ongoing'";
-if ($filter === 'escalated')    $where .= " AND r.status='escalated'";
-if ($filter === 'closed')       $where .= " AND r.status='closed'";
-if ($filter === 'injured')      $where .= " AND r.is_injured=1";
-if ($filter === 'citizen')      $where .= " AND r.reporter_role='citizen'";
-if ($filter === 'driver')       $where .= " AND (r.reporter_role='driver' OR r.reporter_role IS NULL)";
-if ($search) { $where .= " AND (r.reference_number LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)"; $s="%$search%"; $params=[$s,$s,$s]; }
-
-$stmt = $db->prepare("SELECT r.*, u.first_name, u.last_name, u.email, u.account_verified FROM reports r JOIN users u ON r.user_id=u.id $where ORDER BY r.created_at DESC LIMIT 100");
-$stmt->execute($params);
-$reports = $stmt->fetchAll();
-
-// Fetch enforcers for assignment dropdown
-$enforcers = $db->query("SELECT id, first_name, last_name FROM users WHERE role='enforcer' ORDER BY first_name ASC")->fetchAll();
-
-adminHead('Incident Monitoring');
-?>
-<body>
-<?php adminNav('incidents', $admin); ?>
-<div class="main">
-<?php adminTopbar('Incident Monitoring'); ?>
-<div class="page-body">
-
-<div class="section-card mb-4">
-  <div class="section-header" style="flex-wrap:wrap;gap:10px;">
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <?php foreach(['all'=>'All','standard'=>'Standard','citizen'=>'Citizen/Witness','driver'=>'Driver','good_citizen'=>'Good Citizen','pending'=>'Pending','ongoing'=>'Ongoing','escalated'=>'Escalated','closed'=>'Closed','injured'=>'With Injury'] as $k=>$v): ?>
-      <a href="?filter=<?= $k ?>" class="btn-admin <?= $filter===$k?'btn-primary-admin':'btn-review' ?>"><?= $v ?></a>
-      <?php endforeach; ?>
-    </div>
-    <form method="GET" style="display:flex;gap:8px;">
-      <input type="hidden" name="filter" value="<?= htmlspecialchars($filter) ?>">
-      <input class="search-input" name="search" placeholder="Ref# or name…" value="<?= htmlspecialchars($search) ?>">
-      <button type="submit" class="btn-admin btn-primary-admin"><i class="bi bi-search"></i></button>
-    </form>
-  </div>
-</div>
-
-<div class="section-card">
-  <div class="section-header">
-    <span class="section-title-text"><i class="bi bi-exclamation-triangle me-2"></i>Reports (<?= count($reports) ?>)</span>
-  </div>
-  <div style="overflow-x:auto;">
-  <table class="data-table">
-    <thead><tr><th>Ref #</th><th>Reporter</th><th>Role</th><th>Type</th><th>Injured</th><th>Severity</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
-    <tbody>
-    <?php foreach($reports as $r):
-      $typeMap  = ['standard' =>'Standard','contract'=>'Contract','good_citizen'=>'Good Citizen'];
-      $typeClr  = ['standard'=>'#f87171','contract'=>'#60b4ff','good_citizen'=>'#4ade80'];
-      $ft = $r['flow_type'];
-    ?>
-    <tr>
-      <td><span style="font-family:monospace;color:#60b4ff;font-size:12px;"><?= htmlspecialchars($r['reference_number']) ?></span></td>
-      <td>
-        <div style="font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-          <?= htmlspecialchars($r['first_name'].' '.$r['last_name']) ?>
-          <?php if ($r['account_verified']): ?>
-          <span class="verified-badge" title="Identity Verified">
-            <i class="bi bi-shield-check"></i> Verified
-          </span>
-          <?php endif; ?>
-        </div>
-        <div style="font-size:11px;color:var(--muted);"><?= htmlspecialchars($r['email']) ?></div>
-      </td>
-      <td>
-        <?php
-          $rRole = $r['reporter_role'] ?? 'driver';
-          $roleLabel = $rRole === 'citizen' ? 'Citizen/Witness' : 'Driver';
-          $roleColor = $rRole === 'citizen' ? '#a78bfa' : '#60b4ff';
-          $roleIcon  = $rRole === 'citizen' ? 'bi-eye-fill' : 'bi-car-front-fill';
-        ?>
-        <span style="color:<?= $roleColor ?>;font-weight:600;font-size:12px;">
-          <i class="bi <?= $roleIcon ?>"></i> <?= $roleLabel ?>
-        </span>
-      </td>
-      <td><span style="color:<?= $typeClr[$ft] ?>;font-weight:600;font-size:12px;"><?= $typeMap[$ft] ?></span></td>
-      <td><?= $r['is_injured'] ? '<span style="color:#f87171;font-weight:600;">Yes</span>' : '<span style="color:var(--muted);">No</span>' ?></td>
-      <td>
-        <?php if ($r['injury_severity'] === 'minor'): ?>
-          <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(251,191,36,0.15);color:#d97706;">
-            <i class="bi bi-bandaid-fill"></i> Minor
-          </span>
-        <?php elseif ($r['injury_severity'] === 'major'): ?>
-          <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(239,68,68,0.15);color:#ef4444;">
-            <i class="bi bi-heartbreak-fill"></i> Major
-          </span>
-        <?php else: ?>
-          <span style="color:var(--muted);font-size:12px;">—</span>
-        <?php endif; ?>
-      </td>
-      <td>
-        <select class="form-dark" style="padding:5px 10px;width:130px;font-size:12px;" onchange="updateStatus(<?= $r['id'] ?>, this.value)">
-          <?php foreach(['pending'=>'Pending','ongoing'=>'Ongoing','escalated'=>'Escalated to Higher Department','closed'=>'Closed'] as $sv=>$sl): ?>
-          <option value="<?= $sv ?>" <?= $r['status']===$sv?'selected':'' ?>><?= $sl ?></option>
-          <?php endforeach; ?>
-        </select>
-      </td>
-      <td style="font-size:12px;color:var(--muted);"><?= date('M d, Y', strtotime($r['created_at'])) ?></td>
-      <td style="display:flex;gap:6px;">
-        <button class="btn-admin btn-review" onclick="viewReport(<?= $r['id'] ?>)" title="View Details"><i class="bi bi-eye"></i></button>
-        <?php if($ft==='good_citizen' && in_array($r['status'], ['pending','ongoing'])): ?>
-        <button class="btn-admin btn-approve" onclick="approveGC(<?= $r['id'] ?>, <?= $r['user_id'] ?>)" title="Approve Good Citizen — +<?= GOOD_CITIZEN_POINTS ?>pts, set Verified">
-          <i class="bi bi-star-fill"></i> +<?= GOOD_CITIZEN_POINTS ?>pts
-        </button>
-        <?php endif; ?>
-        <button class="btn-admin btn-reject" onclick="denyReport(<?= $r['id'] ?>)" title="Close Report"><i class="bi bi-x"></i></button>
-      </td> 
-    </tr>
-    <?php endforeach; ?>
-    </tbody>
-  </table>
-  </div>
-</div>
-</div></div>
-
-<!-- Modal for Viewing Report -->
-<div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content" style="background:#ffffff; color:#333333; border: 1px solid #e2e8f0; border-radius:12px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
-      <div class="modal-header" style="border-bottom: 1px solid #e2e8f0; background: #f8fafc; border-radius: 12px 12px 0 0;">
-        <h5 class="modal-title" style="color:#0f172a; font-weight: 600;"><i class="bi bi-card-text me-2"></i>Report Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="reportModalBody" style="min-height: 200px;">
-        <div class="text-center mt-5"><div class="spinner-border text-primary" role="status"></div></div>
-      </div>
-      <div class="modal-footer" style="border-top: 1px solid #e2e8f0; background: #f8fafc; border-radius: 0 0 12px 12px;">
-        <button type="button" class="btn-admin btn-review" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- Action Confirm Modal -->
-<div class="modal fade" id="actionConfirmModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" style="max-width:400px;">
-    <div class="modal-content" style="background: linear-gradient(145deg, #0f172a, #1e293b); color:#f8fafc; border: 1px solid rgba(255,255,255,0.08); border-radius:24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
-      <div class="modal-body" style="padding: 32px 24px 24px; text-align: center;">
-        <div id="confirmModalIcon" style="font-size:48px; color:#38bdf8; margin-bottom:16px; line-height:1;"><i class="bi bi-question-circle"></i></div>
-        <h5 id="confirmModalTitle" style="font-weight:700; font-size:18px; margin-bottom:12px; color:#f8fafc;">Confirm Action</h5>
-        <div id="confirmModalText" style="font-size:14px; color:#94a3b8; line-height:1.6; margin-bottom:24px;">Are you sure you want to proceed?</div>
-        
-        <div style="display:flex; gap:12px; justify-content:center;">
-          <button type="button" class="btn-admin btn-review" data-bs-dismiss="modal" style="border-radius:12px; padding:10px 24px; font-weight:600; flex:1;">Cancel</button>
-          <button type="button" class="btn-admin btn-primary-admin" id="confirmModalBtn" style="border-radius:12px; padding:10px 24px; font-weight:600; flex:1; border:none; box-shadow:0 4px 15px rgba(56,189,248,0.2);">Confirm</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Alert Modal -->
-<div class="modal fade" id="alertModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" style="max-width:400px;">
-    <div class="modal-content" style="background: linear-gradient(145deg, #0f172a, #1e293b); color:#f8fafc; border: 1px solid rgba(255,255,255,0.08); border-radius:24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
-      <div class="modal-body" style="padding: 32px 24px 24px; text-align: center;">
-        <div id="alertModalIcon" style="font-size:48px; color:#10b981; margin-bottom:16px; line-height:1;"><i class="bi bi-check-circle"></i></div>
-        <h5 id="alertModalTitle" style="font-weight:700; font-size:18px; margin-bottom:12px; color:#f8fafc;">Success</h5>
-        <div id="alertModalText" style="font-size:14px; color:#94a3b8; line-height:1.6; margin-bottom:24px;">Action completed successfully.</div>
-        
-        <button type="button" class="btn-admin btn-primary-admin" data-bs-dismiss="modal" id="alertModalBtn" style="border-radius:12px; padding:10px 32px; font-weight:600; border:none; box-shadow:0 4px 15px rgba(16,185,129,0.2);">OK</button>
-      </div>
-    </div>
-  </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
 
 function showCustomConfirm(title, text, iconHtml, confirmText, confirmClass, onConfirm) {
   document.getElementById('confirmModalTitle').innerHTML = title;
@@ -252,7 +68,7 @@ function showCustomAlert(title, text, iconHtml, isSuccess, onClose) {
   modal.show();
 }
 
-const enforcersList = <?= json_encode($enforcers) ?>;
+const enforcersList = null;
 
 function getAdminStatusBadge(s) {
   const cfg = {
@@ -273,7 +89,7 @@ async function adminPost(data) {
 }
 
 function approveGC(rid, uid) {
-  const points = <?= GOOD_CITIZEN_POINTS ?>;
+  const points = null;
   const msg = `This will:<br>
   <div style="text-align:left; display:inline-block; margin-top:8px;">
     • Grant <span style="color:#fbbf24; font-weight:bold;">+${points} points</span> to the reporter<br>
@@ -376,10 +192,7 @@ async function viewReport(rid) {
 
   if (!d.success || !r) {
     modalBody.innerHTML = `<div class="p-4 text-center" style="color:#ef4444; font-weight:600;"><i class="bi bi-exclamation-triangle-fill fs-3 d-block mb-2"></i> Failed to load report details.</div>`;
-    return;
-  }
-
-  // PREPARE VARIABLES
+    return  // PREPARE VARIABLES
   // 1. Media
   let mediaHtml = '<span class="text-muted fst-italic">No media provided</span>';
   if (r.media && r.media.length > 0) {
@@ -597,5 +410,3 @@ async function viewReport(rid) {
     </div>
   `;
 }
-</script>
-</body></html>
