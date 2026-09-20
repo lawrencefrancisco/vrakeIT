@@ -182,18 +182,30 @@ function renderContracts() {
 // ── Status badge ──────────────────────────────────────────
 function getStatusBadge(s) {
   const map = {
+    draft:       '#6b7280:#f3f4f6',
+    waiting:     '#92400e:#fef3c7',
+    signed:      '#065f46:#d1fae5',
     settled:     '#0a3622:#d1e7dd',
+    fulfilled:   '#065f46:#d1fae5',
     not_settled: '#856404:#fff3cd',
     disputed:    '#842029:#f8d7da',
   };
   const [color, bg] = (map[s] || map.not_settled).split(':');
-  const labels = { settled: 'Settled', not_settled: 'Not Settled', disputed: 'Disputed' };
+  const labels = {
+    draft: 'Draft', waiting: 'Awaiting Party 2', signed: 'Signed',
+    settled: 'Settled', fulfilled: 'Fulfilled',
+    not_settled: 'Not Settled', disputed: 'Disputed'
+  };
   const label  = labels[s] ?? (s.charAt(0).toUpperCase() + s.slice(1));
   return `<span style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;background:${bg};color:${color};">${label}</span>`;
 }
 
 function statusLabel(s) {
-  const labels = { settled: 'Settled', not_settled: 'Not Settled', disputed: 'Disputed' };
+  const labels = {
+    draft: 'Draft', waiting: 'Awaiting Party 2', signed: 'Signed',
+    settled: 'Settled', fulfilled: 'Fulfilled',
+    not_settled: 'Not Settled', disputed: 'Disputed'
+  };
   return labels[s] ?? (s.charAt(0).toUpperCase() + s.slice(1));
 }
 
@@ -243,10 +255,48 @@ function showDetail(c) {
 
   // Footer — show buttons based on current status
   const footer = document.getElementById('modalFooter');
-  if (c.status === 'settled') {
+  if (c.status === 'settled' || c.status === 'fulfilled') {
     footer.innerHTML = `
-      <div style="width:100%;text-align:center;font-size:0.82rem;color:#0a3622;font-weight:600;padding:6px 0;">
-        <i class="bi bi-check-circle-fill me-1" style="color:#00c853;"></i>This contract has been settled.
+      <div style="width:100%;">
+        <div style="text-align:center;font-size:0.82rem;color:#0a3622;font-weight:600;padding:6px 0 10px;">
+          <i class="bi bi-check-circle-fill me-1" style="color:#00c853;"></i>This contract has been ${statusLabel(c.status).toLowerCase()}.
+        </div>
+        <a href="api/get_contract_pdf.php?ref=${encodeURIComponent(c.reference_number)}" target="_blank"
+           style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#007ED2,#005fa3);color:#fff;font-family:Poppins,sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;text-decoration:none;">
+          <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF Contract
+        </a>
+      </div>`;
+  } else if (c.status === 'signed') {
+    footer.innerHTML = `
+      <div style="width:100%;">
+        <div style="text-align:center;font-size:0.82rem;color:#065f46;font-weight:600;padding:6px 0 10px;">
+          <i class="bi bi-pen-fill me-1" style="color:#00c853;"></i>Signed by both parties.
+        </div>
+        <a href="api/get_contract_pdf.php?ref=${encodeURIComponent(c.reference_number)}" target="_blank"
+           style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#007ED2,#005fa3);color:#fff;font-family:Poppins,sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;text-decoration:none;margin-bottom:8px;">
+          <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF Contract
+        </a>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button onclick="openConfirm()" style="padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#00c853,#009624);color:#fff;font-family:Poppins,sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+            <i class="bi bi-check2-circle"></i> Settled
+          </button>
+          <button onclick="openDispute()" style="padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#E90101,#b30000);color:#fff;font-family:Poppins,sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+            <i class="bi bi-exclamation-triangle"></i> Disputed
+          </button>
+        </div>
+      </div>`;
+  } else if (c.status === 'waiting') {
+    footer.innerHTML = `
+      <div style="width:100%;text-align:center;font-size:0.82rem;color:#92400e;font-weight:600;padding:6px 0;">
+        <i class="bi bi-hourglass-split me-1" style="color:#f59e0b;"></i>Waiting for Party 2 to confirm via email invite.
+      </div>`;
+  } else if (c.status === 'draft') {
+    footer.innerHTML = `
+      <div style="width:100%;">
+        <div style="text-align:center;font-size:0.82rem;color:#6b7280;font-weight:600;padding:6px 0 10px;">Draft — not yet submitted.</div>
+        <a href="report.php" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#007ED2,#005fa3);color:#fff;font-family:Poppins,sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;text-decoration:none;">
+          <i class="bi bi-pencil-square"></i> Continue Draft
+        </a>
       </div>`;
   } else if (c.status === 'disputed') {
     footer.innerHTML = `
@@ -266,6 +316,11 @@ function showDetail(c) {
   }
 
   detailModal.show();
+}
+
+// ── PDF Download ──────────────────────────────────────────
+function downloadContractPDF(ref) {
+  window.open('api/get_contract_pdf.php?ref=' + encodeURIComponent(ref), '_blank');
 }
 
 async function generateAISummary(ref) {

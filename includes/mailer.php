@@ -77,3 +77,48 @@ function sendOtpEmail(string $email, string $name, string $otp): array {
     $body    = getOtpEmailBody($name, $otp);
     return sendEmail($email, $name, $subject, $body);
 }
+
+function getContractInviteEmailBody(string $p2Name, string $p1Name, string $refNum, string $confirmUrl): string {
+    return <<<HTML
+    <div style="font-family:Poppins,Arial,sans-serif;max-width:540px;margin:auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.1);">
+      <div style="background:linear-gradient(135deg,#E90101,#007ED2);padding:30px 28px;text-align:center;">
+        <h1 style="color:#fff;margin:0 0 4px;font-size:26px;font-weight:800;">VrakeIT</h1>
+        <p style="color:rgba(255,255,255,.85);margin:0;font-size:13px;">Settlement Contract Invitation</p>
+      </div>
+      <div style="padding:32px 28px;">
+        <h2 style="font-size:18px;margin:0 0 6px;color:#1a1a1a;">Hi, {$p2Name}!</h2>
+        <p style="color:#555;line-height:1.7;margin:0 0 20px;">
+          <strong>{$p1Name}</strong> has invited you to review and confirm a road incident settlement contract on VrakeIT.
+        </p>
+        <div style="background:#f0f7ff;border:1.5px solid #bfdbfe;border-radius:10px;padding:16px 18px;margin-bottom:24px;">
+          <div style="font-size:11px;font-weight:700;color:#007ED2;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Reference Number</div>
+          <div style="font-size:20px;font-weight:800;color:#1a1a1a;letter-spacing:2px;">{$refNum}</div>
+        </div>
+        <p style="color:#555;line-height:1.7;margin:0 0 20px;font-size:14px;">
+          By clicking the button below, you can review the full contract details and confirm your agreement. Your confirmation will serve as your digital consent and signature.
+        </p>
+        <div style="text-align:center;margin:28px 0;">
+          <a href="{$confirmUrl}" style="display:inline-block;background:linear-gradient(135deg,#007ED2,#0056a3);color:#fff;text-decoration:none;padding:14px 36px;border-radius:12px;font-weight:700;font-size:15px;letter-spacing:0.3px;">
+            Review &amp; Confirm Contract
+          </a>
+        </div>
+        <div style="background:#fef9c3;border:1px solid #fde68a;border-radius:8px;padding:12px 14px;font-size:12px;color:#92400e;line-height:1.6;">
+          ⚠️ <strong>Important:</strong> This invite link expires in <strong>7 days</strong>. You must be logged in to your VrakeIT account to confirm. Do not share this link.
+        </div>
+        <p style="color:#9ca3af;font-size:11px;margin-top:20px;line-height:1.6;">
+          If you cannot click the button, copy and paste this URL into your browser:<br>
+          <span style="color:#007ED2;word-break:break-all;">{$confirmUrl}</span>
+        </p>
+      </div>
+      <div style="background:#f0f0f0;padding:14px;text-align:center;">
+        <p style="color:#9ca3af;font-size:11px;margin:0;">© 2025 VrakeIT · vrakeit@gmail.com</p>
+      </div>
+    </div>
+    HTML;
+}
+
+function sendContractInviteEmail(string $toEmail, string $toName, string $fromName, string $refNum, string $confirmUrl): array {
+    $subject = "VrakeIT: Settlement Contract Invitation — {$refNum}";
+    $body    = getContractInviteEmailBody($toName, $fromName, $refNum, $confirmUrl);
+    return sendEmail($toEmail, $toName, $subject, $body);
+}

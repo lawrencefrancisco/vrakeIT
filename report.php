@@ -939,6 +939,45 @@ if (($user['role'] ?? 'user') !== 'user') {
       margin-bottom: 1rem;
     }
 
+    /* ─── CHIP SELECTORS (contract wizard) ── */
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .chip-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1.5px solid #d1d5db;
+      background: #f9fafb;
+      color: #374151;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+      outline: none;
+    }
+
+    .chip-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .chip-btn.selected {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* cx progress dots */
+    .cx-step-dot.active  { background: var(--primary) !important; }
+    .cx-step-dot.done    { background: #10b981 !important; }
+
+
     .contract-party {
       display: flex;
       align-items: center;
@@ -2090,110 +2129,335 @@ if (($user['role'] ?? 'user') !== 'user') {
           <div class="step-title" style="font-size:1rem; margin-bottom:0.35rem;">Create a written in-system contract?</div>
           <p class="step-sub" style="margin-bottom:0.85rem;">We can help you create a digital agreement that both parties can sign within VrakeIT.</p>
 
-          <button class="btn-primary" onclick="goToStep('step-m-contract-form')"><i class="bi bi-file-earmark-ruled"></i> Yes, create a contract</button>
+          <button class="btn-primary" onclick="startContractWizard()"><i class="bi bi-file-earmark-ruled"></i> Yes, create a contract</button>
           <button class="btn-outline" onclick="goToStep('step-end-settled')"><i class="bi bi-check2-circle"></i> No, we're done — End</button>
-          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
-        </div>
-
-        <!-- M-CONTRACT-FORM — Contract details -->
-        <div class="wizard-step" id="step-m-contract-form">
-          <div class="step-title">Create a Settlement Contract</div>
-          <p class="step-sub">Fill in the details of the agreement. Both parties will be able to review before signing.</p>
-
-          <div class="form-group">
-            <label class="form-label">Incident Description</label>
-            <textarea class="form-control-vr" id="contractIncidentDesc" rows="3" placeholder="Briefly describe what happened..."></textarea>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Agreement Terms</label>
-            <textarea class="form-control-vr" id="contractTerms" rows="4" placeholder="e.g. Party A will shoulder repair costs of Party B's vehicle..."></textarea>
-          </div>
-
-          <div class="contract-card">
-            <div style="font-size:0.78rem;font-weight:700;color:var(--primary);margin-bottom:0.75rem;"><i class="bi bi-people-fill"></i> Parties Involved</div>
-
-            <div class="contract-party">
-              <div class="party-num">1</div>
-              <div style="flex:1">
-                <input type="text" class="form-control-vr" id="party1Name" placeholder="Your name / First party" style="margin-bottom:0.4rem;">
-                <input type="text" class="form-control-vr" id="party1Contact" placeholder="Contact number">
-              </div>
-            </div>
-            <div class="contract-party">
-              <div class="party-num">2</div>
-              <div style="flex:1">
-                <input type="text" class="form-control-vr" id="party2Name" placeholder="Other party's name" style="margin-bottom:0.4rem;">
-                <input type="text" class="form-control-vr" id="party2Contact" placeholder="Contact number">
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Agreed Amount (if any)</label>
-            <div style="position:relative;">
-              <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:600;font-size:0.85rem;">₱</span>
-              <input type="number" class="form-control-vr" id="contractAmount" placeholder="0.00" style="padding-left:2rem;">
-            </div>
-          </div>
-
-          <button class="btn-primary" onclick="saveContractForm()"><i class="bi bi-arrow-right"></i> Next — Review Contract</button>
-          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
-        </div>
-
-        <!-- M-CONTRACT-REVIEW — Does party agree? -->
-        <div class="wizard-step" id="step-m-contract-review">
-          <div class="step-title">Review Settlement Contract</div>
-          <p class="step-sub">Share this summary with the other party for their review.</p>
-
-          <div class="overview-table" style="margin-bottom:1rem;">
-            <div class="ov-row"><span class="ov-label">Party 1</span><span class="ov-value" id="cr-party1">—</span></div>
-            <div class="ov-row"><span class="ov-label">Party 2</span><span class="ov-value" id="cr-party2">—</span></div>
-            <div class="ov-row"><span class="ov-label">Amount</span><span class="ov-value" id="cr-amount">—</span></div>
-          </div>
-
-          <div style="font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;">Agreed Terms</div>
-          <div class="ov-details-box" id="cr-terms">—</div>
-
-          <hr class="divider">
-          <div class="step-title" style="font-size:1rem; margin-bottom:0.35rem;">Does the other party agree?</div>
-
-          <div class="choice-grid" style="margin-bottom:0.85rem;">
-            <button class="choice-btn" onclick="setContractAgree(true)">
-              <span class="cb-icon"><i class="bi bi-check-circle"></i></span>
-              <div class="cb-body">
-                <div class="cb-title">Yes, all parties agree</div>
-                <div class="cb-desc">Save the contract</div>
-              </div>
-            </button>
-            <button class="choice-btn" onclick="setContractAgree(false)">
-              <span class="cb-icon"><i class="bi bi-pencil-square"></i></span>
-              <div class="cb-body">
-                <div class="cb-title">No, needs revision</div>
-                <div class="cb-desc">Edit the terms</div>
-              </div>
-            </button>
-          </div>
-
-          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
-        </div>
-
-        <!-- M-CONTRACT-REVISE — Revision note -->
-        <div class="wizard-step" id="step-m-contract-revise">
-          <div class="center-screen">
-            <div class="hero-icon amber"><i class="bi bi-pencil-fill"></i></div>
-            <div class="step-title">Let's revise the contract</div>
-            <p class="step-sub">Go back and update the terms to reflect what both parties can agree on. Take your time.</p>
-          </div>
-
-          <button class="btn-primary" onclick="goToStep('step-m-contract-form')"><i class="bi bi-pencil-square"></i> Edit Contract</button>
           <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
         </div>
 
 
         <!-- ══════════════════════════════════════════════════
-             SHARED REPORT FORM STEPS
+             5-STEP CONTRACT WIZARD
         ═══════════════════════════════════════════════════════ -->
+
+        <!-- CX Progress Bar (shown inside all cx steps via JS) -->
+        <div id="cx-progress-bar" style="display:none; padding:0 0 0.5rem;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:4px; margin-bottom:4px;">
+            <?php
+            $cxSteps = ['What Happened','Parties','Damage','Agreement','Review'];
+            foreach ($cxSteps as $i => $label):
+            ?>
+            <div class="cx-step-dot" id="cx-dot-<?= $i+1 ?>" style="flex:1; height:4px; border-radius:4px; background:#e5e7eb; transition:background 0.3s;"></div>
+            <?php endforeach; ?>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <?php foreach ($cxSteps as $i => $label): ?>
+            <div style="font-size:0.6rem; font-weight:600; color:#9ca3af; flex:1; text-align:center;" id="cx-label-<?= $i+1 ?>"><?= $label ?></div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+
+        <!-- CX-1: What Happened -->
+        <div class="wizard-step" id="step-cx-1">
+          <div class="step-title">What happened?</div>
+          <p class="step-sub">Describe the incident and select the incident type.</p>
+
+          <div class="form-group">
+            <label class="form-label">Incident Type <span style="color:#E90101;">*</span></label>
+            <div class="chip-group" id="cx-incident-type-chips">
+              <button type="button" class="chip-btn" data-val="rear-end" onclick="selectChip('cx-incident-type-chips',this,'cx_incident_type')">Rear-End</button>
+              <button type="button" class="chip-btn" data-val="sideswipe" onclick="selectChip('cx-incident-type-chips',this,'cx_incident_type')">Side-Swipe</button>
+              <button type="button" class="chip-btn" data-val="intersection" onclick="selectChip('cx-incident-type-chips',this,'cx_incident_type')">Intersection</button>
+              <button type="button" class="chip-btn" data-val="hit-parked" onclick="selectChip('cx-incident-type-chips',this,'cx_incident_type')">Hit Parked Vehicle</button>
+              <button type="button" class="chip-btn" data-val="motorcycle" onclick="selectChip('cx-incident-type-chips',this,'cx_incident_type')">Motorcycle</button>
+              <button type="button" class="chip-btn" data-val="pedestrian" onclick="selectChip('cx-incident-type-chips',this,'cx_incident_type')">Pedestrian</button>
+              <button type="button" class="chip-btn" data-val="other" onclick="selectChip('cx-incident-type-chips',this,'cx_incident_type')">Other</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Incident Description <span style="color:#E90101;">*</span></label>
+            <textarea class="form-control-vr" id="cx-description" rows="3" placeholder="Briefly describe what happened: where, when, and how..." oninput="cxAutosave()"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Do both parties agree on what happened?</label>
+            <div class="choice-grid" style="margin-bottom:0;">
+              <button class="choice-btn" onclick="setCxVersionsAgree(true)" id="cx-agree-yes">
+                <span class="cb-icon"><i class="bi bi-check-circle"></i></span>
+                <div class="cb-body"><div class="cb-title">Yes, we agree</div><div class="cb-desc">Same version of events</div></div>
+              </button>
+              <button class="choice-btn" onclick="setCxVersionsAgree(false)" id="cx-agree-no">
+                <span class="cb-icon"><i class="bi bi-chat-left-dots"></i></span>
+                <div class="cb-body"><div class="cb-title">No, different versions</div><div class="cb-desc">Each party will write their own</div></div>
+              </button>
+            </div>
+          </div>
+
+          <div id="cx-version-p2-block" style="display:none;">
+            <div class="form-group">
+              <label class="form-label">Party 2's Version of Events</label>
+              <textarea class="form-control-vr" id="cx-version-p2" rows="3" placeholder="Party 2: Describe what happened from your perspective..." oninput="cxAutosave()"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Who is at fault?</label>
+            <div class="chip-group" id="cx-fault-chips">
+              <button type="button" class="chip-btn" data-val="party1" onclick="selectChip('cx-fault-chips',this,'cx_fault')">Party 1</button>
+              <button type="button" class="chip-btn" data-val="party2" onclick="selectChip('cx-fault-chips',this,'cx_fault')">Party 2</button>
+              <button type="button" class="chip-btn" data-val="shared" onclick="selectChip('cx-fault-chips',this,'cx_fault')">Shared</button>
+              <button type="button" class="chip-btn" data-val="undetermined" onclick="selectChip('cx-fault-chips',this,'cx_fault')">Not Determined</button>
+            </div>
+          </div>
+
+          <button class="btn-primary" onclick="cxGoNext(1)"><i class="bi bi-arrow-right"></i> Next — Parties & Vehicles</button>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- CX-2: Parties & Vehicles -->
+        <div class="wizard-step" id="step-cx-2">
+          <div class="step-title">Parties & Vehicles</div>
+          <p class="step-sub">Your info is pre-filled. Fill in Party 2's details.</p>
+
+          <div class="contract-card">
+            <div style="font-size:0.78rem;font-weight:700;color:var(--primary);margin-bottom:0.75rem;"><i class="bi bi-person-fill"></i> Party 1 — You</div>
+
+            <div class="form-group">
+              <label class="form-label">Full Name <span style="color:#E90101;">*</span></label>
+              <input type="text" class="form-control-vr" id="cx-p1-name" placeholder="Your full name" oninput="cxAutosave()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Number <span style="color:#E90101;">*</span></label>
+              <input type="tel" class="form-control-vr" id="cx-p1-contact" placeholder="09XX XXX XXXX" oninput="cxAutosave()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Address</label>
+              <input type="text" class="form-control-vr" id="cx-p1-address" placeholder="Street, Barangay, City" oninput="cxAutosave()">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Vehicle Type</label>
+                <input type="text" class="form-control-vr" id="cx-p1-vehicle-type" placeholder="e.g. Sedan, SUV" oninput="cxAutosave()">
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Plate Number</label>
+                <input type="text" class="form-control-vr" id="cx-p1-plate" placeholder="e.g. AAA 1234" oninput="cxAutosave()">
+              </div>
+            </div>
+            <div class="form-group" style="margin-top:0.6rem;">
+              <label class="form-label">Driver's License No.</label>
+              <input type="text" class="form-control-vr" id="cx-p1-license" placeholder="License number" oninput="cxAutosave()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Insurance Provider & Policy No.</label>
+              <input type="text" class="form-control-vr" id="cx-p1-insurance" placeholder="e.g. Malayan, Policy #12345" oninput="cxAutosave()">
+            </div>
+          </div>
+
+          <div class="contract-card" style="border-color:rgba(0,200,83,0.3);">
+            <div style="font-size:0.78rem;font-weight:700;color:#059669;margin-bottom:0.75rem;"><i class="bi bi-person"></i> Party 2</div>
+
+            <div class="form-group">
+              <label class="form-label">VrakeIT Email Address <span style="color:#E90101;">*</span></label>
+              <p style="font-size:0.72rem;color:var(--muted);margin-bottom:0.5rem;">Party 2 must have a VrakeIT account. The contract invite will be sent to this email.</p>
+              <input type="email" class="form-control-vr" id="cx-p2-email" placeholder="their@email.com" oninput="cxAutosave()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Full Name <span style="color:#E90101;">*</span></label>
+              <input type="text" class="form-control-vr" id="cx-p2-name" placeholder="Other party's full name" oninput="cxAutosave()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Number</label>
+              <input type="tel" class="form-control-vr" id="cx-p2-contact" placeholder="09XX XXX XXXX" oninput="cxAutosave()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Address</label>
+              <input type="text" class="form-control-vr" id="cx-p2-address" placeholder="Street, Barangay, City" oninput="cxAutosave()">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Vehicle Type</label>
+                <input type="text" class="form-control-vr" id="cx-p2-vehicle-type" placeholder="e.g. Sedan, SUV" oninput="cxAutosave()">
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Plate Number</label>
+                <input type="text" class="form-control-vr" id="cx-p2-plate" placeholder="e.g. AAA 1234" oninput="cxAutosave()">
+              </div>
+            </div>
+            <div class="form-group" style="margin-top:0.6rem;">
+              <label class="form-label">Driver's License No.</label>
+              <input type="text" class="form-control-vr" id="cx-p2-license" placeholder="License number" oninput="cxAutosave()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Insurance Provider & Policy No.</label>
+              <input type="text" class="form-control-vr" id="cx-p2-insurance" placeholder="e.g. Malayan, Policy #12345" oninput="cxAutosave()">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Witness (Optional)</label>
+            <input type="text" class="form-control-vr" id="cx-witness-name" placeholder="Witness full name" style="margin-bottom:0.5rem;" oninput="cxAutosave()">
+            <input type="tel" class="form-control-vr" id="cx-witness-contact" placeholder="Witness contact number" oninput="cxAutosave()">
+          </div>
+
+          <button class="btn-primary" onclick="cxGoNext(2)"><i class="bi bi-arrow-right"></i> Next — Damage & Evidence</button>
+          <button class="btn-outline" onclick="goToStep('step-cx-1')"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- CX-3: Damage & Evidence -->
+        <div class="wizard-step" id="step-cx-3">
+          <div class="step-title">Damage & Evidence</div>
+          <p class="step-sub">Describe each party's vehicle damage and estimated cost.</p>
+
+          <div class="contract-card">
+            <div style="font-size:0.78rem;font-weight:700;color:var(--primary);margin-bottom:0.75rem;"><i class="bi bi-car-front"></i> Party 1 Damage</div>
+            <div class="form-group">
+              <label class="form-label">Damage Description</label>
+              <textarea class="form-control-vr" id="cx-damage-desc-p1" rows="2" placeholder="e.g. Dented rear bumper, cracked tail light" oninput="cxAutosave()"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estimated Repair Cost</label>
+              <div style="position:relative;">
+                <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:600;font-size:0.85rem;">₱</span>
+                <input type="number" class="form-control-vr" id="cx-damage-cost-p1" placeholder="0.00" style="padding-left:2rem;" oninput="cxAutosave()">
+              </div>
+            </div>
+          </div>
+
+          <div class="contract-card" style="border-color:rgba(0,200,83,0.3);">
+            <div style="font-size:0.78rem;font-weight:700;color:#059669;margin-bottom:0.75rem;"><i class="bi bi-car-front"></i> Party 2 Damage</div>
+            <div class="form-group">
+              <label class="form-label">Damage Description</label>
+              <textarea class="form-control-vr" id="cx-damage-desc-p2" rows="2" placeholder="e.g. Scraped front bumper, broken headlight" oninput="cxAutosave()"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estimated Repair Cost</label>
+              <div style="position:relative;">
+                <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:600;font-size:0.85rem;">₱</span>
+                <input type="number" class="form-control-vr" id="cx-damage-cost-p2" placeholder="0.00" style="padding-left:2rem;" oninput="cxAutosave()">
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-primary" onclick="cxGoNext(3)"><i class="bi bi-arrow-right"></i> Next — The Agreement</button>
+          <button class="btn-outline" onclick="goToStep('step-cx-2')"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- CX-4: The Agreement -->
+        <div class="wizard-step" id="step-cx-4">
+          <div class="step-title">The Agreement</div>
+          <p class="step-sub">Define how this incident will be resolved between parties.</p>
+
+          <div class="form-group">
+            <label class="form-label">Resolution Type <span style="color:#E90101;">*</span></label>
+            <div class="chip-group" id="cx-resolution-chips">
+              <button type="button" class="chip-btn" data-val="pay_repair" onclick="selectChip('cx-resolution-chips',this,'cx_resolution_type')">Pay Repair Costs</button>
+              <button type="button" class="chip-btn" data-val="shoulder_shop" onclick="selectChip('cx-resolution-chips',this,'cx_resolution_type')">Shoulder at Shop</button>
+              <button type="button" class="chip-btn" data-val="cash" onclick="selectChip('cx-resolution-chips',this,'cx_resolution_type')">Cash Payment</button>
+              <button type="button" class="chip-btn" data-val="split" onclick="selectChip('cx-resolution-chips',this,'cx_resolution_type')">Split Costs</button>
+              <button type="button" class="chip-btn" data-val="insurance" onclick="selectChip('cx-resolution-chips',this,'cx_resolution_type')">Go Through Insurance</button>
+              <button type="button" class="chip-btn" data-val="no_comp" onclick="selectChip('cx-resolution-chips',this,'cx_resolution_type')">No Compensation</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Who Pays</label>
+            <div class="chip-group" id="cx-who-pays-chips">
+              <button type="button" class="chip-btn" data-val="party1" onclick="selectChip('cx-who-pays-chips',this,'cx_who_pays')">Party 1</button>
+              <button type="button" class="chip-btn" data-val="party2" onclick="selectChip('cx-who-pays-chips',this,'cx_who_pays')">Party 2</button>
+              <button type="button" class="chip-btn" data-val="split" onclick="selectChip('cx-who-pays-chips',this,'cx_who_pays')">Both (Split)</button>
+              <button type="button" class="chip-btn" data-val="na" onclick="selectChip('cx-who-pays-chips',this,'cx_who_pays')">N/A</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Agreed Amount</label>
+            <div style="position:relative;">
+              <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:600;font-size:0.85rem;">₱</span>
+              <input type="number" class="form-control-vr" id="cx-amount" placeholder="0.00" style="padding-left:2rem;" oninput="cxAutosave()">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Payment Method</label>
+            <div class="chip-group" id="cx-payment-method-chips">
+              <button type="button" class="chip-btn" data-val="cash" onclick="selectChip('cx-payment-method-chips',this,'cx_payment_method')">Cash</button>
+              <button type="button" class="chip-btn" data-val="gcash" onclick="selectChip('cx-payment-method-chips',this,'cx_payment_method')">GCash</button>
+              <button type="button" class="chip-btn" data-val="maya" onclick="selectChip('cx-payment-method-chips',this,'cx_payment_method')">Maya</button>
+              <button type="button" class="chip-btn" data-val="bank_transfer" onclick="selectChip('cx-payment-method-chips',this,'cx_payment_method')">Bank Transfer</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Payment Schedule</label>
+            <div class="chip-group" id="cx-payment-schedule-chips">
+              <button type="button" class="chip-btn" data-val="lump_sum" onclick="selectChip('cx-payment-schedule-chips',this,'cx_payment_schedule')">Lump Sum</button>
+              <button type="button" class="chip-btn" data-val="installments" onclick="selectChip('cx-payment-schedule-chips',this,'cx_payment_schedule')">Installments</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Payment Deadline</label>
+            <input type="date" class="form-control-vr" id="cx-payment-deadline" min="<?= date('Y-m-d') ?>" oninput="cxAutosave()">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Agreement Terms <span style="color:#E90101;">*</span></label>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:0.6rem;">
+              <button type="button" class="chip-btn" style="font-size:0.7rem;" onclick="cxInsertTemplate('Party A will shoulder the repair costs of Party B&#39;s vehicle within 7 days from the date of this agreement.')">Pay repair costs</button>
+              <button type="button" class="chip-btn" style="font-size:0.7rem;" onclick="cxInsertTemplate('Both parties agree to split the repair costs equally. Each party shall pay their own portion within 7 days.')">Split equally</button>
+              <button type="button" class="chip-btn" style="font-size:0.7rem;" onclick="cxInsertTemplate('Both parties agree that all claims regarding this incident are settled. No further legal action shall be taken.')">Full settlement</button>
+              <button type="button" class="chip-btn" style="font-size:0.7rem;" onclick="cxInsertTemplate('Both parties agree to process this claim through their respective insurance providers.')">Insurance route</button>
+            </div>
+            <textarea class="form-control-vr" id="cx-terms" rows="4" placeholder="e.g. Party A will shoulder repair costs of Party B's vehicle..." oninput="cxAutosave()"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Escalation Clause <span style="font-size:0.72rem;color:var(--muted);font-weight:400;">(What happens if not followed)</span></label>
+            <textarea class="form-control-vr" id="cx-escalation" rows="2" placeholder="e.g. Either party may escalate this to the barangay or file a case with the authorities." oninput="cxAutosave()"></textarea>
+          </div>
+
+          <button class="btn-primary" onclick="cxGoNext(4)"><i class="bi bi-arrow-right"></i> Next — Review & Sign</button>
+          <button class="btn-outline" onclick="goToStep('step-cx-3')"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- CX-5: Review & Sign -->
+        <div class="wizard-step" id="step-cx-5">
+          <div class="step-title">Review & Sign</div>
+          <p class="step-sub">Check all details carefully before sending the contract invite.</p>
+
+          <!-- Summary preview -->
+          <div id="cx-review-preview" style="background:#f8fafc;border:1.5px solid #e5e7eb;border-radius:1rem;padding:1rem;margin-bottom:1rem;font-size:0.8rem;line-height:1.7;"></div>
+
+          <hr class="divider">
+
+          <div class="form-group">
+            <label class="form-label">Your Consent <span style="color:#E90101;">*</span></label>
+            <div style="display:flex;align-items:flex-start;gap:0.6rem;margin-bottom:0.6rem;">
+              <input type="checkbox" id="cx-consent-voluntary" style="width:20px;height:20px;flex-shrink:0;margin-top:2px;accent-color:var(--primary);" onchange="cxCheckConsents()">
+              <label for="cx-consent-voluntary" style="font-size:0.8rem;color:var(--text);cursor:pointer;">I am agreeing to this contract <strong>voluntarily</strong> and without pressure from any party.</label>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:0.6rem;">
+              <input type="checkbox" id="cx-consent-hidden" style="width:20px;height:20px;flex-shrink:0;margin-top:2px;accent-color:var(--primary);" onchange="cxCheckConsents()">
+              <label for="cx-consent-hidden" style="font-size:0.8rem;color:var(--text);cursor:pointer;">I understand that <strong>hidden damage or injuries found later</strong> may not be covered by this settlement.</label>
+            </div>
+          </div>
+
+          <div class="alert-banner info" style="margin-bottom:1rem;">
+            <i class="bi bi-envelope-fill" style="color:var(--primary);"></i>
+            <div>
+              <div class="ab-title">Invite will be sent by email</div>
+              <div class="ab-body">Party 2 will receive an email invite to review and confirm this contract on their VrakeIT account. The contract is finalized once they confirm.</div>
+            </div>
+          </div>
+
+          <button id="cx-submit-btn" class="btn-primary" onclick="submitContract()" disabled>
+            <i class="bi bi-send-fill" style="color:#fbbf24;"></i> Submit & Send Invite to Party 2
+          </button>
+          <button class="btn-outline" onclick="goToStep('step-cx-4')"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+
 
         <!-- FORM — Date & Time -->
         <div class="wizard-step" id="step-form-datetime">
@@ -3684,72 +3948,338 @@ if (($user['role'] ?? 'user') !== 'user') {
     // ══════════════════════════════════════════════════════════
     //  CONTRACT
     // ══════════════════════════════════════════════════════════
-    function saveContractForm() {
-      const desc = document.getElementById('contractIncidentDesc').value.trim();
-      const terms = document.getElementById('contractTerms').value.trim();
-      const p1name = document.getElementById('party1Name').value.trim();
-      const p2name = document.getElementById('party2Name').value.trim();
-      if (!terms || !p1name || !p2name) {
-        alert('Please fill in at least the terms and both party names.');
-        return;
-      }
-      state.contract_party1_name = p1name;
-      state.contract_party1_contact = document.getElementById('party1Contact').value.trim();
-      state.contract_party2_name = p2name;
-      state.contract_party2_contact = document.getElementById('party2Contact').value.trim();
-      state.contract_terms = terms;
-      state.contract_amount = document.getElementById('contractAmount').value.trim();
-      state.contract_description = desc;
 
-      // Populate review
-      document.getElementById('cr-party1').textContent = `${p1name} ${state.contract_party1_contact ? '('+state.contract_party1_contact+')' : ''}`;
-      document.getElementById('cr-party2').textContent = `${p2name} ${state.contract_party2_contact ? '('+state.contract_party2_contact+')' : ''}`;
-      document.getElementById('cr-amount').textContent = state.contract_amount ? '₱' + parseFloat(state.contract_amount).toLocaleString() : 'Not specified';
-      document.getElementById('cr-terms').textContent = terms;
-      goToStep('step-m-contract-review');
+    // ══════════════════════════════════════════════════════════
+    //  5-STEP CONTRACT WIZARD (cx) STATE & HELPERS
+    // ══════════════════════════════════════════════════════════
+
+    const CX_STEPS = ['step-cx-1','step-cx-2','step-cx-3','step-cx-4','step-cx-5'];
+    let cx = {};            // contract wizard state
+    let cxExistingRef = ''; // if continuing a draft
+    let cxSaveTimer   = null;
+
+    // Called by "Yes, create a contract" button in step-m-talk
+    function startContractWizard() {
+      // Reset state, pre-fill Party 1 from logged-in user
+      cx = {
+        cx_incident_type: '', cx_fault: '',
+        cx_versions_agree: true,
+        cx_resolution_type: '', cx_who_pays: '',
+        cx_payment_method: '', cx_payment_schedule: '',
+      };
+      cxExistingRef = '';
+
+      // Restore draft if one exists
+      const saved = localStorage.getItem('cx_draft');
+      if (saved) {
+        try {
+          const d = JSON.parse(saved);
+          cx = Object.assign(cx, d);
+          cxExistingRef = d.existing_ref || '';
+          // Re-apply chip states after brief render delay
+          setTimeout(cxRestoreChips, 100);
+        } catch(e) {}
+      }
+
+      // Pre-fill Party 1 from profile
+      const p1name  = document.getElementById('cx-p1-name');
+      const p1phone = document.getElementById('cx-p1-contact');
+      if (p1name  && !p1name.value)  p1name.value  = cx.party1_name  || '<?= htmlspecialchars(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '')) ?>';
+      if (p1phone && !p1phone.value) p1phone.value = cx.party1_contact || '<?= htmlspecialchars($user['phone'] ?? '') ?>';
+
+      // Show progress bar
+      document.getElementById('cx-progress-bar').style.display = 'block';
+      cxUpdateProgress(1);
+      goToStep('step-cx-1');
     }
 
-    async function setContractAgree(agree) {
-      if (!agree) {
-        goToStep('step-m-contract-revise');
-        return;
+    // ── Chip selector ─────────────────────────────────────────
+    function selectChip(groupId, btn, stateKey) {
+      document.querySelectorAll(`#${groupId} .chip-btn`).forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      cx[stateKey] = btn.dataset.val;
+      cxAutosave();
+    }
+
+    function cxRestoreChips() {
+      const map = {
+        'cx-incident-type-chips': 'cx_incident_type',
+        'cx-fault-chips':         'cx_fault',
+        'cx-resolution-chips':    'cx_resolution_type',
+        'cx-who-pays-chips':      'cx_who_pays',
+        'cx-payment-method-chips':'cx_payment_method',
+        'cx-payment-schedule-chips':'cx_payment_schedule',
+      };
+      Object.entries(map).forEach(([gId, key]) => {
+        const val = cx[key];
+        if (!val) return;
+        const btn = document.querySelector(`#${gId} .chip-btn[data-val="${val}"]`);
+        if (btn) btn.classList.add('selected');
+      });
+      // Restore text fields
+      const fields = {
+        'cx-description': cx.description, 'cx-version-p2': cx.version_p2,
+        'cx-p1-name': cx.party1_name, 'cx-p1-contact': cx.party1_contact,
+        'cx-p1-address': cx.party1_address, 'cx-p1-vehicle-type': cx.party1_vehicle_type,
+        'cx-p1-plate': cx.party1_plate, 'cx-p1-license': cx.party1_license,
+        'cx-p1-insurance': cx.party1_insurance,
+        'cx-p2-email': cx.party2_email, 'cx-p2-name': cx.party2_name,
+        'cx-p2-contact': cx.party2_contact, 'cx-p2-address': cx.party2_address,
+        'cx-p2-vehicle-type': cx.party2_vehicle_type, 'cx-p2-plate': cx.party2_plate,
+        'cx-p2-license': cx.party2_license, 'cx-p2-insurance': cx.party2_insurance,
+        'cx-witness-name': cx.witness_name, 'cx-witness-contact': cx.witness_contact,
+        'cx-damage-desc-p1': cx.damage_desc_p1, 'cx-damage-cost-p1': cx.damage_cost_p1,
+        'cx-damage-desc-p2': cx.damage_desc_p2, 'cx-damage-cost-p2': cx.damage_cost_p2,
+        'cx-amount': cx.amount, 'cx-payment-deadline': cx.payment_deadline,
+        'cx-terms': cx.terms, 'cx-escalation': cx.escalation_clause,
+      };
+      Object.entries(fields).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el && val != null) el.value = val;
+      });
+      // Restore version-p2 block visibility
+      if (cx.cx_versions_agree === false) {
+        const block = document.getElementById('cx-version-p2-block');
+        if (block) block.style.display = 'block';
       }
-      // Submit contract
+    }
+
+    // ── Progress bar ──────────────────────────────────────────
+    function cxUpdateProgress(activeStep) {
+      for (let i = 1; i <= 5; i++) {
+        const dot   = document.getElementById(`cx-dot-${i}`);
+        const label = document.getElementById(`cx-label-${i}`);
+        if (!dot) continue;
+        dot.className = 'cx-step-dot';
+        if (i < activeStep)       { dot.classList.add('done');   label.style.color = '#10b981'; }
+        else if (i === activeStep){ dot.classList.add('active');  label.style.color = 'var(--primary)'; }
+        else                      {                               label.style.color = '#9ca3af'; }
+      }
+    }
+
+    // Show/hide progress bar when entering/leaving CX steps
+    const _origGoToStep = goToStep;
+    goToStep = function(id) {
+      _origGoToStep(id);
+      const bar = document.getElementById('cx-progress-bar');
+      if (!bar) return;
+      const idx = CX_STEPS.indexOf(id);
+      if (idx >= 0) {
+        bar.style.display = 'block';
+        cxUpdateProgress(idx + 1);
+      } else {
+        bar.style.display = 'none';
+      }
+    };
+
+    // ── "Do both parties agree?" toggle ───────────────────────
+    function setCxVersionsAgree(agree) {
+      cx.cx_versions_agree = agree;
+      const block = document.getElementById('cx-version-p2-block');
+      block.style.display = agree ? 'none' : 'block';
+      // Highlight chosen button
+      document.getElementById('cx-agree-yes').classList.toggle('choice-btn--active', agree);
+      document.getElementById('cx-agree-no').classList.toggle('choice-btn--active', !agree);
+      cxAutosave();
+    }
+
+    // ── Template insert ───────────────────────────────────────
+    function cxInsertTemplate(text) {
+      const el = document.getElementById('cx-terms');
+      if (!el) return;
+      el.value = text;
+      cx.terms = text;
+      cxAutosave();
+    }
+
+    // ── Auto-save to localStorage ─────────────────────────────
+    function cxAutosave() {
+      clearTimeout(cxSaveTimer);
+      cxSaveTimer = setTimeout(() => {
+        cxCollectFields();
+        cx.existing_ref = cxExistingRef;
+        localStorage.setItem('cx_draft', JSON.stringify(cx));
+      }, 1500);
+    }
+
+    function cxCollectFields() {
+      const g = id => (document.getElementById(id) || {}).value || '';
+      cx.description        = g('cx-description');
+      cx.version_p2         = g('cx-version-p2');
+      cx.party1_name        = g('cx-p1-name');
+      cx.party1_contact     = g('cx-p1-contact');
+      cx.party1_address     = g('cx-p1-address');
+      cx.party1_vehicle_type= g('cx-p1-vehicle-type');
+      cx.party1_plate       = g('cx-p1-plate');
+      cx.party1_license     = g('cx-p1-license');
+      cx.party1_insurance   = g('cx-p1-insurance');
+      cx.party2_email       = g('cx-p2-email');
+      cx.party2_name        = g('cx-p2-name');
+      cx.party2_contact     = g('cx-p2-contact');
+      cx.party2_address     = g('cx-p2-address');
+      cx.party2_vehicle_type= g('cx-p2-vehicle-type');
+      cx.party2_plate       = g('cx-p2-plate');
+      cx.party2_license     = g('cx-p2-license');
+      cx.party2_insurance   = g('cx-p2-insurance');
+      cx.witness_name       = g('cx-witness-name');
+      cx.witness_contact    = g('cx-witness-contact');
+      cx.damage_desc_p1     = g('cx-damage-desc-p1');
+      cx.damage_cost_p1     = g('cx-damage-cost-p1');
+      cx.damage_desc_p2     = g('cx-damage-desc-p2');
+      cx.damage_cost_p2     = g('cx-damage-cost-p2');
+      cx.amount             = g('cx-amount');
+      cx.payment_deadline   = g('cx-payment-deadline');
+      cx.terms              = g('cx-terms');
+      cx.escalation_clause  = g('cx-escalation');
+    }
+
+    // ── Step validation + navigation ──────────────────────────
+    function cxGoNext(step) {
+      cxCollectFields();
+      if (step === 1) {
+        if (!cx.cx_incident_type) { showCxError('Please select an incident type.'); return; }
+        if (!cx.description.trim()) { showCxError('Please describe what happened.'); return; }
+        goToStep('step-cx-2');
+      } else if (step === 2) {
+        if (!cx.party1_name.trim()) { showCxError('Please enter your full name.'); return; }
+        if (!cx.party1_contact.trim()) { showCxError('Please enter your contact number.'); return; }
+        if (!cx.party2_email.trim()) { showCxError('Party 2\'s VrakeIT email is required to send the invite.'); return; }
+        if (!cx.party2_name.trim()) { showCxError('Please enter Party 2\'s full name.'); return; }
+        goToStep('step-cx-3');
+      } else if (step === 3) {
+        goToStep('step-cx-4');
+      } else if (step === 4) {
+        if (!cx.cx_resolution_type) { showCxError('Please select a resolution type.'); return; }
+        if (!cx.terms.trim()) { showCxError('Please enter the agreement terms.'); return; }
+        // Build review preview
+        buildCxReviewPreview();
+        goToStep('step-cx-5');
+      }
+    }
+
+    function showCxError(msg) {
+      // Brief shake + toast
+      const btn = event.target.closest('button');
+      if (btn) { btn.style.animation='none'; setTimeout(()=>{btn.style.animation='';},10); }
+      showToast(msg, 'error');
+    }
+
+    // ── Review preview builder ────────────────────────────────
+    function buildCxReviewPreview() {
+      const resLabels = {
+        pay_repair:'Pay Repair Costs', shoulder_shop:'Shoulder at Shop',
+        cash:'Cash Payment', split:'Split Costs',
+        insurance:'Go Through Insurance', no_comp:'No Compensation',
+      };
+      const payLabels = { cash:'Cash', gcash:'GCash', maya:'Maya', bank_transfer:'Bank Transfer' };
+      const schLabels = { lump_sum:'Lump Sum', installments:'Installments' };
+      const faultLabels = { party1:'Party 1', party2:'Party 2', shared:'Shared', undetermined:'Not Determined' };
+      const incLabels = {
+        'rear-end':'Rear-End','sideswipe':'Side-Swipe','intersection':'Intersection',
+        'hit-parked':'Hit Parked Vehicle','motorcycle':'Motorcycle',
+        'pedestrian':'Pedestrian','other':'Other'
+      };
+
+      const row = (l, v) => v ? `<div style="display:flex;gap:0.5rem;margin-bottom:0.4rem;"><span style="font-weight:700;color:#6b7280;min-width:120px;font-size:0.76rem;">${l}</span><span style="font-size:0.8rem;color:#111;">${v}</span></div>` : '';
+
+      let html = `
+        <div style="font-size:0.72rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">📋 What Happened</div>
+        ${row('Type', incLabels[cx.cx_incident_type] || cx.cx_incident_type)}
+        ${row('Fault', faultLabels[cx.cx_fault] || '—')}
+        ${row('Description', cx.description)}
+        <hr style="border:none;border-top:1px solid #f3f4f6;margin:10px 0;">
+        <div style="font-size:0.72rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">👤 Parties</div>
+        ${row('Party 1', cx.party1_name + (cx.party1_contact ? ' · ' + cx.party1_contact : ''))}
+        ${row('Vehicle 1', [cx.party1_vehicle_type, cx.party1_plate].filter(Boolean).join(' · '))}
+        ${row('Party 2', cx.party2_name + (cx.party2_email ? ' · ' + cx.party2_email : ''))}
+        ${row('Vehicle 2', [cx.party2_vehicle_type, cx.party2_plate].filter(Boolean).join(' · '))}
+        <hr style="border:none;border-top:1px solid #f3f4f6;margin:10px 0;">
+        <div style="font-size:0.72rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">🤝 Agreement</div>
+        ${row('Resolution', resLabels[cx.cx_resolution_type] || '—')}
+        ${cx.amount ? row('Amount', '₱' + parseFloat(cx.amount).toLocaleString()) : ''}
+        ${row('Payment', payLabels[cx.cx_payment_method] || '')}
+        ${row('Schedule', schLabels[cx.cx_payment_schedule] || '')}
+        ${cx.payment_deadline ? row('Deadline', cx.payment_deadline) : ''}
+        <div style="margin-top:8px;padding:8px 10px;background:#f0f7ff;border-left:3px solid var(--primary);border-radius:4px;font-size:0.78rem;color:#374151;line-height:1.5;">${cx.terms || '—'}</div>
+        ${cx.escalation_clause ? `<div style="margin-top:6px;padding:6px 10px;background:#fef2f2;border-left:3px solid #dc2626;border-radius:4px;font-size:0.76rem;color:#991b1b;line-height:1.5;"><strong>Escalation:</strong> ${cx.escalation_clause}</div>` : ''}
+      `;
+      document.getElementById('cx-review-preview').innerHTML = html;
+    }
+
+    // ── Consent checkboxes ────────────────────────────────────
+    function cxCheckConsents() {
+      const v = document.getElementById('cx-consent-voluntary')?.checked;
+      const h = document.getElementById('cx-consent-hidden')?.checked;
+      const btn = document.getElementById('cx-submit-btn');
+      if (btn) btn.disabled = !(v && h);
+    }
+
+    // ── Final submit ──────────────────────────────────────────
+    async function submitContract() {
+      const btn = document.getElementById('cx-submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px;"></span>Submitting...';
+
+      cxCollectFields();
       const fd = new FormData();
-      fd.append('type', 'contract');
-      fd.append('party1_name', state.contract_party1_name);
-      fd.append('party1_contact', state.contract_party1_contact);
-      fd.append('party2_name', state.contract_party2_name);
-      fd.append('party2_contact', state.contract_party2_contact);
-      fd.append('terms', state.contract_terms);
-      fd.append('amount', state.contract_amount);
-      fd.append('parties', state.parties);
-      fd.append('description', state.contract_description);
+      fd.append('action', 'submit');
+      fd.append('existing_ref', cxExistingRef);
+      // Serialize all cx fields
+      const fieldMap = {
+        incident_type: cx.cx_incident_type, fault: cx.cx_fault,
+        versions_agree: cx.cx_versions_agree ? '1' : '0',
+        version_p2: cx.version_p2, description: cx.description,
+        party1_name: cx.party1_name, party1_contact: cx.party1_contact,
+        party1_address: cx.party1_address, party1_vehicle_type: cx.party1_vehicle_type,
+        party1_plate: cx.party1_plate, party1_license: cx.party1_license,
+        party1_insurance: cx.party1_insurance,
+        party2_email: cx.party2_email, party2_name: cx.party2_name,
+        party2_contact: cx.party2_contact, party2_address: cx.party2_address,
+        party2_vehicle_type: cx.party2_vehicle_type, party2_plate: cx.party2_plate,
+        party2_license: cx.party2_license, party2_insurance: cx.party2_insurance,
+        witness_name: cx.witness_name, witness_contact: cx.witness_contact,
+        damage_desc_p1: cx.damage_desc_p1, damage_cost_p1: cx.damage_cost_p1,
+        damage_desc_p2: cx.damage_desc_p2, damage_cost_p2: cx.damage_cost_p2,
+        resolution_type: cx.cx_resolution_type, who_pays: cx.cx_who_pays,
+        amount: cx.amount, payment_method: cx.cx_payment_method,
+        payment_schedule: cx.cx_payment_schedule,
+        payment_deadline: cx.payment_deadline, escalation_clause: cx.escalation_clause,
+        terms: cx.terms,
+        consent_voluntary: '1', consent_hidden_damage: '1',
+      };
+      Object.entries(fieldMap).forEach(([k,v]) => { if (v != null) fd.append(k, v); });
 
       try {
-        const res = await fetch('api/submit_contract.php', {
-          method: 'POST',
-          body: fd
-        });
+        const res  = await fetch('api/submit_contract.php', { method:'POST', body:fd });
         const data = await res.json();
-        const ref = data.reference_number;
-        document.getElementById('contractRefNum').textContent = ref;
-        document.getElementById('cs-parties').textContent = `${state.contract_party1_name} & ${state.contract_party2_name}`;
-        document.getElementById('cs-amount').textContent = state.contract_amount ? '₱' + parseFloat(state.contract_amount).toLocaleString() : '—';
-        goToStep('step-end-contract-saved');
-      } catch {
-        document.body.insertAdjacentHTML('beforeend', `
-        <div id="contractErrorModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:1100;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px);">
-          <div style="background:#fff;border-radius:24px;padding:2rem 1.5rem;max-width:340px;width:100%;text-align:center;animation:stepIn .35s ease;">
-            <div style="width:72px;height:72px;background:linear-gradient(135deg,#E90101,#b30000);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:2rem;">⚠️</div>
-            <div style="font-size:1.1rem;font-weight:800;margin-bottom:0.5rem;">An error occurred</div>
-            <div style="font-size:0.82rem;color:#6b7280;margin-bottom:1.25rem;">Could not save the contract. Please check your connection and try again.</div>
-            <button onclick="document.getElementById('contractErrorModal').remove()" style="width:100%;background:linear-gradient(135deg,#007ED2,#005fa3);color:#fff;border:none;border-radius:14px;padding:0.85rem;font-family:'Poppins',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;">Try Again</button>
-          </div>
-        </div>
-      `);
+
+        if (data.success) {
+          // Clear draft from localStorage
+          localStorage.removeItem('cx_draft');
+          cxExistingRef = data.reference_number;
+
+          // Update end screen
+          const refEl = document.getElementById('contractRefNum');
+          if (refEl) refEl.textContent = data.reference_number;
+          const psEl  = document.getElementById('cs-parties');
+          if (psEl) psEl.textContent = `${cx.party1_name} & ${cx.party2_name}`;
+          goToStep('step-end-contract-saved');
+        } else {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-send-fill" style="color:#fbbf24;"></i> Submit & Send Invite to Party 2';
+          showToast(data.message || 'Failed to submit. Please try again.', 'error');
+        }
+      } catch(e) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-send-fill" style="color:#fbbf24;"></i> Submit & Send Invite to Party 2';
+        showToast('Network error. Please check your connection.', 'error');
       }
     }
+
+    // ── Legacy stubs (kept for backward compat, now unused) ───
+    function saveContractForm() { startContractWizard(); }
+    function setContractAgree() {}
+
 
     // ══════════════════════════════════════════════════════════
     //  ROUTE TO FORM FLOW
