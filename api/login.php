@@ -46,5 +46,14 @@ if ($userRole !== $loginType) {
 loginUser($user);
 auditLog($user['id'], 'login_success', "Email: {$email}");
 
-$redirectUrl = ($userRole === 'enforcer') ? BASE_URL . '/enforcer_landing.php' : BASE_URL . '/landing.php';
+// If there's a saved redirect (e.g. from a contract invite link), use it
+if (!empty($_SESSION['login_redirect'])) {
+    $redirectUrl = BASE_URL . '/' . ltrim($_SESSION['login_redirect'], '/');
+    unset($_SESSION['login_redirect']);
+} elseif ($userRole === 'enforcer') {
+    $redirectUrl = BASE_URL . '/enforcer_landing.php';
+} else {
+    $redirectUrl = BASE_URL . '/landing.php';
+}
+
 jsonResponse(true, 'Login successful.', ['redirect' => $redirectUrl]);
