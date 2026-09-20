@@ -38,9 +38,8 @@ $user = getLoggedInUser();
     <select id="statusFilter" style="padding: 8px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 13px; background: #fff; outline: none; font-family: Poppins, sans-serif;" onchange="renderReports()">
       <option value="all">All Status</option>
       <option value="pending">Pending</option>
-      <option value="reviewing">Reviewing</option>
-      <option value="verified">Verified</option>
-      <option value="rejected">Rejected</option>
+      <option value="ongoing">Ongoing</option>
+      <option value="escalated">Escalated</option>
       <option value="closed">Closed</option>
     </select>
   </div>
@@ -52,7 +51,7 @@ $user = getLoggedInUser();
   </div>
 
   <div id="emptyState" style="display:none;text-align:center;padding:60px 20px;">
-    <i class="bi bi-clipboard-x" style="font-size:56px;color:#ddd;display:block;margin-bottom:12px;"></i>
+    <i class="bi bi-clipboard-x" style="font-size:56px;color:var(--red);display:block;margin-bottom:12px;"></i>
     <h5 style="color:var(--muted);font-weight:600;">No Reports Yet</h5>
     <p style="color:#aaa;font-size:14px;">File your first report to see it here.</p>
     <a href="report.php" class="btn-primary-vr d-inline-block" style="padding:12px 24px;text-decoration:none;margin-top:8px;">File a Report</a>
@@ -163,11 +162,25 @@ function renderReports() {
         <div>
           <div class="ref">${r.reference_number}</div>
           <div class="flow-type">${r.flow_label}</div>
+          <div style="margin-top:4px;">
+            ${ r.reporter_role === 'citizen'
+              ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#7c3aed;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);padding:2px 8px;border-radius:20px;"><i class="bi bi-eye-fill"></i> Citizen / Witness</span>`
+              : `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#1d4ed8;background:rgba(29,78,216,0.08);border:1px solid rgba(29,78,216,0.2);padding:2px 8px;border-radius:20px;"><i class="bi bi-car-front-fill"></i> Driver</span>`
+            }
+          </div>
         </div>
         ${getStatusBadge(r.status)}
       </div>
       <div class="date"><i class="bi bi-calendar3 me-1"></i>${r.formatted_date}</div>
-      ${r.location_address ? `<div style="font-size:12px;color:var(--muted);margin-top:4px;"><i class="bi bi-geo-alt me-1"></i>${r.location_address.substring(0,60)}...</div>` : ''}
+      ${r.location_address ? `<div style="font-size:12px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><i class="bi bi-geo-alt me-1"></i>${r.location_address}</div>` : ''}
+      ${ r.flow_type === 'good_citizen' && r.status === 'closed' ? `
+        <div style="margin-top:10px;padding:8px 12px;border-radius:12px;background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(74,222,128,0.15));border:1.5px solid rgba(251,191,36,0.5);display:flex;align-items:center;gap:8px;">
+          <span style="font-size:20px;">⭐</span>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#92400e;">+50 Points Granted!</div>
+            <div style="font-size:11px;color:#a16207;">Thank you for being a Good Citizen</div>
+          </div>
+        </div>` : '' }
       <div style="text-align:right;margin-top:8px;font-size:12px;color:var(--blue);">Tap for details &rarr;</div>
     </div>
   `).join('');
@@ -177,14 +190,13 @@ function renderReports() {
 
 function getStatusBadge(s) {
   const map = {
-    pending:   { bg: '#fff3cd', color: '#856404', label: '⚠️ Pending'   },
-    reviewing: { bg: '#cfe2ff', color: '#084298', label: '🔍 Reviewing' },
-    verified:  { bg: '#d0f5f0', color: '#0b7b6b', label: '✅ Verified' },
-    rejected:  { bg: '#fde8e8', color: '#991b1b', label: '❌ Rejected' },
-    closed:    { bg: '#c6ccc9', color: '#0a3622', label: '🔒 Closed'    },
+    pending:   { bg: '#fff3cd', color: '#856404', icon: 'bi-clock',                    label: 'Pending'                       },
+    ongoing:   { bg: '#cfe2ff', color: '#084298', icon: 'bi-arrow-repeat',             label: 'Ongoing'                       },
+    escalated: { bg: '#fde8e8', color: '#991b1b', icon: 'bi-exclamation-octagon-fill', label: 'Escalated to Higher Dept.'     },
+    closed:    { bg: '#c6ccc9', color: '#0a3622', icon: 'bi-lock-fill',                label: 'Closed'                        },
   };
   const c = map[s] || map.pending;
-  return `<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;background:${c.bg};color:${c.color};">${c.label}</span>`;
+  return `<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;background:${c.bg};color:${c.color};"><i class="bi ${c.icon}"></i> ${c.label}</span>`;
 }
 
 function showDetail(r) {
@@ -225,21 +237,50 @@ function showDetail(r) {
     }
   }
 
+  const roleLabel = r.reporter_role === 'citizen'
+    ? `<span style="display:inline-flex;align-items:center;gap:5px;color:#7c3aed;font-weight:600;"><i class="bi bi-eye-fill"></i> Citizen / Witness</span>`
+    : `<span style="display:inline-flex;align-items:center;gap:5px;color:#1d4ed8;font-weight:600;"><i class="bi bi-car-front-fill"></i> Driver</span>`;
+
+  // Build vehicles HTML
+  let vehiclesHtml = '-';
+  if (r.vehicles && r.vehicles.length > 0) {
+    vehiclesHtml = r.vehicles.map(v =>
+      `<div style="margin-bottom:3px;"><strong>${v.vehicle_type}</strong> &mdash; <span style="font-family:monospace;color:var(--red);">${v.plate_number || 'No plate'}</span></div>`
+    ).join('');
+  }
+
+  // Injury severity and deceased labels
+  const severityLabel = r.injury_severity === 'minor'
+    ? `<span style="color:#d97706;font-weight:700;"><i class="bi bi-bandaid-fill"></i> Minor Injury</span>`
+    : r.injury_severity === 'major'
+      ? `<span style="color:#dc2626;font-weight:700;"><i class="bi bi-heartbreak-fill"></i> Major Injury</span>`
+      : null;
+
+  const deceasedLabel = r.has_deceased == 1
+    ? `<span style="color:#7f1d1d;font-weight:700;"><i class="bi bi-x-octagon-fill"></i> There are fatalities / deceased</span>`
+    : r.has_deceased == 0
+      ? `<span style="color:#15803d;font-weight:700;"><i class="bi bi-check-circle-fill"></i> Everyone is alive</span>`
+      : null;
+
   const rows = [
     ['Reference', r.reference_number],
     ['Status', r.status.charAt(0).toUpperCase() + r.status.slice(1)],
     ['Type', r.flow_label],
+    ['Role', roleLabel],
     ['Submitted', r.formatted_date],
     ['Injured?', r.is_injured ? 'Yes' : 'No'],
+    ...(severityLabel  ? [['Injury Severity',  severityLabel]]  : []),
+    ...(deceasedLabel  ? [['Deceased Status',  deceasedLabel]]  : []),
     ['Date of Incident', r.incident_date || '-'],
     ['Location', r.location_address || '-'],
     ['Other Parties', r.has_other_parties ? 'Yes' : 'No'],
     ['Weather', r.weather_condition || '-'],
     ['Road Condition', r.road_condition || '-'],
     ['Insurance', r.insurance_type || '-'],
-    ['Photos', photosHtml], // Rendered Photos
+    ['Vehicles', vehiclesHtml],
+    ['Photos', photosHtml],
     ['Details', r.event_details || '-']
-  ].map(([l, v]) => `<div class="overview-row"><span class="label">${l}</span><span class="value" style="${l === 'Photos' ? 'flex-basis: 100%; margin-top: 4px;' : ''}">${v}</span></div>`).join('');
+  ].map(([l, v]) => `<div class="overview-row"><span class="label">${l}</span><span class="value" style="${(l === 'Photos' || l === 'Vehicles' || l === 'Details') ? 'flex-basis: 100%; margin-top: 4px;' : ''}">${v}</span></div>`).join('');
   
   // AI Block:
   const aiHtml = `
@@ -257,8 +298,21 @@ function showDetail(r) {
     </div>
   `;
 
+  // Points-granted block for approved Good Citizen reports
+  const gcGrantedHtml = (r.flow_type === 'good_citizen' && r.status === 'closed') ? `
+    <div style="margin-bottom:16px; padding:16px; border-radius:16px;
+                background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(74,222,128,0.12));
+                border:2px solid rgba(251,191,36,0.5);
+                display:flex; align-items:center; gap:14px;">
+      <div style="font-size:36px; line-height:1;">⭐</div>
+      <div>
+        <div style="font-size:15px; font-weight:800; color:#92400e; margin-bottom:2px;">+50 Points Granted!</div>
+        <div style="font-size:12px; color:#a16207; line-height:1.4;">This Good Citizen report was approved by the admin.<br>50 points have been added to your account.</div>
+      </div>
+    </div>` : '';
+
   // CHANGE THE INNER HTML ASSIGNMENT TO INCLUDE aiHtml:
-  document.getElementById('modalBody').innerHTML = `<div style="padding:4px 0;">${aiHtml}${rows}</div>`;
+  document.getElementById('modalBody').innerHTML = `<div style="padding:4px 0;">${gcGrantedHtml}${aiHtml}${rows}</div>`;
   modal.show();
 }
 // Initialize

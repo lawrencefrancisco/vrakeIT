@@ -35,6 +35,11 @@ foreach ($reports as &$r) {
 
     // Overwrite any old database junk with a clean array of the correct images
     $r['media_urls'] = $mediaFiles;
+
+    // Fetch vehicles for this report
+    $vStmt = $db->prepare("SELECT vehicle_type, plate_number FROM report_vehicles WHERE report_id = ? ORDER BY id ASC");
+    $vStmt->execute([$r['id']]);
+    $r['vehicles'] = $vStmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 }
 
 jsonResponse(true, 'Reports fetched.', ['reports' => $reports]);

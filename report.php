@@ -564,11 +564,15 @@ if (($user['role'] ?? 'user') !== 'user') {
       cursor: pointer;
       transition: all 0.2s;
       font-family: 'Poppins', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
     }
 
     .chip:hover {
       border-color: var(--primary);
       color: var(--primary);
+      background: var(--primary-light);
     }
 
     .chip.active {
@@ -576,6 +580,117 @@ if (($user['role'] ?? 'user') !== 'user') {
       background: var(--primary-light);
       color: var(--primary);
     }
+
+    /* ─── VEHICLE DETAIL CARDS ───────────── */
+    .vd-card {
+      background: #fff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .vd-card:hover { border-color: var(--primary); box-shadow: 0 2px 12px rgba(233,1,1,0.07); }
+    .vd-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .vd-card-label {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .vd-card-label .vd-icon {
+      font-size: 1.15rem;
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      background: #fff0f0;
+      color: var(--primary);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Count stepper */
+    .vd-stepper {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #f9fafb;
+    }
+    .vd-stepper button {
+      background: none;
+      border: none;
+      width: 30px;
+      height: 30px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--primary);
+      transition: background 0.15s;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .vd-stepper button:hover { background: rgba(233,1,1,0.08); }
+    .vd-stepper span {
+      min-width: 28px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    /* Plate inputs container */
+    .vd-plates {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-top: 0.6rem;
+    }
+    .vd-plate-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .vd-plate-num {
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.65rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .vd-plate-input {
+      flex: 1;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 0.6rem;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.82rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      outline: none;
+      background: #fafafa;
+      transition: border-color 0.2s;
+    }
+    .vd-plate-input:focus { border-color: var(--primary); background: #fff; }
+    .vd-plate-input::placeholder { text-transform: none; font-weight: 400; letter-spacing: 0; color: #aaa; }
 
     /* ─── MEDIA UPLOAD ───────────────────── */
     .media-dropzone {
@@ -1076,9 +1191,152 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- ══════════════════════════════════════════════════
              STEP 1 — How many are involved?
         ═══════════════════════════════════════════════════════ -->
-        <div class="wizard-step active" id="step-1">
-          <div class="step-title">How many drivers are involved?</div>
-          <p class="step-sub">This helps us guide you through the right reporting process.</p>
+        <!-- ══════════════════════════════════════════════════
+             STEP 0 — ROLE SELECTION (NEW ENTRY GATE)
+        ═══════════════════════════════════════════════════════ -->
+        <div class="wizard-step active" id="step-0-role">
+          <div class="alert-banner info" style="margin-bottom:1.25rem;">
+            <i class="bi bi-shield-check-fill" style="color:var(--primary);"></i>
+            <div>
+              <div class="ab-title">You're protected when you report properly. Stay composed and trust the process.</div>
+            </div>
+          </div>
+
+          <div class="step-title" id="role-title-el">What is your role in this incident?</div>
+          <p class="step-sub" id="role-sub-el">Select how you are involved so we can guide you correctly.</p>
+
+          <div class="choice-card-grid">
+            <button class="choice-card" onclick="chooseRole('driver', this)" id="btn-role-driver">
+              <span class="cc-icon"><i class="bi bi-car-front-fill"></i></span>
+              <div class="cc-label" id="role-driver-label">I am a Driver</div>
+              <div class="cc-sub" id="role-driver-sub">I was directly involved in the accident</div>
+            </button>
+            <button class="choice-card" onclick="chooseRole('citizen', this)" id="btn-role-citizen">
+              <span class="cc-icon"><i class="bi bi-eye-fill"></i></span>
+              <div class="cc-label" id="role-citizen-label">Citizen / Witness</div>
+              <div class="cc-sub" id="role-citizen-sub">I witnessed or am reporting on behalf of others</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════
+             CITIZEN FLOW — Step C1: How many people involved?
+        ═══════════════════════════════════════════════════════ -->
+        <div class="wizard-step" id="step-c1">
+          <div class="step-title">How many people are involved in the accident?</div>
+          <p class="step-sub">Count all people at the scene — drivers, passengers, and bystanders.</p>
+
+          <div class="choice-card-grid">
+            <button class="choice-card" onclick="setCitizenParties('self', this)">
+              <span class="cc-icon"><i class="bi bi-person"></i></span>
+              <div class="cc-label">Just Me</div>
+              <div class="cc-sub">Only I was involved</div>
+            </button>
+            <button class="choice-card" onclick="setCitizenParties('two', this)">
+              <span class="cc-icon"><i class="bi bi-people"></i></span>
+              <div class="cc-label">Two People</div>
+              <div class="cc-sub">Me and one other person</div>
+            </button>
+            <button class="choice-card" onclick="setCitizenParties('multiple', this)">
+              <span class="cc-icon"><i class="bi bi-people-fill"></i></span>
+              <div class="cc-label">Three or More</div>
+              <div class="cc-sub">Multiple people involved</div>
+            </button>
+          </div>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════
+             CITIZEN FLOW — Step C2: How many are injured?
+        ═══════════════════════════════════════════════════════ -->
+        <div class="wizard-step" id="step-c2">
+          <div class="step-title">How many people are injured?</div>
+          <p class="step-sub">Include everyone at the scene who may be hurt.</p>
+
+          <div class="choice-card-grid">
+            <button class="choice-card" onclick="setCitizenInjured('one', this)">
+              <span class="cc-icon"><i class="bi bi-person-exclamation"></i></span>
+              <div class="cc-label">1 Person</div>
+              <div class="cc-sub">One person is injured</div>
+            </button>
+            <button class="choice-card" onclick="setCitizenInjured('multiple', this)">
+              <span class="cc-icon"><i class="bi bi-people-fill" style="color:#e11d48;"></i></span>
+              <div class="cc-label">2 or More</div>
+              <div class="cc-sub">Multiple people are injured</div>
+            </button>
+          </div>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════
+             CITIZEN FLOW — Step C3: How bad are the injuries?
+        ═══════════════════════════════════════════════════════ -->
+        <div class="wizard-step" id="step-c-severity">
+          <div class="step-title">How bad are the injuries?</div>
+          <p class="step-sub">This helps determine the right emergency response.</p>
+
+          <div class="choice-card-grid">
+            <button class="choice-card" onclick="setCitizenSeverity('major', this)">
+              <span class="cc-icon"><i class="bi bi-heartbreak-fill" style="color:#e11d48;"></i></span>
+              <div class="cc-label">Major Injury</div>
+              <div class="cc-sub">Life-threatening or serious</div>
+            </button>
+            <button class="choice-card" onclick="setCitizenSeverity('minor', this)">
+              <span class="cc-icon"><i class="bi bi-bandaid-fill" style="color:#f59e0b;"></i></span>
+              <div class="cc-label">Minor Injury</div>
+              <div class="cc-sub">Not life-threatening</div>
+            </button>
+          </div>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════
+             CITIZEN FLOW — Step C-Hotline: Call Hotline
+        ═══════════════════════════════════════════════════════ -->
+        <div class="wizard-step" id="step-c-hotline">
+          <div class="center-screen">
+            <div class="hero-icon red pulse"><i class="bi bi-telephone-fill"></i></div>
+            <div class="step-title">Please call for help first</div>
+            <p class="step-sub">There are injured people at the scene. Contact emergency services immediately before continuing.</p>
+          </div>
+
+          <div class="call-grid">
+            <a href="tel:911" class="call-btn red">
+              <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
+              <strong>Call 911</strong>
+              <span class="ca-label">Emergency Hotline</span>
+            </a>
+            <a href="tel:117" class="call-btn blue">
+              <span class="ca-icon"><i class="bi bi-truck-front"></i></span>
+              <strong>Call 117</strong>
+              <span class="ca-label">Philippine Red Cross</span>
+            </a>
+            <a href="tel:163" class="call-btn amber">
+              <span class="ca-icon"><i class="bi bi-fire"></i></span>
+              <strong>BFP 163</strong>
+              <span class="ca-label">Fire Bureau</span>
+            </a>
+            <a href="tel:7220650" class="call-btn green">
+              <span class="ca-icon"><i class="bi bi-shield-fill"></i></span>
+              <strong>PNP Hotline</strong>
+              <span class="ca-label">722-0650</span>
+            </a>
+          </div>
+
+          <hr class="divider">
+          <div class="step-title" style="font-size:1rem;margin-bottom:0.4rem;">Ready to document the incident?</div>
+          <p class="step-sub" style="margin-bottom:0.85rem;">You can still file a Good Citizen report and earn points for helping.</p>
+          <button class="btn-primary" onclick="goToFormFlow('good_citizen')"><i class="bi bi-star-fill" style="color:#fbbf24;"></i> Yes, file a report &amp; earn points</button>
+          <button class="btn-outline" onclick="goToStep('step-end-no-report')"><i class="bi bi-x-circle"></i> No, I'm done</button>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════
+             STEP 1 — HOW MANY DRIVERS? (DRIVER FLOW)
+        ═══════════════════════════════════════════════════════ -->
+        <div class="wizard-step" id="step-1">
+          <div class="step-title" id="step1-title-el">How many drivers are involved?</div>
+          <p class="step-sub" id="step1-sub-el">This helps us guide you through the right reporting process.</p>
 
           <div class="choice-card-grid">
             <button class="choice-card" onclick="chooseParties('self', this)">
@@ -1088,40 +1346,42 @@ if (($user['role'] ?? 'user') !== 'user') {
             </button>
             <button class="choice-card" onclick="chooseParties('two', this)">
               <span class="cc-icon"><i class="bi bi-people"></i></span>
-              <div class="cc-label">Two People</div>
-              <div class="cc-sub">Me + Another</div>
+              <div class="cc-label">Two Drivers</div>
+              <div class="cc-sub">Me + Another driver</div>
             </button>
             <button class="choice-card" onclick="chooseParties('multiple', this)">
               <span class="cc-icon"><i class="bi bi-people-fill"></i></span>
               <div class="cc-label">Three or More</div>
-              <div class="cc-sub">Multi-party</div>
+              <div class="cc-sub">Multi-party accident</div>
             </button>
           </div>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
         </div>
 
         <!-- ══════════════════════════════════════════════════
              SELF FLOW
         ═══════════════════════════════════════════════════════ -->
 
-        <!-- S2 — Any injury or accident? -->
+        <!-- S2 — How many people are injured? (SELF FLOW) -->
         <div class="wizard-step" id="step-s2">
-          <div class="step-title">Was there an injury or accident?</div>
-          <p class="step-sub">Tell us what happened — injury, collision, or property damage?</p>
+          <div class="step-title">How many people are injured?</div>
+          <p class="step-sub">Include yourself and anyone else involved in the incident.</p>
 
-          <div class="choice-grid">
-            <button class="choice-btn" onclick="setSelfInjury(true)">
-              <span class="cb-icon"><i class="bi bi-truck-front"></i></span>
-              <div class="cb-body">
-                <div class="cb-title">Yes — there was an injury</div>
-                <div class="cb-desc">Someone may be hurt</div>
-              </div>
+          <div class="choice-card-grid">
+            <button class="choice-card" onclick="setSelfInjuredCount('none', this)">
+              <span class="cc-icon"><i class="bi bi-check-circle-fill"></i></span>
+              <div class="cc-label">None</div>
+              <div class="cc-sub">No injuries — property damage only</div>
             </button>
-            <button class="choice-btn" onclick="setSelfInjury(false)">
-              <span class="cb-icon"><i class="bi bi-car-front"></i></span>
-              <div class="cb-body">
-                <div class="cb-title">No — property or vehicle damage only</div>
-                <div class="cb-desc">No injuries involved</div>
-              </div>
+            <button class="choice-card" onclick="setSelfInjuredCount('one', this)">
+              <span class="cc-icon"><i class="bi bi-person-fill-exclamation"></i></span>
+              <div class="cc-label">1 Person</div>
+              <div class="cc-sub">One person may be hurt</div>
+            </button>
+            <button class="choice-card" onclick="setSelfInjuredCount('multiple', this)">
+              <span class="cc-icon"><i class="bi bi-people-fill"></i></span>
+              <div class="cc-label">2 or More</div>
+              <div class="cc-sub">Multiple people are injured</div>
             </button>
           </div>
 
@@ -1311,25 +1571,26 @@ if (($user['role'] ?? 'user') !== 'user') {
              MULTI-PARTY FLOW (Two / Three+)
         ═══════════════════════════════════════════════════════ -->
 
-        <!-- M1 — Is someone hurt? -->
+        <!-- M1 — How many people are injured? (MULTI FLOW) -->
         <div class="wizard-step" id="step-m1">
-          <div class="step-title">Is anyone involved hurt?</div>
-          <p class="step-sub">This includes yourself, the other party, or any bystanders.</p>
+          <div class="step-title">How many people are injured?</div>
+          <p class="step-sub">Include all parties — drivers, passengers, and bystanders.</p>
 
-          <div class="choice-grid">
-            <button class="choice-btn" onclick="setMultiInjury(true)">
-              <span class="cb-icon"><i class="bi bi-truck-front"></i></span>
-              <div class="cb-body">
-                <div class="cb-title">Yes, someone is injured</div>
-                <div class="cb-desc">Immediate medical attention may be needed</div>
-              </div>
+          <div class="choice-card-grid">
+            <button class="choice-card" onclick="setMultiInjuredCount('none', this)">
+              <span class="cc-icon"><i class="bi bi-check-circle-fill"></i></span>
+              <div class="cc-label">None</div>
+              <div class="cc-sub">No injuries — property damage only</div>
             </button>
-            <button class="choice-btn" onclick="setMultiInjury(false)">
-              <span class="cb-icon"><i class="bi bi-check-circle"></i></span>
-              <div class="cb-body">
-                <div class="cb-title">No, everyone is safe</div>
-                <div class="cb-desc">No physical injuries</div>
-              </div>
+            <button class="choice-card" onclick="setMultiInjuredCount('one', this)">
+              <span class="cc-icon"><i class="bi bi-person-fill-exclamation"></i></span>
+              <div class="cc-label">1 Person</div>
+              <div class="cc-sub">One person may be hurt</div>
+            </button>
+            <button class="choice-card" onclick="setMultiInjuredCount('multiple', this)">
+              <span class="cc-icon"><i class="bi bi-people-fill"></i></span>
+              <div class="cc-label">2 or More</div>
+              <div class="cc-sub">Multiple people are injured</div>
             </button>
           </div>
 
@@ -1406,6 +1667,234 @@ if (($user['role'] ?? 'user') !== 'user') {
           <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
         </div>
 
+        <!-- ══════════════════════════════════════════════════
+             INJURY SEVERITY BRANCH STEPS (shared for all flows with injury)
+        ═══════════════════════════════════════════════════════ -->
+
+        <!-- INJURY-SEVERITY — How bad are the injuries? -->
+        <div class="wizard-step" id="step-injury-severity">
+          <div class="alert-banner danger" style="margin-bottom:1.25rem;">
+            <i class="bi bi-exclamation-triangle-fill" style="color:#E90101;"></i>
+            <div>
+              <div class="ab-title">Injury Reported</div>
+              <div class="ab-body">Please assess the severity carefully. This helps us guide the correct response.</div>
+            </div>
+          </div>
+
+          <div class="step-title">How bad are the injuries?</div>
+          <p class="step-sub">Assess the condition of everyone involved as best you can right now.</p>
+
+          <div class="choice-card-grid">
+            <button class="choice-card" onclick="setInjurySeverity('minor', this)">
+              <span class="cc-icon" style="background:#fffbeb;color:#f59e0b;"><i class="bi bi-bandaid-fill"></i></span>
+              <div class="cc-label">Minor Injury</div>
+              <div class="cc-sub">Cuts, bruises — no life-threatening condition</div>
+            </button>
+            <button class="choice-card" onclick="setInjurySeverity('major', this)">
+              <span class="cc-icon" style="background:#fef2f2;color:#E90101;"><i class="bi bi-heartbreak-fill"></i></span>
+              <div class="cc-label">Major Injury</div>
+              <div class="cc-sub">Serious — unconscious, bleeding heavily, or critical</div>
+            </button>
+          </div>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- INJURY-HOTLINE — Want to call the hotline? -->
+        <div class="wizard-step" id="step-injury-hotline">
+          <div class="center-screen">
+            <div class="hero-icon amber pulse"><i class="bi bi-telephone-fill"></i></div>
+            <div class="step-title" style="margin-bottom:0.5rem; line-height:1.3;">Want to call the hotline for help now?</div>
+            <p class="step-sub">We strongly recommend calling TMO or emergency services before continuing.</p>
+          </div>
+
+          <div class="call-grid">
+            <a href="tel:136" class="call-btn amber">
+              <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
+              <strong>TMO Hotline</strong>
+              <span class="ca-label">Speed Dial 136</span>
+            </a>
+            <a href="tel:911" class="call-btn red">
+              <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
+              <strong>Call 911</strong>
+              <span class="ca-label">Emergency</span>
+            </a>
+          </div>
+
+          <hr class="divider">
+          
+          <div class="btn-row" style="margin-top:0;">
+            <button class="btn-outline" style="width:100%; margin-bottom:0;" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+            <button class="btn-primary" style="width:100%; margin-bottom:0;" onclick="setHotlineChoice(false)">Skip, File a Report Anyway <i class="bi bi-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- MINOR-CALL-TMO — Minor injury, user chose to call TMO first -->
+        <div class="wizard-step" id="step-minor-call-tmo">
+          <div class="center-screen">
+            <div class="hero-icon amber pulse"><i class="bi bi-stoplights"></i></div>
+            <div class="step-title">Contact TMO</div>
+            <p class="step-sub">Please contact your local Traffic Management Officer. Once done, you can proceed to file your report.</p>
+          </div>
+
+          <div class="call-grid">
+            <a href="tel:136" class="call-btn amber">
+              <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
+              <strong>TMO Hotline</strong>
+              <span class="ca-label">Speed Dial 136</span>
+            </a>
+            <a href="tel:911" class="call-btn red">
+              <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
+              <strong>Call 911</strong>
+              <span class="ca-label">Emergency</span>
+            </a>
+          </div>
+
+          <hr class="divider">
+          <button class="btn-primary" onclick="goToFormFlow()"><i class="bi bi-arrow-right"></i> Continue to Report</button>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- INJURY-DECEASED — Are there any deceased? -->
+        <div class="wizard-step" id="step-injury-deceased">
+          <div class="alert-banner danger" style="margin-bottom:1.25rem;">
+            <i class="bi bi-exclamation-octagon-fill" style="color:#E90101;"></i>
+            <div>
+              <div class="ab-title">Critical Question</div>
+              <div class="ab-body">Your answer determines the next steps for this case. Please answer honestly.</div>
+            </div>
+          </div>
+          <div class="step-title">Are there any deceased / fatalities?</div>
+          <p class="step-sub">This is a critical factor in how this case will be handled.</p>
+
+          <div class="choice-card-grid">
+            <button class="choice-card" onclick="setDeceased(true, this)">
+              <span class="cc-icon" style="background:#fef2f2;color:#E90101;"><i class="bi bi-exclamation-octagon-fill"></i></span>
+              <div class="cc-label">Yes — there are fatalities</div>
+              <div class="cc-sub">One or more people have died</div>
+            </button>
+            <button class="choice-card" onclick="setDeceased(false, this)">
+              <span class="cc-icon"><i class="bi bi-check-circle-fill"></i></span>
+              <div class="cc-label">No — everyone is alive</div>
+              <div class="cc-sub">No deaths at this time</div>
+            </button>
+          </div>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- INJURY-CONFIRM-REPORT — No deceased: ask if they still want to report -->
+        <div class="wizard-step" id="step-injury-confirm-report">
+          <div class="center-screen" style="padding-bottom:0;">
+            <div class="hero-icon amber pulse" id="injury-confirm-icon"><i class="bi bi-file-earmark-text"></i></div>
+            <div class="step-title" id="injury-confirm-title">Do you still want to file a report?</div>
+            <p class="step-sub" id="injury-confirm-sub">You can still document this incident for the record — even if it has already been handled.</p>
+          </div>
+
+          <div class="alert-banner warn" id="injury-confirm-banner" style="margin-top:1rem;">
+            <i class="bi bi-info-circle-fill" style="color:#f59e0b;"></i>
+            <div>
+              <div class="ab-title" id="injury-confirm-banner-title">Minor Injury Noted</div>
+              <div class="ab-body" id="injury-confirm-banner-body">Filing a report creates an official record and may help with insurance or legal processes later.</div>
+            </div>
+          </div>
+
+          <hr class="divider">
+          <button class="btn-primary" onclick="setConfirmReport(true)"><i class="bi bi-file-earmark-text" style="color:#fbbf24;"></i> Yes, I want to file a report</button>
+          <button class="btn-outline" onclick="setConfirmReport(false)"><i class="bi bi-x-circle"></i> No, I'm done</button>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- INJURY-ESCALATE — Immediate escalation (deceased = YES) -->
+        <div class="wizard-step" id="step-injury-escalate">
+          <div class="center-screen">
+            <div class="hero-icon red pulse"><i class="bi bi-exclamation-octagon-fill"></i></div>
+            <div class="step-title" style="color:#E90101;">Escalating Immediately</div>
+            <p class="step-sub">This case involves fatalities. Emergency responders are being called right away. Do NOT move the vehicles. Stay at the scene and cooperate with authorities.</p>
+          </div>
+
+          <div class="call-grid">
+            <a href="tel:911" class="call-btn red">
+              <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
+              <strong>Call 911</strong>
+              <span class="ca-label">Emergency Hotline</span>
+            </a>
+            <a href="tel:117" class="call-btn blue">
+              <span class="ca-icon"><i class="bi bi-truck-front"></i></span>
+              <strong>Call 117</strong>
+              <span class="ca-label">Philippine Red Cross</span>
+            </a>
+            <a href="tel:136" class="call-btn amber">
+              <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
+              <strong>TMO Hotline</strong>
+              <span class="ca-label">Traffic Mgmt</span>
+            </a>
+            <a href="tel:7220650" class="call-btn green">
+              <span class="ca-icon"><i class="bi bi-car-front-fill"></i></span>
+              <strong>PNP Hotline</strong>
+              <span class="ca-label">722-0650</span>
+            </a>
+          </div>
+
+          <div class="alert-banner warn" style="margin-top:1rem;">
+            <i class="bi bi-info-circle-fill" style="color:#f59e0b;"></i>
+            <div>
+              <div class="ab-title">What happens next?</div>
+              <div class="ab-body">Emergency responders and a higher office will be notified. A formal investigation will follow. You will be contacted by TMO/Police to complete the report.</div>
+            </div>
+          </div>
+          <a href="landing.php" class="btn-primary" style="text-decoration:none;margin-top:0.5rem;"><i class="bi bi-house-fill"></i> Return to Home</a>
+        </div>
+
+        <!-- INJURY-WHO-REPORTS — Who is making this report? (no deceased) -->
+        <div class="wizard-step" id="step-injury-who-reports">
+          <div class="step-title">Who is making this report?</div>
+          <p class="step-sub">This helps us determine the correct process for this injury case.</p>
+
+          <div class="choice-card-grid">
+            <button class="choice-card" onclick="setReporter('enforcer', this)">
+              <span class="cc-icon"><i class="bi bi-person-badge-fill"></i></span>
+              <div class="cc-label">An Enforcer</div>
+              <div class="cc-sub">TMO or Police officer at the scene</div>
+            </button>
+            <button class="choice-card" onclick="setReporter('civilian', this)">
+              <span class="cc-icon"><i class="bi bi-person-fill"></i></span>
+              <div class="cc-label">Another Person / Civilian</div>
+              <div class="cc-sub">Driver, passenger, or bystander</div>
+            </button>
+          </div>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- INJURY-ENFORCER-REQUIRED — Civilian trying to report serious injury case -->
+        <div class="wizard-step" id="step-injury-enforcer-required">
+          <div class="center-screen">
+            <div class="hero-icon amber"><i class="bi bi-person-badge"></i></div>
+            <div class="step-title">An Enforcer Must Be Involved</div>
+            <p class="step-sub">For injury cases, a Traffic Management Officer or Police must be officially involved to process the report. This case will be referred to the appropriate office.</p>
+          </div>
+
+          <div class="alert-banner warn">
+            <i class="bi bi-exclamation-circle-fill" style="color:#f59e0b;"></i>
+            <div>
+              <div class="ab-title">Case Cannot Be Settled Privately</div>
+              <div class="ab-body">Injury cases involving no enforcer are automatically escalated to the higher office for proper handling. Please contact TMO to be assigned an enforcer.</div>
+            </div>
+          </div>
+
+          <div class="call-grid" style="margin-top:0.75rem;">
+            <a href="tel:136" class="call-btn amber">
+              <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
+              <strong>TMO Hotline</strong>
+              <span class="ca-label">Speed Dial 136</span>
+            </a>
+            <a href="tel:911" class="call-btn red">
+              <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
+              <strong>Call 911</strong>
+              <span class="ca-label">Emergency</span>
+            </a>
+          </div>
+          <a href="landing.php" class="btn-primary" style="text-decoration:none;margin-top:0.75rem;"><i class="bi bi-house-fill"></i> Return to Home</a>
+        </div>
+
         <!-- M-DOC-NOTE — Enforcer present, document the scene -->
         <div class="wizard-step" id="step-m-doc-note">
           <div class="alert-banner success">
@@ -1444,14 +1933,14 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="choice-grid">
             <button class="choice-btn" onclick="setSettle(true)">
-              <span class="cb-icon"><i class="bi bi-handshake-fill"></i></span>
+              <span class="cb-icon" style="background:#e0f2fe; color:#0ea5e9;"><i class="bi bi-people-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">Yes, settle on our own</div>
                 <div class="cb-desc">Agree between involved parties</div>
               </div>
             </button>
             <button class="choice-btn" onclick="setSettle(false)">
-              <span class="cb-icon"><i class="bi bi-card-checklist"></i></span>
+              <span class="cb-icon" style="background:#f3f4f6; color:#4b5563;"><i class="bi bi-file-earmark-text-fill"></i></span>
               <div class="cb-body">
                 <div class="cb-title">No, file a formal report</div>
                 <div class="cb-desc">Document through VrakeIT</div>
@@ -1670,15 +2159,27 @@ if (($user['role'] ?? 'user') !== 'user') {
         <!-- FORM — Parties & Vehicles (skipped for good citizen) -->
         <div class="wizard-step" id="step-form-parties">
           <div class="step-title">Vehicles involved</div>
-          <p class="step-sub">Select all vehicle types at the scene.</p>
+          <p class="step-sub">Select all vehicle types at the scene, then enter each plate number.</p>
 
           <div class="chip-group" id="vehicleChips">
-            <?php foreach (['Car', 'Motorcycle', 'Van', 'Truck', 'Tricycle', 'E-bike/E-trike', 'Jeepney', 'Bus', 'Bicycle'] as $v): ?>
-              <button class="chip" data-vehicle="<?= $v ?>" onclick="toggleChip(this)"><?= $v ?></button>
+            <?php
+            $vehicleIcons = [
+              'Car'            => 'bi-car-front-fill',
+              'Motorcycle'     => 'bi-scooter',
+              'Van'            => 'bi-truck',
+              'Truck'          => 'bi-truck-front-fill',
+              'Tricycle'       => 'bi-bicycle',
+              'E-bike/E-trike' => 'bi-lightning-charge-fill',
+              'Jeepney'        => 'bi-bus-front-fill',
+              'Bus'            => 'bi-bus-front',
+              'Bicycle'        => 'bi-bicycle',
+            ];
+            foreach ($vehicleIcons as $v => $icon): ?>
+              <button class="chip" data-vehicle="<?= $v ?>" data-icon="<?= $icon ?>" onclick="toggleChip(this)"><i class="bi <?= $icon ?>"></i> <?= $v ?></button>
             <?php endforeach; ?>
           </div>
 
-          <div id="vehicleDetailForms" class="mb-3"></div>
+          <div id="vehicleDetailForms"></div>
 
           <button class="btn-primary" onclick="saveVehicleInfo()"><i class="bi bi-arrow-right"></i> Next</button>
           <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
@@ -1785,6 +2286,10 @@ if (($user['role'] ?? 'user') !== 'user') {
             <div class="ov-row">
               <span class="ov-label">Photos</span>
               <div class="ov-value" id="ov-photos" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;">None</div>
+            </div>
+            <div class="ov-row" id="ov-vehicles-row" style="display:none;">
+              <span class="ov-label">Vehicles</span>
+              <div class="ov-value" id="ov-vehicles" style="text-align:right;">—</div>
             </div>
           </div>
 
@@ -1908,10 +2413,36 @@ if (($user['role'] ?? 'user') !== 'user') {
         tl: '<i class="bi bi-globe"></i> English'
       },
 
+      // Step 0 — Role Selection
+      'role-title': {
+        en: 'What is your role in this incident?',
+        tl: 'Ano ang iyong papel sa insidenteng ito?'
+      },
+      'role-sub': {
+        en: 'Select how you are involved so we can guide you correctly.',
+        tl: 'Piliin kung paano ka sangkot para mapatnubayan ka namin nang tama.'
+      },
+      'role-driver': {
+        en: 'I am a Driver',
+        tl: 'Ako ay isang Drayber'
+      },
+      'role-driver-sub': {
+        en: 'I was directly involved in the accident',
+        tl: 'Direkta akong sangkot sa aksidente'
+      },
+      'role-citizen': {
+        en: 'Citizen / Witness',
+        tl: 'Mamamayan / Saksi'
+      },
+      'role-citizen-sub': {
+        en: 'I witnessed or am reporting on behalf of others',
+        tl: 'Nasaksihan ko o nag-uulat para sa iba'
+      },
+
       // Step 1
       's1-title': {
         en: 'How many drivers are involved?',
-        tl: 'Ilang tao ang sangkot?'
+        tl: 'Ilang drayber ang sangkot?'
       },
       's1-sub': {
         en: 'This helps us guide you through the right reporting process.',
@@ -1942,31 +2473,28 @@ if (($user['role'] ?? 'user') !== 'user') {
         tl: 'Maraming partido'
       },
 
-      // S2
+      // S2 — How many injured?
       's2-title': {
-        en: 'Was there an injury or accident?',
-        tl: 'May nasaktan o aksidente ba?'
+        en: 'How many people are injured?',
+        tl: 'Ilang tao ang nasugatan?'
       },
       's2-sub': {
-        en: 'Tell us what happened — injury, collision, or property damage?',
-        tl: 'Sabihin sa amin ang nangyari — pinsala, banggaan, o pinsala sa ari-arian?'
+        en: 'Include yourself and anyone else involved in the incident.',
+        tl: 'Isama ang iyong sarili at sinumang sangkot sa insidente.'
       },
-      's2-yes-t': {
-        en: 'Yes — there was an injury',
-        tl: 'Oo — may nasaktan'
+      's2-none-t': {
+        en: 'None',
+        tl: 'Wala'
       },
-      's2-yes-d': {
-        en: 'Someone may be hurt',
-        tl: 'Maaaring may nasaktan'
+      's2-one-t': {
+        en: '1 Person',
+        tl: '1 Tao'
       },
-      's2-no-t': {
-        en: 'No — property or vehicle damage only',
-        tl: 'Hindi — pinsala sa sasakyan o ari-arian lamang'
+      's2-multi-t': {
+        en: '2 or More',
+        tl: '2 o Higit Pa'
       },
-      's2-no-d': {
-        en: 'No injuries involved',
-        tl: 'Walang nasaktan'
-      },
+
 
       // S3
       's3-title': {
@@ -2333,6 +2861,14 @@ if (($user['role'] ?? 'user') !== 'user') {
       ['h1', 'header-title', 'text'],
       ['#translateBtn', 'translate-btn', 'html'],
 
+      // Step 0 — Role Selection
+      ['#role-title-el', 'role-title', 'text'],
+      ['#role-sub-el', 'role-sub', 'text'],
+      ['#role-driver-label', 'role-driver', 'text'],
+      ['#role-driver-sub', 'role-driver-sub', 'text'],
+      ['#role-citizen-label', 'role-citizen', 'text'],
+      ['#role-citizen-sub', 'role-citizen-sub', 'text'],
+
       // Step 1
       ['#step-1 .step-title', 's1-title', 'text'],
       ['#step-1 .step-sub', 's1-sub', 'text'],
@@ -2346,8 +2882,9 @@ if (($user['role'] ?? 'user') !== 'user') {
       // S2
       ['#step-s2 .step-title', 's2-title', 'text'],
       ['#step-s2 .step-sub', 's2-sub', 'text'],
-      ['#step-s2 .choice-btn:nth-child(1) .cb-title', 's2-yes-t', 'text'],
-      ['#step-s2 .choice-btn:nth-child(1) .cb-desc', 's2-yes-d', 'text'],
+      ['#step-s2 .choice-card:nth-child(1) .cc-label', 's2-none-t', 'text'],
+      ['#step-s2 .choice-card:nth-child(2) .cc-label', 's2-one-t', 'text'],
+      ['#step-s2 .choice-card:nth-child(3) .cc-label', 's2-multi-t', 'text'],
       ['#step-s2 .choice-btn:nth-child(2) .cb-title', 's2-no-t', 'text'],
       ['#step-s2 .choice-btn:nth-child(2) .cb-desc', 's2-no-d', 'text'],
 
@@ -2563,7 +3100,10 @@ if (($user['role'] ?? 'user') !== 'user') {
     //  STATE
     // ══════════════════════════════════════════════════════════
     const state = {
-      parties: '', // 'self' | 'two' | 'multiple'
+      role: '',         // 'driver' | 'citizen'
+      parties: '',     // 'self' | 'two' | 'multiple'
+      injured_count: '', // 'none' | 'one' | 'multiple'
+      injury_severity: '', // 'minor' | 'major'
       has_injury: null,
       self_hurt: null,
       self_attended: null,
@@ -2592,7 +3132,7 @@ if (($user['role'] ?? 'user') !== 'user') {
       contract_description: ''
     };
 
-    const stepHistory = ['step-1'];
+    const stepHistory = ['step-0-role'];
     let mediaFiles = [];
 
     // ─── Progress map ────────────────────────────────────────
@@ -2673,74 +3213,285 @@ if (($user['role'] ?? 'user') !== 'user') {
     }
 
     // ══════════════════════════════════════════════════════════
-    //  STEP 1 — PARTIES
+    //  STEP 0 — ROLE SELECTION
+    // ══════════════════════════════════════════════════════════
+    function chooseRole(role, btn) {
+      document.querySelectorAll('#step-0-role .choice-card').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.role = role;
+      const labels = { driver: 'Driver', citizen: 'Citizen/Witness' };
+      document.getElementById('flowLabel').textContent = labels[role] || '';
+      syncSidebar();
+      setTimeout(() => {
+        if (role === 'driver') {
+          goToStep('step-1');          // Driver: choose how many drivers
+        } else {
+          // Citizen: follow CitizenFlow — ask how many people are involved
+          state.parties = 'citizen';   // Tag so form & submit know the flow
+          goToStep('step-c1');
+        }
+      }, 180);
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  CITIZEN FLOW — Step C1: How many people are involved?
+    // ══════════════════════════════════════════════════════════
+    function setCitizenParties(count, btn) {
+      document.querySelectorAll('#step-c1 .choice-card').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.citizen_party_count = count;
+      syncSidebar();
+      setTimeout(() => {
+        if (count === 'self') {
+          // Just Me → Good Citizen report directly (no injury path)
+          state.has_injury = false;
+          state.injured_count = 'none';
+          goToFormFlow('good_citizen');
+        } else {
+          // Two or More → ask how many are injured
+          goToStep('step-c2');
+        }
+      }, 180);
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  CITIZEN FLOW — Step C2: How many are injured?
+    // ══════════════════════════════════════════════════════════
+    function setCitizenInjured(count, btn) {
+      document.querySelectorAll('#step-c2 .choice-card').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.injured_count = count;
+      state.has_injury = true;
+      syncSidebar();
+      setTimeout(() => {
+        goToStep('step-c-severity');
+      }, 180);
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  CITIZEN FLOW — Step C3: How bad are the injuries?
+    // ══════════════════════════════════════════════════════════
+    function setCitizenSeverity(severity, btn) {
+      document.querySelectorAll('#step-c-severity .choice-card').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.injury_severity = severity;
+      syncSidebar();
+      setTimeout(() => {
+        // Both major and minor → call hotline screen, then report form
+        goToStep('step-c-hotline');
+      }, 180);
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  STEP 1 — PARTIES (DRIVER FLOW)
     // ══════════════════════════════════════════════════════════
     function chooseParties(type, btn) {
-      document.querySelectorAll('.choice-card').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#step-1 .choice-card').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       state.parties = type;
       const labels = {
-        self: 'Solo',
-        two: 'Two Parties',
+        self: 'Solo Driver',
+        two: 'Two Drivers',
         multiple: 'Multi-Party'
       };
       document.getElementById('flowLabel').textContent = labels[type] || '';
       syncSidebar();
       setTimeout(() => {
         if (state.parties === 'self') {
-          goToStep('step-s-attended');
-        } else if (state.parties === 'two') {
-          goToStep('step-m1');
+          goToStep('step-s-attended');   // Solo: first check if TMO/Police is attending
         } else {
-          goToStep('step-m-attended');
+          goToStep('step-m1');           // Multi: how many injured?
         }
       }, 180);
     }
 
     // ══════════════════════════════════════════════════════════
-    //  SELF FLOW
+    //  CITIZEN FLOW — "Are you hurt?" reused from step-s3
     // ══════════════════════════════════════════════════════════
-    function setSelfInjury(injured) {
-      state.has_injury = injured;
-      syncSidebar();
-      if (injured) {
-        goToStep('step-s3');
-      } else {
-        goToStep('step-s-property');
-      }
-    }
-
     function setSelfHurt(hurt) {
       state.self_hurt = hurt;
       syncSidebar();
-      goToStep(hurt ? 'step-s-speed-dial' : 'step-s-property');
+      if (state.role === 'citizen') {
+        // Citizen: if hurt call for help, then proceed to good citizen report form
+        if (hurt) {
+          goToStep('step-s-speed-dial');
+        } else {
+          goToStep('step-s-property');  // Good Citizen report
+        }
+      } else {
+        // Driver Self flow:
+        // YES — hurt → Speed Dial → "Do you still wish to report?"
+        // NO  — not hurt → Good Citizen report (+50 pts)
+        goToStep(hurt ? 'step-s-speed-dial' : 'step-s-property');
+      }
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  DRIVER SELF FLOW — How many injured?
+    // ══════════════════════════════════════════════════════════
+    function setSelfInjuredCount(count, btn) {
+      document.querySelectorAll('#step-s2 .choice-card').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.injured_count = count;
+      state.has_injury = (count !== 'none');
+      syncSidebar();
+      setTimeout(() => {
+        if (count === 'none') {
+          // Solo driver, no injury — go straight to report form
+          goToFormFlow('good_citizen');
+        } else {
+          // Solo driver with injury — go to severity check
+          goToStep('step-injury-severity');
+        }
+      }, 180);
+    }
+
+    // Legacy compat (speed-dial → report-form button still works)
+    function setSelfInjury(injured) {
+      state.has_injury = injured;
+      syncSidebar();
+      goToStep(injured ? 'step-injury-severity' : 'step-s-property');
     }
 
     function setSelfAttended(attended) {
       state.self_attended = attended;
       syncSidebar();
-      goToStep(attended ? 'step-s-doc-note' : 'step-s3');
+      if (state.parties === 'self') {
+        // Driver Self flow:
+        // YES — attended by TMO/Police → go straight to file the report
+        // NO  — not attended → ask if they are hurt
+        goToStep(attended ? 'step-s-doc-note' : 'step-s3');
+      } else {
+        // Legacy / multi path
+        goToStep(attended ? 'step-s-doc-note' : 'step-s3');
+      }
     }
 
     // ══════════════════════════════════════════════════════════
-    //  MULTI FLOW
+    //  DRIVER MULTI FLOW — How many injured?
     // ══════════════════════════════════════════════════════════
+    function setMultiInjuredCount(count, btn) {
+      document.querySelectorAll('#step-m1 .choice-card').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.injured_count = count;
+      state.has_injury = (count !== 'none');
+      syncSidebar();
+      setTimeout(() => {
+        if (count === 'none') {
+          // No injury — offer settlement or formal report
+          goToStep('step-m-settle');
+        } else {
+          // Injury present — assess severity
+          goToStep('step-injury-severity');
+        }
+      }, 180);
+    }
+
+    // Legacy compat
     function setMultiInjury(injured) {
       state.has_injury = injured;
       syncSidebar();
-      if (injured && isTwoParties()) {
-        goToStep('step-m-attended');
-      } else if (injured) {
-        goToStep('step-m-speed-dial');
-      } else {
-        goToStep('step-m-settle');
-      }
+      goToStep(injured ? 'step-injury-severity' : 'step-m-settle');
     }
 
     function setMultiAttended(attended) {
       state.multi_attended = attended;
       syncSidebar();
       goToStep(attended ? 'step-m-doc-note' : 'step-m-speed-dial');
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  INJURY BRANCH
+    //  Minor:  Severity → Hotline → (No: form | Yes: Call TMO → form)
+    //  Major:  Severity → Hotline → Deceased → (Fatal: escalate | Alive: confirm → reporter → form)
+    // ══════════════════════════════════════════════════════════
+    function setInjurySeverity(severity, btn) {
+      document.querySelectorAll('#step-injury-severity .choice-card').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.injury_severity = severity;
+      syncSidebar();
+      // Both minor and major lead to the hotline question first
+      setTimeout(() => goToStep('step-injury-hotline'), 180);
+    }
+
+    function setHotlineChoice(called) {
+      if (state.injury_severity === 'minor') {
+        // Minor injury: skip the deceased check entirely
+        if (called) {
+          // User wants to call TMO first — show the TMO call screen
+          goToStep('step-minor-call-tmo');
+        } else {
+          // User skips calling — go straight to the report form
+          goToFormFlow();
+        }
+      } else {
+        // Major injury: keep the original flow (deceased check)
+        goToStep('step-injury-deceased');
+      }
+    }
+
+    function setDeceased(deceased, btn) {
+      document.querySelectorAll('#step-injury-deceased .choice-card').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      setTimeout(() => {
+        if (deceased) {
+          // Fatal — escalate immediately
+          goToStep('step-injury-escalate');
+        } else {
+          // No deceased — for minor OR major injury without fatalities,
+          // ask if they still want to file a report.
+          const severity = state.injury_severity; // 'minor' | 'major'
+
+          // Update the confirm-report step dynamically based on severity
+          const title  = document.getElementById('injury-confirm-title');
+          const sub    = document.getElementById('injury-confirm-sub');
+          const btitle = document.getElementById('injury-confirm-banner-title');
+          const bbody  = document.getElementById('injury-confirm-banner-body');
+          const icon   = document.getElementById('injury-confirm-icon');
+          const banner = document.getElementById('injury-confirm-banner');
+
+          if (severity === 'minor') {
+            icon.className  = 'hero-icon amber pulse';
+            banner.className = 'alert-banner warn';
+            banner.querySelector('i').style.color = '#f59e0b';
+            btitle.textContent = 'Minor Injury Noted';
+            bbody.textContent  = 'Even for minor injuries, filing a report creates an official record that can help with insurance or legal matters later.';
+          } else {
+            // major
+            icon.className  = 'hero-icon red pulse';
+            banner.className = 'alert-banner danger';
+            banner.querySelector('i').style.color = '#E90101';
+            btitle.textContent = 'Major Injury Noted';
+            bbody.textContent  = 'This is a serious incident. Filing an official report is strongly recommended to protect all parties involved.';
+          }
+
+          goToStep('step-injury-confirm-report');
+        }
+      }, 180);
+    }
+
+    function setConfirmReport(wantsToReport) {
+      if (wantsToReport) {
+        // Go straight to the report form
+        goToFormFlow();
+      } else {
+        // User does not want to file — end session
+        goToStep('step-end-no-report');
+      }
+    }
+
+    function setReporter(type, btn) {
+      document.querySelectorAll('#step-injury-who-reports .choice-card').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      setTimeout(() => {
+        if (type === 'enforcer') {
+          // Enforcer is reporting — proceed to the report form
+          goToFormFlow();
+        } else {
+          // Civilian reporting injury case without enforcer — cannot continue
+          goToStep('step-injury-enforcer-required');
+        }
+      }, 180);
     }
 
     function setSettle(settle) {
@@ -2947,34 +3698,86 @@ if (($user['role'] ?? 'user') !== 'user') {
     }
 
     function updateVehicleDetails() {
-      const selected = [...document.querySelectorAll('.chip.active')].map(c => c.dataset.vehicle);
+      const chips = [...document.querySelectorAll('#vehicleChips .chip.active')];
       const container = document.getElementById('vehicleDetailForms');
-      container.innerHTML = selected.length === 0 ? '' : selected.map((v, i) => `
-      <div style="background:#f9fafb;border:1px solid var(--border);border-radius:0.85rem;padding:0.9rem;margin-bottom:0.6rem;">
-        <div style="font-size:0.78rem;font-weight:700;margin-bottom:0.6rem;color:var(--text);">${v}</div>
-        <div style="display:grid;grid-template-columns:1fr 2fr;gap:0.5rem;">
-          <div>
-            <label style="font-size:0.65rem;color:var(--muted);display:block;margin-bottom:3px;">Count</label>
-            <input type="number" class="form-control-vr" id="vc_count_${i}" min="1" max="20" value="1" style="padding:0.5rem 0.65rem;">
+      if (chips.length === 0) { container.innerHTML = ''; return; }
+
+      // Preserve existing counts when re-rendering
+      const prevCounts = {};
+      document.querySelectorAll('.vd-card').forEach(card => {
+        const v = card.dataset.vehicleKey;
+        const cnt = parseInt(card.querySelector('.vd-count-val')?.textContent) || 1;
+        prevCounts[v] = cnt;
+      });
+
+      container.innerHTML = chips.map((chip, i) => {
+        const v    = chip.dataset.vehicle;
+        const icon = chip.dataset.icon || 'bi-car-front-fill';
+        const cnt  = prevCounts[v] || 1;
+        const plates = Array.from({ length: cnt }, (_, j) => `
+          <div class="vd-plate-row">
+            <div class="vd-plate-num">${j + 1}</div>
+            <input class="vd-plate-input" id="vp_${i}_${j}" type="text" placeholder="e.g. ABC 1234" maxlength="12">
           </div>
-          <div>
-            <label style="font-size:0.65rem;color:var(--muted);display:block;margin-bottom:3px;">Plate(s)</label>
-            <input type="text" class="form-control-vr" id="vc_plate_${i}" placeholder="e.g. ABC 1234" style="padding:0.5rem 0.65rem;">
-          </div>
+        `).join('');
+        return `
+          <div class="vd-card" data-vehicle-key="${v}" data-chip-index="${i}">
+            <div class="vd-card-header">
+              <div class="vd-card-label">
+                <span class="vd-icon"><i class="bi ${icon}"></i></span>
+                <span>${v}</span>
+              </div>
+              <div class="vd-stepper">
+                <button type="button" onclick="stepCount(this, -1, ${i})" aria-label="Decrease">−</button>
+                <span class="vd-count-val">${cnt}</span>
+                <button type="button" onclick="stepCount(this, 1, ${i})" aria-label="Increase">+</button>
+              </div>
+            </div>
+            <div class="vd-plates" id="vd_plates_${i}">
+              ${plates}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function stepCount(btn, delta, chipIdx) {
+      const card     = btn.closest('.vd-card');
+      const valEl    = card.querySelector('.vd-count-val');
+      const platesEl = document.getElementById(`vd_plates_${chipIdx}`);
+      const chip     = document.querySelectorAll('#vehicleChips .chip.active')[chipIdx];
+      const icon     = chip ? chip.dataset.icon : 'bi-car-front-fill';
+      let cnt = parseInt(valEl.textContent) + delta;
+      if (cnt < 1) cnt = 1;
+      if (cnt > 20) cnt = 20;
+      valEl.textContent = cnt;
+
+      // Preserve existing plate values
+      const existingVals = [...platesEl.querySelectorAll('.vd-plate-input')].map(el => el.value);
+      platesEl.innerHTML = Array.from({ length: cnt }, (_, j) => `
+        <div class="vd-plate-row">
+          <div class="vd-plate-num">${j + 1}</div>
+          <input class="vd-plate-input" id="vp_${chipIdx}_${j}" type="text" placeholder="e.g. ABC 1234" maxlength="12" value="${existingVals[j] || ''}">
         </div>
-      </div>
-    `).join('');
+      `).join('');
     }
 
     function saveVehicleInfo() {
-      const selected = [...document.querySelectorAll('.chip.active')].map(c => c.dataset.vehicle);
-      if (!selected.length) {
+      const chips = [...document.querySelectorAll('#vehicleChips .chip.active')];
+      if (!chips.length) {
         alert('Please select at least one vehicle type.');
         return;
       }
-      state.vehicle_types = selected;
-      state.vehicle_counts = selected.map((_, i) => document.getElementById(`vc_count_${i}`)?.value || '1');
-      state.plate_numbers = selected.map((_, i) => document.getElementById(`vc_plate_${i}`)?.value || '');
+      state.vehicle_types  = [];
+      state.vehicle_counts = [];
+      state.plate_numbers  = [];
+      chips.forEach((chip, i) => {
+        const card = document.querySelector(`.vd-card[data-chip-index="${i}"]`);
+        const cnt  = card ? parseInt(card.querySelector('.vd-count-val')?.textContent) || 1 : 1;
+        const plates = Array.from({ length: cnt }, (_, j) => (document.getElementById(`vp_${i}_${j}`)?.value || '').trim().toUpperCase()).join(', ');
+        state.vehicle_types.push(chip.dataset.vehicle);
+        state.vehicle_counts.push(cnt);
+        state.plate_numbers.push(plates);
+      });
       goToStep('step-form-conditions');
     }
 
@@ -3057,6 +3860,19 @@ if (($user['role'] ?? 'user') !== 'user') {
         ovPhotos.textContent = 'None';
       }
 
+      // Vehicles summary
+      const ovVehiclesRow = document.getElementById('ov-vehicles-row');
+      const ovVehicles    = document.getElementById('ov-vehicles');
+      if (state.vehicle_types && state.vehicle_types.length > 0) {
+        ovVehiclesRow.style.display = '';
+        ovVehicles.innerHTML = state.vehicle_types.map((v, i) => {
+          const plate = state.plate_numbers[i] || 'No plate';
+          return `<div style="margin-bottom:2px;"><strong>${v}</strong> &mdash; <span style="font-family:monospace;color:var(--primary);">${plate}</span></div>`;
+        }).join('');
+      } else {
+        ovVehiclesRow.style.display = 'none';
+      }
+
       goToStep('step-form-overview');
     }
 
@@ -3068,10 +3884,13 @@ if (($user['role'] ?? 'user') !== 'user') {
 
       const fd = new FormData();
       fd.append('flow_type', state.flow_type);
+      fd.append('reporter_role', state.role || 'driver'); // 'driver' | 'citizen'
       fd.append('parties', state.parties);
       // Derive has_other_parties from state.parties
       fd.append('has_other_parties', (state.parties === 'two' || state.parties === 'multiple') ? 1 : 0);
       fd.append('is_injured', state.has_injury ? 1 : 0);
+      fd.append('injury_severity', state.injury_severity || '');
+      fd.append('has_deceased', state.has_deceased === true ? 1 : (state.has_deceased === false ? 0 : ''));
       fd.append('self_hurt', state.self_hurt ?? '');
       fd.append('self_attended', state.self_attended ?? '');
       fd.append('multi_attended', state.multi_attended ?? '');

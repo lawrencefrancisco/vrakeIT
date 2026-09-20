@@ -1689,25 +1689,30 @@ body::before {
 .saas-cta-btn.blue-cta,
 .saas-cta-btn.green-cta,
 .saas-cta-btn.amber-cta {
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 14px 22px;
   flex-direction: row;
   align-items: center;
   gap: 18px;
   
-  /* Ultra-clean Frosted Glass */
-  background: rgba(255, 255, 255, 0.7);
+  /* 3D Glassmorphism Pill Effect */
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(240, 240, 240, 0.6));
   backdrop-filter: blur(24px) saturate(150%);
   -webkit-backdrop-filter: blur(24px) saturate(150%);
   
-  /* Glossy Edges */
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  /* Glossy Edges & 3D Depth */
+  border: 1px solid rgba(255, 255, 255, 1);
+  border-bottom: 3px solid rgba(210, 215, 220, 0.8); /* Simulated thickness */
+  
   box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.06), 
-    inset 0 2px 0 rgba(255, 255, 255, 0.9);
+    0 10px 20px rgba(0, 0, 0, 0.08), 
+    0 4px 8px rgba(0, 0, 0, 0.04),
+    inset 0 3px 6px rgba(255, 255, 255, 1), /* Bright top rim */
+    inset 0 -3px 6px rgba(0, 0, 0, 0.03);   /* Soft bottom shadow */
   
   width: 100%;
   max-width: 100%;
+  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .saas-cta-btn.blue-cta { margin-top: 30px; } /* Separation from red orb */
@@ -1716,10 +1721,23 @@ body::before {
 .saas-cta-btn.green-cta:hover,
 .saas-cta-btn.amber-cta:hover {
   transform: translateY(-4px);
-  background: rgba(255, 255, 255, 0.85);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 1), rgba(245, 245, 245, 0.7));
   box-shadow: 
-    0 15px 35px rgba(0, 0, 0, 0.1), 
-    inset 0 2px 0 rgba(255, 255, 255, 1);
+    0 14px 28px rgba(0, 0, 0, 0.12), 
+    0 6px 12px rgba(0, 0, 0, 0.06),
+    inset 0 3px 6px rgba(255, 255, 255, 1),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.02);
+}
+
+.saas-cta-btn.blue-cta:active,
+.saas-cta-btn.green-cta:active,
+.saas-cta-btn.amber-cta:active {
+  transform: translateY(1px);
+  border-bottom: 1px solid rgba(210, 215, 220, 0.8);
+  background: linear-gradient(145deg, rgba(240, 240, 240, 0.7), rgba(225, 225, 225, 0.5));
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    inset 0 4px 10px rgba(0, 0, 0, 0.08); /* Inner depth on press */
 }
 
 /* ── ICON WRAPPERS ─────────────────────────────────────── */
