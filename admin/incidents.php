@@ -531,9 +531,15 @@ async function viewReport(rid) {
       <div class="col-md-3 col-6">
         <p style="margin:0 0 2px 0; color:#64748b; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Other Parties</p>
         <div style="color:#0f172a; font-weight:600; font-size:13px;">
-          ${r.has_other_parties == 1 
-            ? '<span style="color:#ef4444; font-weight:700;">Yes</span>' 
-            : '<span style="color:#64748b;">No</span>'}
+          ${r.parties === 'self'
+            ? '<span style="color:#64748b;">No Other Parties</span>'
+            : r.parties === 'two'
+              ? '<span style="color:#0071c2; font-weight:700;">2 Drivers</span>'
+              : r.parties === 'multiple'
+                ? '<span style="color:#7c3aed; font-weight:700;">Three or More</span>'
+                : r.has_other_parties == 1
+                  ? '<span style="color:#ef4444; font-weight:700;">Yes</span>'
+                  : '<span style="color:#64748b;">No</span>'}
         </div>
       </div>
 
