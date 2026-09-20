@@ -1597,6 +1597,72 @@ if (($user['role'] ?? 'user') !== 'user') {
           <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
         </div>
 
+        <!-- M-NONE-ATTENDED — Three+ parties, no injury: is TMO/Police attending? -->
+        <div class="wizard-step" id="step-m-none-attended">
+          <div class="alert-banner info" style="margin-bottom:1.1rem;">
+            <i class="bi bi-info-circle-fill" style="color:var(--primary);"></i>
+            <div>
+              <div class="ab-title">Multi-vehicle Accident — No Injuries Reported</div>
+              <div class="ab-body">With 3 or more vehicles involved, law enforcement is required to document the scene properly.</div>
+            </div>
+          </div>
+
+          <div class="step-title">Is TMO or Police attending the scene?</div>
+          <p class="step-sub">A law enforcer must be present for a multi-party accident, even without injuries.</p>
+
+          <div class="choice-grid">
+            <button class="choice-btn" onclick="setMultiNoneAttended(true)">
+              <span class="cb-icon"><i class="bi bi-person-badge"></i></span>
+              <div class="cb-body">
+                <div class="cb-title">Yes, TMO or Police is here</div>
+                <div class="cb-desc">Enforcer is present at the scene</div>
+              </div>
+            </button>
+            <button class="choice-btn" onclick="setMultiNoneAttended(false)">
+              <span class="cb-icon"><i class="bi bi-telephone-x"></i></span>
+              <div class="cb-body">
+                <div class="cb-title">No, nobody has arrived yet</div>
+                <div class="cb-desc">No law enforcer at the scene</div>
+              </div>
+            </button>
+          </div>
+
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- M-NONE-SPEED-DIAL — Three+ parties, no injury, no enforcer: speed dial + file report -->
+        <div class="wizard-step" id="step-m-none-speed-dial">
+          <div class="center-screen">
+            <div class="hero-icon amber pulse"><i class="bi bi-stoplights"></i></div>
+            <div class="step-title" style="margin-bottom:0.4rem;">Please contact TMO or Police</div>
+            <p class="step-sub">With multiple vehicles involved and no enforcer present, you should contact authorities. You can still file a report afterwards.</p>
+          </div>
+
+          <div class="call-grid">
+            <a href="tel:136" class="call-btn amber">
+              <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
+              <strong>TMO Hotline</strong>
+              <span class="ca-label">Speed Dial 136</span>
+            </a>
+            <a href="tel:911" class="call-btn red">
+              <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
+              <strong>Call 911</strong>
+              <span class="ca-label">Emergency</span>
+            </a>
+            <a href="tel:7220650" class="call-btn green">
+              <span class="ca-icon"><i class="bi bi-car-front-fill"></i></span>
+              <strong>PNP Hotline</strong>
+              <span class="ca-label">722-0650</span>
+            </a>
+          </div>
+
+          <hr class="divider">
+          <div class="step-title" style="font-size:1rem; margin-bottom:0.4rem;">Want to file a report now?</div>
+          <p class="step-sub" style="margin-bottom:0.85rem;">You can document the incident while waiting for the enforcer to arrive.</p>
+          <button class="btn-primary" onclick="goToFormFlow()"><i class="bi bi-file-earmark-text" style="color:#fbbf24;"></i> Just File a Report</button>
+          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+        </div>
+
         <!-- M-ATTENDED — Is TMO or police attending? -->
         <div class="wizard-step" id="step-m-attended">
           <!-- <div class="alert-banner danger">
@@ -1699,32 +1765,43 @@ if (($user['role'] ?? 'user') !== 'user') {
           <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
         </div>
 
-        <!-- INJURY-HOTLINE — Want to call the hotline? -->
+        <!-- INJURY-HOTLINE — Urgent: Call for help now! -->
         <div class="wizard-step" id="step-injury-hotline">
-          <div class="center-screen">
-            <div class="hero-icon amber pulse"><i class="bi bi-telephone-fill"></i></div>
-            <div class="step-title" style="margin-bottom:0.5rem; line-height:1.3;">Want to call the hotline for help now?</div>
-            <p class="step-sub">We strongly recommend calling TMO or emergency services before continuing.</p>
+          <div class="alert-banner danger" style="margin-bottom:1.1rem; border-width:2px;">
+            <i class="bi bi-exclamation-octagon-fill" style="color:#E90101; font-size:1.4rem; flex-shrink:0;"></i>
+            <div>
+              <div class="ab-title" style="font-size:0.85rem; color:#E90101;">⚠ IMMEDIATE ACTION REQUIRED</div>
+              <div class="ab-body" style="font-weight:600; color:#7f1d1d;">Someone is injured. Please call for help RIGHT NOW before doing anything else.</div>
+            </div>
+          </div>
+
+          <div class="center-screen" style="margin-bottom:0.75rem;">
+            <div class="hero-icon red pulse"><i class="bi bi-telephone-fill"></i></div>
+            <div class="step-title" style="margin-bottom:0.3rem; line-height:1.3; color:#E90101;">Call Emergency Services Now</div>
+            <p class="step-sub" style="font-weight:600; color:#7f1d1d;">Every second counts. Do not delay — call immediately.</p>
           </div>
 
           <div class="call-grid">
+            <a href="tel:911" class="call-btn red" style="font-size:1rem;">
+              <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
+              <strong>CALL 911</strong>
+              <span class="ca-label">National Emergency</span>
+            </a>
             <a href="tel:136" class="call-btn amber">
               <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
-              <strong>TMO Hotline</strong>
-              <span class="ca-label">Speed Dial 136</span>
-            </a>
-            <a href="tel:911" class="call-btn red">
-              <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
-              <strong>Call 911</strong>
-              <span class="ca-label">Emergency</span>
+              <strong>TMO 136</strong>
+              <span class="ca-label">Traffic Management</span>
             </a>
           </div>
 
           <hr class="divider">
-          
+          <p style="font-size:0.75rem; color:var(--muted); text-align:center; margin-bottom:0.75rem; line-height:1.5;">
+            <i class="bi bi-exclamation-circle" style="color:#f59e0b;"></i>
+            Only skip if emergency services have <strong>already been called</strong> or are already on the way.
+          </p>
           <div class="btn-row" style="margin-top:0;">
             <button class="btn-outline" style="width:100%; margin-bottom:0;" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
-            <button class="btn-primary" style="width:100%; margin-bottom:0;" onclick="setHotlineChoice(false)">Skip, File a Report Anyway <i class="bi bi-arrow-right"></i></button>
+            <button class="btn-outline" style="width:100%; margin-bottom:0; color:var(--muted); border-color:#d1d5db;" onclick="setHotlineChoice(false)">Skip, File a Report Anyway <i class="bi bi-arrow-right"></i></button>
           </div>
         </div>
 
@@ -3378,8 +3455,13 @@ if (($user['role'] ?? 'user') !== 'user') {
       syncSidebar();
       setTimeout(() => {
         if (count === 'none') {
-          // No injury — offer settlement or formal report
-          goToStep('step-m-settle');
+          // Three or more parties with no injury — must ask about TMO/Police
+          if (state.parties === 'multiple') {
+            goToStep('step-m-none-attended');
+          } else {
+            // Two parties, no injury — offer settlement or formal report
+            goToStep('step-m-settle');
+          }
         } else {
           // Injury present — assess severity
           goToStep('step-injury-severity');
@@ -3398,6 +3480,19 @@ if (($user['role'] ?? 'user') !== 'user') {
       state.multi_attended = attended;
       syncSidebar();
       goToStep(attended ? 'step-m-doc-note' : 'step-m-speed-dial');
+    }
+
+    // Three+ parties, no injury — TMO/Police attending check
+    function setMultiNoneAttended(attended) {
+      state.multi_attended = attended;
+      syncSidebar();
+      if (attended) {
+        // Enforcer present — proceed directly to report form
+        goToFormFlow();
+      } else {
+        // No enforcer — show speed dial + option to just file report
+        goToStep('step-m-none-speed-dial');
+      }
     }
 
     // ══════════════════════════════════════════════════════════

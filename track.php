@@ -273,7 +273,13 @@ function showDetail(r) {
     ...(deceasedLabel  ? [['Deceased Status',  deceasedLabel]]  : []),
     ['Date of Incident', r.incident_date || '-'],
     ['Location', r.location_address || '-'],
-    ['Other Parties', r.has_other_parties ? 'Yes' : 'No'],
+    ['Other Parties', (() => {
+      const p = r.parties;
+      if (p === 'self')     return 'No Other Parties';
+      if (p === 'two')      return '2 Drivers';
+      if (p === 'multiple') return 'Three or More';
+      return r.has_other_parties ? 'Yes' : 'No';
+    })()],
     ['Weather', r.weather_condition || '-'],
     ['Road Condition', r.road_condition || '-'],
     ['Insurance', r.insurance_type || '-'],

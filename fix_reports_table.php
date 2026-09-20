@@ -30,6 +30,7 @@ $columns = [
     "ALTER TABLE `reports` ADD COLUMN IF NOT EXISTS `admin_notes`        TEXT          DEFAULT NULL",
     "ALTER TABLE `reports` ADD COLUMN IF NOT EXISTS `assigned_enforcer_id` INT(11)     DEFAULT NULL",
     "ALTER TABLE `reports` ADD COLUMN IF NOT EXISTS `resolution_status`  VARCHAR(50)   DEFAULT 'unresolved'",
+    "ALTER TABLE `reports` ADD COLUMN IF NOT EXISTS `parties`            VARCHAR(20)   DEFAULT NULL",
 ];
 
 $errors = [];

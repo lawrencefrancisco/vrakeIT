@@ -33,8 +33,8 @@ $stmt = $db->prepare("
         location_lat, location_lng, location_address,
         has_other_parties, other_parties_present,
         weather_condition, road_condition, insurance_type,
-        event_details, damage_category, status
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending')
+        event_details, damage_category, parties, status
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending')
 ");
 
 $emergencyServices = !empty($data['emergency_services']) ? json_encode((array)$data['emergency_services']) : null;
@@ -64,6 +64,7 @@ try {
         $data['insurance_type'] ?? null,
         sanitize($data['event_details'] ?? null),
         sanitize($data['damage_category'] ?? null),
+        in_array($data['parties'] ?? '', ['self','two','multiple']) ? $data['parties'] : null,
     ]);
 } catch (Exception $e) {
     jsonResponse(false, 'Failed to save report: ' . $e->getMessage());
