@@ -2667,13 +2667,16 @@ if (($user['role'] ?? 'user') !== 'user') {
           <p class="step-sub">Make sure everything looks correct. You can go back to edit.</p>
 
           <div class="overview-table">
-            <div class="ov-row"><span class="ov-label">Report Type</span><span class="ov-value" id="ov-type">—</span></div>
-            <div class="ov-row"><span class="ov-label">Involved</span><span class="ov-value" id="ov-parties">—</span></div>
-            <div class="ov-row"><span class="ov-label">Injury</span><span class="ov-value" id="ov-injured">—</span></div>
-            <div class="ov-row"><span class="ov-label">Date & Time</span><span class="ov-value" id="ov-datetime">—</span></div>
+            <div class="ov-row"><span class="ov-label">Type</span><span class="ov-value" id="ov-type">—</span></div>
+            <div class="ov-row"><span class="ov-label">Role</span><span class="ov-value" id="ov-role">—</span></div>
+            <div class="ov-row"><span class="ov-label">Other Parties</span><span class="ov-value" id="ov-parties">—</span></div>
+            <div class="ov-row"><span class="ov-label">Injured?</span><span class="ov-value" id="ov-injured">—</span></div>
+            <div class="ov-row" id="ov-severity-row" style="display:none;"><span class="ov-label">Injury Severity</span><span class="ov-value" id="ov-severity">—</span></div>
+            <div class="ov-row" id="ov-deceased-row" style="display:none;"><span class="ov-label">Deceased Status</span><span class="ov-value" id="ov-deceased">—</span></div>
+            <div class="ov-row"><span class="ov-label">Date of Incident</span><span class="ov-value" id="ov-datetime">—</span></div>
             <div class="ov-row"><span class="ov-label">Location</span><span class="ov-value" id="ov-location">—</span></div>
             <div class="ov-row"><span class="ov-label">Weather</span><span class="ov-value" id="ov-weather">—</span></div>
-            <div class="ov-row"><span class="ov-label">Road</span><span class="ov-value" id="ov-road">—</span></div>
+            <div class="ov-row"><span class="ov-label">Road Condition</span><span class="ov-value" id="ov-road">—</span></div>
             <div class="ov-row"><span class="ov-label">Insurance</span><span class="ov-value" id="ov-insurance">—</span></div>
             <div class="ov-row">
               <span class="ov-label">Photos</span>
@@ -2685,7 +2688,7 @@ if (($user['role'] ?? 'user') !== 'user') {
             </div>
           </div>
 
-          <div style="font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;">What Happened</div>
+          <div style="font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;">Details</div>
           <div class="ov-details-box" id="ov-details">—</div>
 
           <button class="btn-primary" id="submitReportBtn" onclick="submitReport()"><i class="bi bi-send-fill"></i> Submit Report</button>
@@ -4513,20 +4516,72 @@ if (($user['role'] ?? 'user') !== 'user') {
       }
       state.event_details = desc;
 
-      const partyLabels = {
-        self: 'Solo (One Driver)',
-        two: 'Two Drivers',
-        multiple: 'Three or More Drivers'
+      // Type
+      document.getElementById('ov-type').innerHTML = state.flow_type === 'good_citizen'
+        ? '<i class="bi bi-star-fill" style="color:#fbbf24;"></i> Good Citizen'
+        : '📋 Standard Report';
+
+      // Role (matching track.php badges)
+      const roleEl = document.getElementById('ov-role');
+      if (state.reporter_role === 'citizen') {
+        roleEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:5px;color:#7c3aed;font-weight:600;"><i class="bi bi-eye-fill"></i> Citizen / Witness</span>`;
+      } else if (state.reporter_role === 'enforcer') {
+        roleEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:5px;color:#059669;font-weight:600;"><i class="bi bi-shield-fill"></i> Enforcer</span>`;
+      } else {
+        roleEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:5px;color:#1d4ed8;font-weight:600;"><i class="bi bi-car-front-fill"></i> Driver</span>`;
+      }
+
+      // Other Parties (matching track.php labels)
+      const partiesMap = {
+        self:     'No Other Parties',
+        two:      '2 Drivers',
+        multiple: 'Three or More'
       };
-      document.getElementById('ov-type').innerHTML = state.flow_type === 'good_citizen' ? '<i class="bi bi-star-fill" style="color:#fbbf24;"></i> Good Citizen' : '📋 Standard Report';
-      document.getElementById('ov-parties').textContent = partyLabels[state.parties] || '—';
+      document.getElementById('ov-parties').textContent = partiesMap[state.parties] || (state.has_other_parties ? 'Yes' : 'No');
+
+      // Injured?
       document.getElementById('ov-injured').textContent = state.has_injury ? 'Yes' : 'No';
-      document.getElementById('ov-datetime').textContent = state.incident_date ? `${state.incident_date} @ ${state.incident_time}` : '—';
-      document.getElementById('ov-location').textContent = state.location_address || '—';
-      document.getElementById('ov-weather').textContent = state.weather_condition || '—';
-      document.getElementById('ov-road').textContent = state.road_condition || '—';
+
+      // Injury Severity (conditional, matching track.php)
+      const sevRow = document.getElementById('ov-severity-row');
+      const sevEl  = document.getElementById('ov-severity');
+      if (state.has_injury && state.injury_severity) {
+        sevRow.style.display = '';
+        if (state.injury_severity === 'minor') {
+          sevEl.innerHTML = `<span style="color:#d97706;font-weight:700;"><i class="bi bi-bandaid-fill"></i> Minor Injury</span>`;
+        } else if (state.injury_severity === 'major') {
+          sevEl.innerHTML = `<span style="color:#dc2626;font-weight:700;"><i class="bi bi-heartbreak-fill"></i> Major Injury</span>`;
+        } else {
+          sevEl.textContent = state.injury_severity;
+        }
+      } else {
+        sevRow.style.display = 'none';
+      }
+
+      // Deceased Status (conditional, matching track.php)
+      const decRow = document.getElementById('ov-deceased-row');
+      const decEl  = document.getElementById('ov-deceased');
+      if (state.has_injury && state.has_deceased !== null && state.has_deceased !== undefined) {
+        decRow.style.display = '';
+        if (state.has_deceased) {
+          decEl.innerHTML = `<span style="color:#7f1d1d;font-weight:700;"><i class="bi bi-x-octagon-fill"></i> There are fatalities / deceased</span>`;
+        } else {
+          decEl.innerHTML = `<span style="color:#15803d;font-weight:700;"><i class="bi bi-check-circle-fill"></i> Everyone is alive</span>`;
+        }
+      } else {
+        decRow.style.display = 'none';
+      }
+
+      // Date of Incident (matching track.php label)
+      document.getElementById('ov-datetime').textContent = state.incident_date
+        ? `${state.incident_date} @ ${state.incident_time}`
+        : '—';
+
+      document.getElementById('ov-location').textContent  = state.location_address || '—';
+      document.getElementById('ov-weather').textContent   = state.weather_condition || '—';
+      document.getElementById('ov-road').textContent      = state.road_condition || '—';
       document.getElementById('ov-insurance').textContent = state.insurance_type || '—';
-      document.getElementById('ov-details').textContent = desc;
+      document.getElementById('ov-details').textContent   = desc;
 
       // Photos thumbnail strip
       const ovPhotos = document.getElementById('ov-photos');
@@ -4536,7 +4591,7 @@ if (($user['role'] ?? 'user') !== 'user') {
           const url = URL.createObjectURL(f);
           const img = document.createElement('img');
           img.src = url;
-          img.style.cssText = 'width:40px;height:40px;object-fit:cover;border-radius:6px;cursor:pointer;';
+          img.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid #e0e0e0;cursor:pointer;';
           img.onclick = () => viewFullImage(url);
           ovPhotos.appendChild(img);
         });
@@ -4551,7 +4606,7 @@ if (($user['role'] ?? 'user') !== 'user') {
         ovVehiclesRow.style.display = '';
         ovVehicles.innerHTML = state.vehicle_types.map((v, i) => {
           const plate = state.plate_numbers[i] || 'No plate';
-          return `<div style="margin-bottom:2px;"><strong>${v}</strong> &mdash; <span style="font-family:monospace;color:var(--primary);">${plate}</span></div>`;
+          return `<div style="margin-bottom:3px;"><strong>${v}</strong> &mdash; <span style="font-family:monospace;color:var(--primary);">${plate}</span></div>`;
         }).join('');
       } else {
         ovVehiclesRow.style.display = 'none';
