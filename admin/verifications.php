@@ -93,16 +93,7 @@ adminHead('ID Verifications');
           <div class="vm-row" style="border:none;"><span class="vm-label">Submitted</span><span id="vm-submitted" class="vm-val"></span></div>
         </div>
 
-        <!-- ID Image -->
-        <div id="vm-image-wrap" style="display:none; margin-bottom: 24px;">
-          <div class="vm-section-label"><i class="bi bi-person-badge"></i> Submitted ID Image</div>
-          <div style="border-radius: 16px; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); padding: 12px;">
-            <img id="vm-id-image" src="" alt="ID Image"
-              style="width: 100%; display: block; max-height: 320px; object-fit: contain; cursor: zoom-in; border-radius: 10px;"
-              onclick="window.open(this.src,'_blank')">
-          </div>
-          <div style="font-size: 12px; color: #94a3b8; text-align: center; margin-top: 10px; font-weight: 500;">Click image to open full size</div>
-        </div>
+        <!-- ID Image removed for data privacy compliance -->
 
         <!-- OCR Extracted -->
         <div class="vm-section-label"><i class="bi bi-search"></i> OCR Extracted from ID</div>
@@ -252,16 +243,7 @@ function openVerifModal(v) {
   // Image hash (fingerprint)
   document.getElementById('vm-hash-wrap').textContent = v.image_hash ? 'SHA-256: ' + v.image_hash : '';
 
-  // ID image preview
-  const imgWrap = document.getElementById('vm-image-wrap');
-  const imgEl   = document.getElementById('vm-id-image');
-  if (v.id_file) {
-    imgEl.src = 'serve_id_image.php?vid=' + encodeURIComponent(v.id);
-    imgWrap.style.display = 'block';
-  } else {
-    imgEl.src = '';
-    imgWrap.style.display = 'none';
-  }
+  // ID image display removed for data privacy compliance (RA 10173)
 
   // Footer buttons
   const footer = document.getElementById('vm-footer');

@@ -165,7 +165,9 @@ function renderReports() {
           <div style="margin-top:4px;">
             ${ r.reporter_role === 'citizen'
               ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#7c3aed;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);padding:2px 8px;border-radius:20px;"><i class="bi bi-eye-fill"></i> Citizen / Witness</span>`
-              : `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#1d4ed8;background:rgba(29,78,216,0.08);border:1px solid rgba(29,78,216,0.2);padding:2px 8px;border-radius:20px;"><i class="bi bi-car-front-fill"></i> Driver</span>`
+              : r.reporter_role === 'enforcer'
+                ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#059669;background:rgba(5,150,105,0.08);border:1px solid rgba(5,150,105,0.25);padding:2px 8px;border-radius:20px;"><i class="bi bi-shield-fill"></i> Enforcer</span>`
+                : `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#1d4ed8;background:rgba(29,78,216,0.08);border:1px solid rgba(29,78,216,0.2);padding:2px 8px;border-radius:20px;"><i class="bi bi-car-front-fill"></i> Driver</span>`
             }
           </div>
         </div>
@@ -239,7 +241,9 @@ function showDetail(r) {
 
   const roleLabel = r.reporter_role === 'citizen'
     ? `<span style="display:inline-flex;align-items:center;gap:5px;color:#7c3aed;font-weight:600;"><i class="bi bi-eye-fill"></i> Citizen / Witness</span>`
-    : `<span style="display:inline-flex;align-items:center;gap:5px;color:#1d4ed8;font-weight:600;"><i class="bi bi-car-front-fill"></i> Driver</span>`;
+    : r.reporter_role === 'enforcer'
+      ? `<span style="display:inline-flex;align-items:center;gap:5px;color:#059669;font-weight:600;"><i class="bi bi-shield-fill"></i> Enforcer</span>`
+      : `<span style="display:inline-flex;align-items:center;gap:5px;color:#1d4ed8;font-weight:600;"><i class="bi bi-car-front-fill"></i> Driver</span>`;
 
   // Build vehicles HTML
   let vehiclesHtml = '-';

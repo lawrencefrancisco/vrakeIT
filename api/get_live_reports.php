@@ -15,7 +15,7 @@ $db = getDB();
 try {
     // Fetch all active reports (pending or reviewing)
     $stmt = $db->prepare("
-        SELECT r.*, u.first_name, u.last_name 
+        SELECT r.*, u.first_name, u.last_name, u.email
         FROM reports r
         JOIN users u ON r.user_id = u.id
         WHERE r.status IN ('pending', 'reviewing')
@@ -24,10 +24,14 @@ try {
     $stmt->execute();
     $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Format dates
+    // Format dates and attach media
+    $mediaStmt = $db->prepare("SELECT file_path FROM report_media WHERE report_id = ?");
     foreach ($reports as &$r) {
         $r['formatted_date'] = date('M d, Y h:i A', strtotime($r['created_at']));
+        $mediaStmt->execute([$r['id']]);
+        $r['photos'] = array_column($mediaStmt->fetchAll(PDO::FETCH_ASSOC), 'file_path');
     }
+    unset($r);
 
     echo json_encode([
         'success' => true,
