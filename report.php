@@ -1269,12 +1269,12 @@ if (($user['role'] ?? 'user') !== 'user') {
             <button class="choice-card" onclick="setCitizenParties('self', this)">
               <span class="cc-icon"><i class="bi bi-person"></i></span>
               <div class="cc-label">One Driver</div>
-              <div class="cc-sub">Only me involved</div>
+              <div class="cc-sub">Only one driver involved</div>
             </button>
             <button class="choice-card" onclick="setCitizenParties('two', this)">
               <span class="cc-icon"><i class="bi bi-people"></i></span>
               <div class="cc-label">Two Drivers</div>
-              <div class="cc-sub">Me and another driver</div>
+              <div class="cc-sub">Two drivers involved</div>
             </button>
             <button class="choice-card" onclick="setCitizenParties('multiple', this)">
               <span class="cc-icon"><i class="bi bi-people-fill"></i></span>
@@ -2517,7 +2517,7 @@ if (($user['role'] ?? 'user') !== 'user') {
 
           <div class="form-group">
             <label class="form-label">Date</label>
-            <input type="date" class="form-control-vr" id="incidentDate" max="<?= date('Y-m-d') ?>">
+            <input type="date" class="form-control-vr" id="incidentDate" max="<?= date('Y-m-d', strtotime('+8 hours', strtotime(gmdate('Y-m-d H:i:s')))) ?>">
           </div>
           <div class="form-group" style="margin-bottom:1.5rem;">
             <label class="form-label">Time</label>

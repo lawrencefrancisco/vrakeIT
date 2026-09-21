@@ -29,6 +29,11 @@ $user['last_incident_viewed_at'] = date('Y-m-d H:i:s');
 <link href="assets/css/style.css" rel="stylesheet">
 <style>
   #detailMap { height: 200px; width: 100%; border-radius: 12px; margin-bottom: 12px; border: 1px solid #e0e0e0; z-index: 1;}
+  .info-card { background:#f8fafc; border-radius:12px; padding:14px; margin-bottom:12px; }
+  .info-card-title { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:#94a3b8; margin-bottom:10px; }
+  .info-row { margin-bottom:10px; }
+  .info-row-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#64748b; margin-bottom:3px; }
+  .info-row-value { font-size:13px; font-weight:600; color:#0f172a; }
 </style>
 </head>
 <body style="background-color: #f8fafc;">
@@ -74,7 +79,7 @@ $user['last_incident_viewed_at'] = date('Y-m-d H:i:s');
         <h5 class="modal-title">Incident Details</h5>
         <button type="button" class="btn-close btn-close-white opacity-100" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body" id="modalBody" style="font-size:14px;"></div>
+      <div class="modal-body" id="modalBody" style="font-size:14px;padding:16px;"></div>
     </div>
   </div>
 </div>
@@ -83,9 +88,8 @@ $user['last_incident_viewed_at'] = date('Y-m-d H:i:s');
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const modal = new bootstrap.Modal(document.getElementById('detailModal'));
-let allReports = []; 
+let allReports = [];
 let detailMap = null;
-let detailMarker = null;
 
 async function loadReports() {
   document.getElementById('loadingState').style.display = 'block';
@@ -96,15 +100,14 @@ async function loadReports() {
     const res  = await fetch('api/get_live_reports.php');
     const data = await res.json();
     document.getElementById('loadingState').style.display = 'none';
-    
+
     if (!data.success || !data.reports.length) {
       document.getElementById('emptyState').style.display = 'block';
       return;
     }
-    
+
     allReports = data.reports;
     renderReports();
-
   } catch {
     document.getElementById('loadingState').innerHTML = '<i class="bi bi-wifi-off" style="font-size:40px;color:#ddd;display:block;margin-bottom:8px;"></i>Failed to load reports.';
   }
@@ -113,175 +116,255 @@ async function loadReports() {
 async function generateAISummary(rid) {
   const btn = document.getElementById('btnAiSummarize');
   const textDiv = document.getElementById('aiSummaryText');
-  
-  btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Thinking...';
+
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Thinking...';
   btn.disabled = true;
   textDiv.innerHTML = '<span style="color:var(--muted);">Analyzing incident details...</span>';
-  
+
   try {
     const fd = new FormData();
     fd.append('report_id', rid);
-    
     const res = await fetch('api/summarize_incident.php', { method: 'POST', body: fd });
     const d = await res.json();
-    
     btn.innerHTML = '<i class="bi bi-magic"></i> Summarize';
     btn.disabled = false;
-    
-    if(d.success) {
-      textDiv.innerHTML = `<span style="color:#333; font-weight:500;">${d.summary}</span>`;
-    } else {
-      textDiv.innerHTML = `<span style="color:var(--red);">Error: ${d.message}</span>`;
-    }
-  } catch (error) {
+    textDiv.innerHTML = d.success
+      ? `<span style="color:#333;font-weight:500;">${d.summary}</span>`
+      : `<span style="color:var(--red);">Error: ${d.message}</span>`;
+  } catch {
     btn.innerHTML = '<i class="bi bi-magic"></i> Summarize';
     btn.disabled = false;
-    textDiv.innerHTML = `<span style="color:var(--red);">Network error occurred.</span>`;
+    textDiv.innerHTML = '<span style="color:var(--red);">Network error occurred.</span>';
   }
 }
 
 function renderReports() {
   const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-  
-  const filtered = allReports.filter(r => {
-    return r.reference_number.toLowerCase().includes(searchTerm) || 
-           (r.location_address && r.location_address.toLowerCase().includes(searchTerm)) ||
-           (r.first_name && r.first_name.toLowerCase().includes(searchTerm));
-  });
+  const filtered = allReports.filter(r =>
+    r.reference_number.toLowerCase().includes(searchTerm) ||
+    (r.location_address && r.location_address.toLowerCase().includes(searchTerm)) ||
+    (r.first_name && r.first_name.toLowerCase().includes(searchTerm))
+  );
 
   const reportsList = document.getElementById('reportsList');
 
-  if (filtered.length === 0) {
+  if (!filtered.length) {
     reportsList.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">No reports match your search criteria.</div>';
     return;
   }
 
-  const html = filtered.map(r => `
+  reportsList.innerHTML = filtered.map(r => {
+    const injuryBadge = r.is_injured == 1
+      ? `<span style="background:#fee2e2;color:#ef4444;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;"><i class="bi bi-exclamation-circle-fill me-1"></i>Injured</span>`
+      : '';
+    const addr = r.location_address ? r.location_address.substring(0, 55) + (r.location_address.length > 55 ? '…' : '') : '';
+    return `
     <div class="report-card" onclick='showDetail(${JSON.stringify(r).replace(/'/g,"&#39;")})' style="cursor:pointer; border-left: 4px solid var(--red);">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
         <div>
           <div class="ref">${r.reference_number}</div>
           <div style="font-size:12px;font-weight:600;color:var(--blue);"><i class="bi bi-person me-1"></i>${r.first_name} ${r.last_name}</div>
         </div>
-        ${getStatusBadge(r.status)}
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          ${getStatusBadge(r.status)}
+          ${injuryBadge}
+        </div>
       </div>
       <div class="date"><i class="bi bi-calendar3 me-1"></i>${r.formatted_date}</div>
-      ${r.location_address ? `<div style="font-size:12px;color:var(--muted);margin-top:4px;"><i class="bi bi-geo-alt me-1"></i>${r.location_address.substring(0,60)}...</div>` : ''}
-      <div style="text-align:right;margin-top:8px;font-size:12px;color:var(--blue);font-weight:600;">View Location & Info &rarr;</div>
-    </div>
-  `).join('');
-  
-  reportsList.innerHTML = html;
+      ${addr ? `<div style="font-size:12px;color:var(--muted);margin-top:4px;"><i class="bi bi-geo-alt me-1"></i>${addr}</div>` : ''}
+      <div style="text-align:right;margin-top:8px;font-size:12px;color:var(--blue);font-weight:600;">View Details &rarr;</div>
+    </div>`;
+  }).join('');
 }
 
 function getStatusBadge(s) {
   const map = {
     pending:   { bg: '#fff3cd', color: '#856404', label: '⚠️ Pending'   },
-    reviewing: { bg: '#cfe2ff', color: '#084298', label: '🔍 Reviewing' }
+    reviewing: { bg: '#cfe2ff', color: '#084298', label: '🔍 Reviewing' },
+    ongoing:   { bg: '#d1fae5', color: '#065f46', label: '🟢 Ongoing'   },
+    closed:    { bg: '#f1f5f9', color: '#64748b', label: '✅ Closed'     },
+    escalated: { bg: '#fee2e2', color: '#991b1b', label: '🚨 Escalated' },
   };
   const c = map[s] || map.pending;
-  return `<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;background:${c.bg};color:${c.color};">${c.label}</span>`;
+  return `<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${c.bg};color:${c.color};">${c.label}</span>`;
+}
+
+// ── Helper badge builder ─────────────────────────────────────
+function badge(text, bg, border, color, icon) {
+  const ico = icon ? `<i class="bi bi-${icon} me-1"></i>` : '';
+  return `<span style="background:${bg};border:1px solid ${border};color:${color};padding:2px 9px;border-radius:6px;font-size:12px;font-weight:700;">${ico}${text}</span>`;
+}
+
+function infoRow(label, html) {
+  return `<div class="info-row"><div class="info-row-label">${label}</div><div class="info-row-value">${html}</div></div>`;
 }
 
 function showDetail(r) {
-  const mediaData = r.media_urls || r.photos || r.media || r.attachments; 
-  let photosHtml = '<span style="color:var(--muted)">No photos attached</span>';
-  
-  if (mediaData) { 
-    let urls = [];
-    if (Array.isArray(mediaData)) {
-        urls = mediaData;
-    } else if (typeof mediaData === 'string' && mediaData.trim().startsWith('[')) {
-        try { urls = JSON.parse(mediaData); } catch(e) {}
-    } else if (typeof mediaData === 'string') {
-        urls = mediaData.split(',');
-    }
-    urls = urls.filter(url => url && url.trim() !== '');
+  // ── Photos ───────────────────────────────────────────────────
+  const photoArr = Array.isArray(r.photos) ? r.photos.filter(Boolean) : [];
+  let photosHtml = '<span style="color:#94a3b8;font-style:italic;font-size:13px;">No photos attached</span>';
+  if (photoArr.length) {
+    photosHtml = `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">` +
+      photoArr.map(p => {
+        let src = p.trim();
+        if (!src.startsWith('http') && !src.startsWith('assets/')) src = 'assets/uploads/' + src;
+        return `<img src="${src}" onclick="viewFullImage(this.src)" style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid #e0e0e0;cursor:pointer;">`;
+      }).join('') + '</div>';
+  }
 
-    if (urls.length > 0) {
-       photosHtml = `<div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">` + 
-                    urls.map(url => {
-                        let imagePath = url.trim();
-                        if (!imagePath.startsWith('assets/uploads/') && !imagePath.startsWith('http')) {
-                            imagePath = 'assets/uploads/' + imagePath;
-                        }
-                        return `<img src="${imagePath}" onclick="viewFullImage(this.src)" style="width:60px; height:60px; object-fit:cover; border-radius:8px; border: 1px solid #e0e0e0; cursor: pointer;">`;
-                    }).join('') + `</div>`;
+  // ── Role / Flow ──────────────────────────────────────────────
+  const roleHtml = r.reporter_role === 'citizen'
+    ? badge('Citizen / Witness', '#f0fdf4', '#bbf7d0', '#16a34a', 'eye-fill')
+    : r.reporter_role === 'enforcer'
+      ? badge('Enforcer', '#d1fae5', '#a7f3d0', '#059669', 'shield-fill')
+      : badge('Driver', '#eff6ff', '#bfdbfe', '#2563eb', 'person-fill');
+
+  const flowHtml = r.flow_type === 'good_citizen'
+    ? badge('Good Citizen ⭐', '#fefce8', '#fde68a', '#d97706', 'star-fill')
+    : badge('Standard Report', '#f1f5f9', '#e2e8f0', '#64748b');
+
+  // ── Parties ──────────────────────────────────────────────────
+  let partiesHtml;
+  if      (r.parties === 'self')     partiesHtml = badge('Solo / No Other Parties',  '#f1f5f9','#e2e8f0','#64748b','person');
+  else if (r.parties === 'two')      partiesHtml = badge('2 Drivers',                '#eff6ff','#bfdbfe','#1d4ed8','people');
+  else if (r.parties === 'multiple') partiesHtml = badge('Three or More',             '#f5f3ff','#ddd6fe','#7c3aed','people-fill');
+  else partiesHtml = r.has_other_parties
+    ? badge('Yes', '#fee2e2','#fca5a5','#ef4444')
+    : badge('No',  '#f1f5f9','#e2e8f0','#64748b');
+
+  // ── Injury ───────────────────────────────────────────────────
+  const injHtml = r.is_injured == 1
+    ? badge('YES — Injuries Reported','#fee2e2','#fca5a5','#ef4444','exclamation-circle-fill')
+    : badge('No Injuries','#f1f5f9','#e2e8f0','#64748b','check-circle');
+
+  let injCountHtml = '';
+  if (r.injured_count === 'none')         injCountHtml = infoRow('Injured Count', badge('None','#f1f5f9','#e2e8f0','#64748b','check-circle'));
+  else if (r.injured_count === 'one')     injCountHtml = infoRow('Injured Count', badge('1 Person','#fef3c7','#fde68a','#d97706','person-fill-exclamation'));
+  else if (r.injured_count === 'multiple')injCountHtml = infoRow('Injured Count', badge('2 or More','#fee2e2','#fca5a5','#ef4444','people-fill'));
+
+  let sevHtml = '';
+  if (r.injury_severity) {
+    sevHtml = infoRow('Injury Severity', r.injury_severity === 'minor'
+      ? badge('Minor','#fef3c7','#fde68a','#d97706','bandaid-fill')
+      : badge('Major / Critical','#fee2e2','#fca5a5','#ef4444','heartbreak-fill'));
+  }
+
+  let decHtml = '';
+  if (r.injury_severity && r.has_deceased !== null && r.has_deceased !== undefined && r.has_deceased !== '') {
+    decHtml = infoRow('Fatalities', r.has_deceased == 1
+      ? badge('Deceased Reported','#fee2e2','#fca5a5','#ef4444','x-octagon-fill')
+      : badge('Everyone Alive','#dcfce7','#bbf7d0','#16a34a','check-circle-fill'));
+  }
+
+  // ── Enforcer ─────────────────────────────────────────────────
+  let formattedEnforcer = r.enforcer_type || '';
+  if (formattedEnforcer) {
+    if (formattedEnforcer.toUpperCase() === 'TMO_POLICE') {
+      formattedEnforcer = 'TMO / Police';
+    } else {
+      formattedEnforcer = formattedEnforcer.replace(/_/g, ' / ').toUpperCase();
     }
   }
 
-  const rows = [
-    ['Reference', r.reference_number],
-    ['Submitted By', r.first_name + ' ' + r.last_name],
-    ['Injured?', r.is_injured ? '<span style="color:var(--red);font-weight:bold;">Yes - Needs Medic</span>' : 'No'],
-    ['Date of Incident', r.incident_date || '-'],
-    ['Location', r.location_address || '-'],
-    ['Other Parties', r.has_other_parties ? 'Yes' : 'No'],
-    ['Weather / Road', (r.weather_condition || '-') + ' / ' + (r.road_condition || '-')],
-    ['Photos', photosHtml],
-    ['Details', r.event_details || '-']
-  ].map(([l, v]) => `<div class="overview-row"><span class="label">${l}</span><span class="value" style="${l === 'Photos' ? 'flex-basis: 100%; margin-top: 4px;' : ''}">${v}</span></div>`).join('');
-  
-  const mapHtml = `<div id="detailMap"></div>`;
+  const enfHtml = formattedEnforcer
+    ? badge(formattedEnforcer, '#e0f2fe', '#bae6fd', '#0284c7', 'shield-shaded')
+    : '<span style="color:#94a3b8;font-style:italic;">None reported</span>';
 
+  // ── Map & Navigation ──────────────────────────────────────────
   const gmapsUrl = r.location_lat ? `https://www.google.com/maps/dir/?api=1&destination=${r.location_lat},${r.location_lng}` : '#';
-  const gmapsBtnHtml = r.location_lat ? `
-    <a href="${gmapsUrl}" target="_blank" style="display:flex; justify-content:center; align-items:center; gap:8px; padding:12px; margin-bottom:16px; border-radius:12px; background:linear-gradient(135deg, #007ED2, #005fa3); color:#fff; text-decoration:none; font-weight:600; box-shadow: 0 4px 15px rgba(0, 126, 210, 0.3);">
-      <i class="bi bi-geo-alt-fill" style="font-size:16px;"></i> Open in Google Maps
-    </a>` : '';
+  const navBtn = r.location_lat
+    ? `<a href="${gmapsUrl}" target="_blank" style="display:flex;justify-content:center;align-items:center;gap:8px;padding:12px;margin-bottom:14px;border-radius:12px;background:linear-gradient(135deg,#007ED2,#005fa3);color:#fff;text-decoration:none;font-weight:600;font-size:13px;box-shadow:0 4px 15px rgba(0,126,210,.3);">
+         <i class="bi bi-geo-alt-fill" style="font-size:16px;"></i> Open in Google Maps
+       </a>` : '';
 
+  // ── AI Summary ────────────────────────────────────────────────
   const aiHtml = `
-    <div style="background:rgba(0, 126, 210, 0.05); border:1px solid rgba(0, 126, 210, 0.2); border-radius:12px; padding:15px; display:flex; align-items:center; gap:12px; margin-bottom: 16px;">
-      <div style="flex-shrink:0; font-size:24px; color:#007ED2;"><i class="bi bi-robot"></i></div>
+    <div style="background:rgba(0,126,210,.05);border:1px solid rgba(0,126,210,.2);border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+      <div style="flex-shrink:0;font-size:22px;color:#007ED2;"><i class="bi bi-robot"></i></div>
       <div style="flex-grow:1;">
-        <div style="font-size:12px; font-weight:bold; color:#007ED2; text-transform:uppercase; letter-spacing:1px; margin-bottom:2px;">AI Incident Summary</div>
-        <div id="aiSummaryText" style="font-size:13px; color:var(--muted); line-height: 1.4;">Tap the button to generate a quick summary.</div>
+        <div style="font-size:11px;font-weight:700;color:#007ED2;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">AI Incident Summary</div>
+        <div id="aiSummaryText" style="font-size:12px;color:var(--muted);line-height:1.5;">Tap the button to generate a quick summary.</div>
       </div>
-      <div>
-        <button id="btnAiSummarize" class="btn-primary-vr" onclick="generateAISummary(${r.id})" style="padding: 6px 12px; font-size: 12px; white-space:nowrap; border-radius: 8px; text-decoration:none; display:inline-block; border:none; background: #007ED2;">
-          <i class="bi bi-magic"></i> Summarize
-        </button>
-      </div>
-    </div>
-  `;
+      <button id="btnAiSummarize" onclick="generateAISummary(${r.id})" style="padding:6px 12px;font-size:12px;white-space:nowrap;border-radius:8px;border:none;background:#007ED2;color:#fff;font-weight:600;flex-shrink:0;">
+        <i class="bi bi-magic"></i> Summarize
+      </button>
+    </div>`;
 
-  document.getElementById('modalBody').innerHTML = `<div style="padding:4px 0;">${aiHtml}${mapHtml}${gmapsBtnHtml}${rows}</div>`;
-  
+  // ── Assemble modal ────────────────────────────────────────────
+  document.getElementById('modalBody').innerHTML = `
+    <div style="padding:4px 0;">
+      ${aiHtml}
+      <div id="detailMap" style="height:200px;width:100%;border-radius:12px;margin-bottom:12px;border:1px solid #e0e0e0;"></div>
+      ${navBtn}
+
+      <div class="info-card">
+        <div class="info-card-title">Report Overview</div>
+        ${infoRow('Reference #', `<span style="font-family:monospace;font-size:14px;color:#E90101;font-weight:800;">${r.reference_number}</span>`)}
+        ${infoRow('Submitted By', `<i class="bi bi-person me-1" style="color:#007ED2;"></i>${r.first_name} ${r.last_name}`)}
+        ${infoRow('Role', roleHtml)}
+        ${infoRow('Report Type', flowHtml)}
+        ${infoRow('Status', getStatusBadge(r.status))}
+        ${infoRow('Submitted', `<i class="bi bi-clock me-1" style="color:#64748b;"></i>${r.formatted_date}`)}
+        ${r.incident_date ? infoRow('Incident Date / Time', `<i class="bi bi-calendar3 me-1" style="color:#64748b;"></i>${r.incident_date}${r.incident_time ? ' at ' + r.incident_time : ''}`) : ''}
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-title">Location</div>
+        ${infoRow('Address', `<i class="bi bi-geo-alt-fill me-1" style="color:#ef4444;"></i>${r.location_address || '<span style="color:#94a3b8;font-style:italic;">Not provided</span>'}`)}
+        ${infoRow('Weather / Road', `${r.weather_condition || '-'} &nbsp;/&nbsp; ${r.road_condition || '-'}`)}
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-title">Parties &amp; Injuries</div>
+        ${infoRow('Parties Involved', partiesHtml)}
+        ${infoRow('Injuries', injHtml)}
+        ${injCountHtml}
+        ${sevHtml}
+        ${decHtml}
+        ${infoRow('Law Enforcer / Authority', enfHtml)}
+      </div>
+
+      ${r.damage_category ? `<div class="info-card">
+        <div class="info-card-title">Damage</div>
+        ${infoRow('Damage Category', r.damage_category)}
+      </div>` : ''}
+
+      <div class="info-card">
+        <div class="info-card-title">Description</div>
+        <p style="font-size:13px;color:#0f172a;line-height:1.6;margin:0;">${r.event_details || '<span style="color:#94a3b8;font-style:italic;">No description provided.</span>'}</p>
+      </div>
+
+      ${photoArr.length ? `<div class="info-card">
+        <div class="info-card-title">Photos / Media (${photoArr.length})</div>
+        ${photosHtml}
+      </div>` : ''}
+    </div>`;
+
   modal.show();
 
-  // Initialize Map after modal is shown so it renders correctly
+  // Init map after modal is visible
   document.getElementById('detailModal').addEventListener('shown.bs.modal', function initMap() {
     document.getElementById('detailModal').removeEventListener('shown.bs.modal', initMap);
-    
-    if (detailMap) {
-      detailMap.remove();
-    }
-    
-    let lat = r.location_lat ? parseFloat(r.location_lat) : 14.5995;
-    let lng = r.location_lng ? parseFloat(r.location_lng) : 120.9842;
-    
+    if (detailMap) { detailMap.remove(); detailMap = null; }
+
+    const lat = r.location_lat ? parseFloat(r.location_lat) : 14.5995;
+    const lng = r.location_lng ? parseFloat(r.location_lng) : 120.9842;
+
     detailMap = L.map('detailMap').setView([lat, lng], 16);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(detailMap);
-    
-    // Custom marker icon
-    const redIcon = L.icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    });
 
     if (r.location_lat && r.location_lng) {
-      detailMarker = L.marker([lat, lng], {icon: redIcon}).addTo(detailMap);
-      detailMarker.bindPopup(`<b>Incident Location</b><br>${r.location_address || ''}`).openPopup();
+      const redIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25,41], iconAnchor: [12,41], popupAnchor: [1,-34], shadowSize: [41,41]
+      });
+      L.marker([lat, lng], {icon: redIcon}).addTo(detailMap)
+        .bindPopup(`<b>Incident Location</b><br>${r.location_address || ''}`).openPopup();
     }
-    
-    // Invalidate size to fix leaflet grey tiles issue in modals
-    setTimeout(() => { detailMap.invalidateSize(); }, 200);
+    setTimeout(() => detailMap.invalidateSize(), 200);
   });
 }
 
@@ -306,15 +389,13 @@ loadReports();
 function viewFullImage(src) {
   document.getElementById('fullSizeImage').src = src;
   const viewerModal = new bootstrap.Modal(document.getElementById('imageViewerModal'));
-  
   const detailModalEl = document.getElementById('detailModal');
   if (detailModalEl && detailModalEl.classList.contains('show')) {
-      bootstrap.Modal.getInstance(detailModalEl).hide();
-      document.getElementById('imageViewerModal').addEventListener('hidden.bs.modal', function () {
-          bootstrap.Modal.getInstance(detailModalEl).show();
-      }, { once: true });
+    bootstrap.Modal.getInstance(detailModalEl).hide();
+    document.getElementById('imageViewerModal').addEventListener('hidden.bs.modal', function () {
+      bootstrap.Modal.getInstance(detailModalEl)?.show();
+    }, { once: true });
   }
-  
   viewerModal.show();
 }
 </script>

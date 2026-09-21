@@ -14,53 +14,57 @@ $userId = (int)$_SESSION['user_id'];
 $db     = getDB();
 $data   = $_POST;
 
-// Required fields
-$flowType = $data['flow_type'] ?? '';
-if (!in_array($flowType, ['first', 'second', 'good_citizen', 'standard'])) {
-    jsonResponse(false, 'Invalid report type.');
-}
-
+$flowType = 'standard'; // Enforcer reports are always standard
 $refNum = generateReferenceNumber();
 
-// Base insert
 $stmt = $db->prepare("
     INSERT INTO reports (
-        user_id, reference_number, flow_type,
-        is_injured, enforcer_type, enforcer_documented, emergency_services,
+        user_id, reference_number, flow_type, reporter_role,
+        is_injured, injured_count, injury_severity, has_deceased,
+        enforcer_type, enforcer_documented, emergency_services,
         is_safe, incident_date, incident_time,
-        latitude, longitude, location_address,
+        location_lat, location_lng, location_address,
         has_other_parties, other_parties_present,
         weather_condition, road_condition, insurance_type,
-        event_details, damage_category, parties, assigned_enforcer_id, status
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending')
+        event_details, damage_category, parties,
+        assigned_enforcer_id, status
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending')
 ");
 
 $emergencyServices = !empty($data['emergency_services']) ? json_encode((array)$data['emergency_services']) : null;
 
-$stmt->execute([
-    $userId,
-    $refNum,
-    $flowType,
-    (int)($data['is_injured'] ?? 0),
-    sanitize($data['enforcer_type'] ?? ''),
-    $data['enforcer_documented'] ?? null,
-    $emergencyServices,
-    isset($data['is_safe']) ? (int)$data['is_safe'] : null,
-    $data['incident_date'] ?? null,
-    $data['incident_time'] ?? null,
-    $data['location_lat'] ?? null,
-    $data['location_lng'] ?? null,
-    sanitize($data['location_address'] ?? null),
-    (int)($data['has_other_parties'] ?? 0),
-    isset($data['other_parties_present']) ? (int)$data['other_parties_present'] : null,
-    sanitize($data['weather_condition'] ?? null),
-    sanitize($data['road_condition'] ?? null),
-    $data['insurance_type'] ?? null,
-    sanitize($data['event_details'] ?? null),
-    sanitize($data['damage_category'] ?? null),
-    in_array($data['parties'] ?? '', ['self','two','multiple']) ? $data['parties'] : null,
-    $userId
-]);
+try {
+    $stmt->execute([
+        $userId,
+        $refNum,
+        $flowType,
+        'enforcer', // Enforcer-submitted reports are role='enforcer'
+        (int)($data['is_injured'] ?? 0),
+        in_array($data['injured_count'] ?? '', ['none','one','multiple']) ? $data['injured_count'] : null,
+        !empty($data['injury_severity']) ? $data['injury_severity'] : null,
+        isset($data['has_deceased']) && $data['has_deceased'] !== '' ? (int)$data['has_deceased'] : null,
+        sanitize($data['enforcer_type'] ?? 'TMO'),
+        $data['enforcer_documented'] ?? null,
+        $emergencyServices,
+        isset($data['is_safe']) ? (int)$data['is_safe'] : null,
+        $data['incident_date'] ?? null,
+        $data['incident_time'] ?? null,
+        $data['location_lat'] ?? null,
+        $data['location_lng'] ?? null,
+        sanitize($data['location_address'] ?? null),
+        (int)($data['has_other_parties'] ?? 0),
+        isset($data['other_parties_present']) ? (int)$data['other_parties_present'] : null,
+        sanitize($data['weather_condition'] ?? null),
+        sanitize($data['road_condition'] ?? null),
+        $data['insurance_type'] ?? null,
+        sanitize($data['event_details'] ?? null),
+        sanitize($data['damage_category'] ?? null),
+        in_array($data['parties'] ?? '', ['self','two','multiple']) ? $data['parties'] : null,
+        $userId, // assigned_enforcer_id = the enforcer who filed it
+    ]);
+} catch (Exception $e) {
+    jsonResponse(false, 'Failed to save report: ' . $e->getMessage());
+}
 
 $reportId = (int)$db->lastInsertId();
 
@@ -79,12 +83,12 @@ if (!empty($_FILES['media']['name'][0])) {
     $mediaDir = UPLOAD_DIR . 'reports/' . $reportId . '/';
     if (!is_dir($mediaDir)) mkdir($mediaDir, 0755, true);
 
-    $mStmt    = $db->prepare("INSERT INTO report_media (report_id, file_name, file_path, file_type) VALUES (?,?,?,?)");
-    $allowed  = array_merge(ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES);
-    $files    = $_FILES['media'];
-    $count    = count($files['name']);
+    $mStmt   = $db->prepare("INSERT INTO report_media (report_id, file_name, file_path, file_type) VALUES (?,?,?,?)");
+    $allowed = array_merge(ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES);
+    $files   = $_FILES['media'];
+    $cnt     = count($files['name']);
 
-    for ($i = 0; $i < $count; $i++) {
+    for ($i = 0; $i < $cnt; $i++) {
         if ($files['error'][$i] !== UPLOAD_ERR_OK) continue;
         if ($files['size'][$i] > MAX_UPLOAD_SIZE) continue;
         if (!in_array($files['type'][$i], $allowed)) continue;
@@ -101,5 +105,5 @@ if (!empty($_FILES['media']['name'][0])) {
     }
 }
 
-auditLog($userId, 'report_submitted by enforcer', "Ref: {$refNum}, Flow: {$flowType}");
+auditLog($userId, 'enforcer_report_submitted', "Ref: {$refNum}, Enforcer ID: {$userId}");
 jsonResponse(true, 'Report submitted successfully!', ['reference_number' => $refNum]);

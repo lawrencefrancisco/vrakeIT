@@ -498,6 +498,10 @@ setInterval(rotateSafetyTip, 5000);
   from { opacity:0; transform:translateX(-50%) translateY(30px); }
   to   { opacity:1; transform:translateX(-50%) translateY(0); }
 }
+@keyframes slideDown {
+  from { opacity:1; transform:translateX(-50%) translateY(0); }
+  to   { opacity:0; transform:translateX(-50%) translateY(30px); }
+}
 </style>
 
 <script>
@@ -545,7 +549,7 @@ async function enablePushNotifications() {
   const permission = await Notification.requestPermission();
   if (permission === 'granted') {
     await subscribeEnforcer();
-    showPushToast('🔔 Notifications enabled! You\'ll now receive instant report alerts.', 'success');
+    showPushToast('Notifications enabled! You\'ll now receive instant report alerts.', 'success');
   } else {
     showPushToast('Notifications blocked. You can enable them in browser settings.', 'warn');
     localStorage.setItem('pushDismissed', '1');
@@ -610,7 +614,7 @@ async function subscribeEnforcer() {
   } catch (err) {
     console.error('[WebPush] ❌ Subscription failed:', err.name, err.message, err);
     // Show a visible error toast for debugging on mobile
-    showPushToast('⚠️ Push setup failed: ' + err.message, 'warn');
+    showPushToast('Push setup failed: ' + err.message, 'warn');
   }
 }
 
@@ -619,17 +623,22 @@ async function subscribeEnforcer() {
  */
 function showPushToast(message, type = 'success') {
   const toast = document.createElement('div');
-  const bg    = type === 'success' ? '#059669' : '#d97706';
+  const bg    = type === 'success' ? '#10b981' : '#f59e0b';
+  const icon  = type === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill';
   toast.style.cssText = `
-    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
-    background:${bg}; color:#fff; padding:12px 22px; border-radius:50px;
-    font-family:'DM Sans',sans-serif; font-weight:600; font-size:14px;
+    position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+    background:${bg}; color:#fff; padding:12px 24px; border-radius:50px;
+    font-family:'Poppins', sans-serif; font-weight:600; font-size:14px;
+    display:flex; align-items:center; gap:8px; white-space:nowrap;
     z-index:10000; box-shadow:0 8px 30px rgba(0,0,0,0.25);
-    animation: slideUp 0.3s ease;
+    animation: slideUp 0.3s ease forwards;
   `;
-  toast.textContent = message;
+  toast.innerHTML = `<i class="bi bi-${icon}" style="font-size:1.15rem;"></i> <span>${message}</span>`;
   document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 5000);
+  setTimeout(() => {
+    toast.style.animation = 'slideDown 0.3s ease forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
 }
 
 /**
@@ -647,7 +656,7 @@ function manualEnablePush() {
   }
   
   if (Notification.permission === 'granted') {
-    showPushToast('✅ Notifications are already enabled!', 'success');
+    showPushToast('Notifications are already enabled!', 'success');
   } else {
     // Show the banner if it was dismissed
     document.getElementById('push-permission-banner').style.display = 'block';

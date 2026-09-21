@@ -82,9 +82,13 @@ adminHead('Incident Monitoring');
       <td>
         <?php
           $rRole = $r['reporter_role'] ?? 'driver';
-          $roleLabel = $rRole === 'citizen' ? 'Citizen/Witness' : 'Driver';
-          $roleColor = $rRole === 'citizen' ? '#a78bfa' : '#60b4ff';
-          $roleIcon  = $rRole === 'citizen' ? 'bi-eye-fill' : 'bi-car-front-fill';
+          if ($rRole === 'citizen') {
+            $roleLabel = 'Citizen/Witness'; $roleColor = '#a78bfa'; $roleIcon = 'bi-eye-fill';
+          } elseif ($rRole === 'enforcer') {
+            $roleLabel = 'Enforcer'; $roleColor = '#10b981'; $roleIcon = 'bi-shield-fill';
+          } else {
+            $roleLabel = 'Driver'; $roleColor = '#60b4ff'; $roleIcon = 'bi-car-front-fill';
+          }
         ?>
         <span style="color:<?= $roleColor ?>;font-weight:600;font-size:12px;">
           <i class="bi <?= $roleIcon ?>"></i> <?= $roleLabel ?>
@@ -428,7 +432,9 @@ async function viewReport(rid) {
   // 5. Badges
   const roleBadge = r.reporter_role === 'citizen'
     ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;background:#ede9fe;border:1px solid #ddd6fe;color:#8b5cf6;font-size:11px;font-weight:600;"><i class='bi bi-eye-fill'></i> Citizen/Witness</span>`
-    : `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;background:#e0f2fe;border:1px solid #bae6fd;color:#0ea5e9;font-size:11px;font-weight:600;"><i class='bi bi-car-front-fill'></i> Driver</span>`;
+    : r.reporter_role === 'enforcer'
+      ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;background:#d1fae5;border:1px solid #a7f3d0;color:#059669;font-size:11px;font-weight:600;"><i class='bi bi-shield-fill'></i> Enforcer</span>`
+      : `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;background:#e0f2fe;border:1px solid #bae6fd;color:#0ea5e9;font-size:11px;font-weight:600;"><i class='bi bi-car-front-fill'></i> Driver</span>`;
 
   const flowBadge = `<span style="display:inline-block; padding:3px 8px; border-radius:6px; background:#f1f5f9; border:1px solid #e2e8f0; color:#475569; font-size:11px; font-weight:700; letter-spacing:0.5px;">${(r.flow_type || '').replace('_', ' ').toUpperCase()}</span>`;
 
@@ -581,7 +587,12 @@ async function viewReport(rid) {
       <div class="col-md-6 mt-3">
         <p style="margin:0 0 2px 0; color:#64748b; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Law Enforcer / Auth</p>
         <div style="color:#0f172a; font-weight:600; font-size:13px;">
-          ${r.enforcer_type ? `<span style="background:#e0f2fe; border:1px solid #bae6fd; color:#0284c7; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700;"><i class="bi bi-shield-shaded me-1"></i> ${r.enforcer_type.toUpperCase()}</span>` : '<span class="text-muted fst-italic">N/A</span>'}
+          ${r.enforcer_type ? (() => {
+            let t = r.enforcer_type.toUpperCase();
+            if (t === 'TMO_POLICE') t = 'TMO / Police';
+            else t = t.replace(/_/g, ' / ');
+            return `<span style="background:#e0f2fe; border:1px solid #bae6fd; color:#0284c7; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700;"><i class="bi bi-shield-shaded me-1"></i> ${t}</span>`;
+          })() : '<span class="text-muted fst-italic">N/A</span>'}
         </div>
       </div>
       <div class="col-md-6 mt-3">

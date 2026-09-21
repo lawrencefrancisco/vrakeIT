@@ -269,12 +269,54 @@ else {
     .ap-val { font-size: 0.8rem; font-weight: 600; color: var(--text); }
     .ap-hint { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
 
-    /* ─── VEHICLE DETAILS ─── */
-    .vehicle-detail-card {
-      background: #f8fafc; border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 0.85rem; margin-top: 0.75rem;
+    /* ─── VEHICLE CHIPS ─── */
+    .chip-group-ep {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
     }
-    .vdc-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.6rem; }
+    .chip-ep {
+      border: 2px solid rgba(0,0,0,0.08);
+      background: #fff;
+      border-radius: 999px;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Poppins', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: var(--muted);
+    }
+    .chip-ep:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+    .chip-ep.active { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+
+    /* ─── VEHICLE DETAIL CARDS ─── */
+    .vd-card-ep {
+      background: #fff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .vd-card-ep:hover { border-color: var(--blue); box-shadow: 0 2px 12px rgba(0,126,210,0.07); }
+    .vd-card-header-ep { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .vd-card-label-ep { display: flex; align-items: center; gap: 0.45rem; font-size: 0.85rem; font-weight: 700; color: var(--text); }
+    .vd-icon-ep { font-size: 1.15rem; width: 28px; height: 28px; min-width: 28px; background: var(--blue-light); color: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .vd-stepper-ep { display: flex; align-items: center; border: 1.5px solid #e0e0e0; border-radius: 999px; overflow: hidden; background: #f9fafb; }
+    .vd-stepper-ep button { background: none; border: none; width: 30px; height: 30px; font-size: 1rem; font-weight: 700; cursor: pointer; color: var(--blue); display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; transition: background 0.15s; }
+    .vd-stepper-ep button:hover { background: rgba(0,126,210,0.08); }
+    .vd-stepper-ep span { min-width: 28px; text-align: center; font-size: 0.82rem; font-weight: 700; color: var(--text); }
+    .vd-plates-ep { display: flex; flex-direction: column; gap: 0.45rem; margin-top: 0.6rem; }
+    .vd-plate-row-ep { display: flex; align-items: center; gap: 0.5rem; }
+    .vd-plate-num-ep { width: 22px; height: 22px; min-width: 22px; background: var(--blue); color: #fff; border-radius: 50%; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .vd-plate-input-ep { flex: 1; border: 1.5px solid #e0e0e0; border-radius: 0.6rem; padding: 0.45rem 0.75rem; font-size: 0.82rem; font-family: 'Poppins', sans-serif; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; outline: none; background: #fafafa; transition: border-color 0.2s; }
+    .vd-plate-input-ep:focus { border-color: var(--blue); background: #fff; }
+    .vd-plate-input-ep::placeholder { text-transform: none; font-weight: 400; letter-spacing: 0; color: #aaa; }
 
     /* ─── MEDIA UPLOAD ─── */
     .dropzone {
@@ -408,19 +450,19 @@ else {
           <input type="radio" name="parties" value="self">
           <div class="radio-dot"></div>
           <span class="rc-icon"><i class="bi bi-person-fill" style="color:var(--blue); font-size: 1.3rem;"></i></span>
-          <div><div class="rc-title">Single</div><div class="rc-sub">Solo incident</div></div>
+          <div><div class="rc-title">1 Driver</div><div class="rc-sub">Solo incident</div></div>
         </label>
         <label class="radio-card" onclick="selectParties('two', this)">
           <input type="radio" name="parties" value="two">
           <div class="radio-dot"></div>
           <span class="rc-icon"><i class="bi bi-people-fill" style="color:var(--blue); font-size: 1.3rem;"></i></span>
-          <div><div class="rc-title">Two People</div><div class="rc-sub">Me + Another party</div></div>
+          <div><div class="rc-title">Two Drivers</div><div class="rc-sub">Two vehicles involved</div></div>
         </label>
         <label class="radio-card" onclick="selectParties('multiple', this)">
           <input type="radio" name="parties" value="multiple">
           <div class="radio-dot"></div>
           <span class="rc-icon"><i class="bi bi-people-fill" style="color:var(--blue); font-size: 1.3rem;"></i></span>
-          <div><div class="rc-title">Three or More</div><div class="rc-sub">Multi-party incident</div></div>
+          <div><div class="rc-title">Three or More</div><div class="rc-sub">Multi-vehicle incident</div></div>
         </label>
       </div>
     </div>
@@ -457,22 +499,68 @@ else {
         </div>
       </div>
 
-      <!-- Injury sub-fields: are YOU hurt? -->
-      <div class="cond-block" id="block-selfhurt">
+      <!-- How many injured? -->
+      <div class="cond-block" id="block-injured-count">
         <div class="fdiv"></div>
-        <div class="field-label">Is he/she hurt?</div>
-        <div class="radio-row">
-          <label class="radio-card" onclick="setSelfHurt(true, this)">
-            <input type="radio" name="self_hurt" value="1">
+        <div class="field-label">How many people are injured? <span class="req">*</span></div>
+        <div class="radio-row" style="grid-template-columns:1fr 1fr 1fr;">
+          <label class="radio-card" onclick="setInjuredCount('none', this)">
+            <input type="radio" name="injured_count" value="none">
             <div class="radio-dot"></div>
-            <span class="rc-icon"><i class="bi bi-emoji-dizzy-fill" style="color:var(--red); font-size: 1.3rem;"></i></span>
-            <div><div class="rc-title">Yes, he/she is hurt</div><div class="rc-sub">I need medical attention</div></div>
+            <span class="rc-icon"><i class="bi bi-check-circle-fill" style="color:var(--green); font-size:1.3rem;"></i></span>
+            <div><div class="rc-title">None</div><div class="rc-sub">Property damage only</div></div>
           </label>
-          <label class="radio-card" onclick="setSelfHurt(false, this)">
-            <input type="radio" name="self_hurt" value="0">
+          <label class="radio-card" onclick="setInjuredCount('one', this)">
+            <input type="radio" name="injured_count" value="one">
             <div class="radio-dot"></div>
-            <span class="rc-icon"><i class="bi bi-emoji-smile-fill" style="color:var(--green); font-size: 1.3rem;"></i></span>
-            <div><div class="rc-title">No, he/she is not hurt</div><div class="rc-sub">They're okay physically</div></div>
+            <span class="rc-icon"><i class="bi bi-person-fill-exclamation" style="color:var(--amber); font-size:1.3rem;"></i></span>
+            <div><div class="rc-title">1 Person</div><div class="rc-sub">One person may be hurt</div></div>
+          </label>
+          <label class="radio-card" onclick="setInjuredCount('multiple', this)">
+            <input type="radio" name="injured_count" value="multiple">
+            <div class="radio-dot"></div>
+            <span class="rc-icon"><i class="bi bi-people-fill" style="color:var(--red); font-size:1.3rem;"></i></span>
+            <div><div class="rc-title">2 or More</div><div class="rc-sub">Multiple people injured</div></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Injury severity -->
+      <div class="cond-block" id="block-severity">
+        <div class="fdiv"></div>
+        <div class="field-label">How severe are the injuries? <span class="req">*</span></div>
+        <div class="radio-row">
+          <label class="radio-card" onclick="setSeverity('minor', this)">
+            <input type="radio" name="injury_severity" value="minor">
+            <div class="radio-dot"></div>
+            <span class="rc-icon"><i class="bi bi-bandaid-fill" style="color:var(--amber); font-size:1.3rem;"></i></span>
+            <div><div class="rc-title">Minor</div><div class="rc-sub">Cuts, bruises, limping</div></div>
+          </label>
+          <label class="radio-card" onclick="setSeverity('major', this)">
+            <input type="radio" name="injury_severity" value="major">
+            <div class="radio-dot"></div>
+            <span class="rc-icon"><i class="bi bi-heartbreak-fill" style="color:var(--red); font-size:1.3rem;"></i></span>
+            <div><div class="rc-title">Major / Critical</div><div class="rc-sub">Unconscious, broken bones</div></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Deceased -->
+      <div class="cond-block" id="block-deceased">
+        <div class="fdiv"></div>
+        <div class="field-label">Are there any fatalities / deceased? <span class="req">*</span></div>
+        <div class="radio-row">
+          <label class="radio-card" onclick="setDeceased(true, this)">
+            <input type="radio" name="has_deceased" value="1">
+            <div class="radio-dot"></div>
+            <span class="rc-icon"><i class="bi bi-x-octagon-fill" style="color:var(--red); font-size:1.3rem;"></i></span>
+            <div><div class="rc-title">Yes, there are deceased</div><div class="rc-sub">Fatality at the scene</div></div>
+          </label>
+          <label class="radio-card" onclick="setDeceased(false, this)">
+            <input type="radio" name="has_deceased" value="0">
+            <div class="radio-dot"></div>
+            <span class="rc-icon"><i class="bi bi-check-circle-fill" style="color:var(--green); font-size:1.3rem;"></i></span>
+            <div><div class="rc-title">No, everyone is alive</div><div class="rc-sub">No fatalities</div></div>
           </label>
         </div>
       </div>
@@ -483,8 +571,8 @@ else {
         <div class="alert-strip danger">
           <i class="bi bi-exclamation-triangle-fill" style="color:var(--red);"></i>
           <div>
-            <div class="as-title">Please call for help before proceeding</div>
-            <div class="as-body">Contact emergency services immediately. You can still file a report afterwards.</div>
+            <div class="as-title">Injuries reported — contact emergency services</div>
+            <div class="as-body">Call for additional medical support if needed. You can still complete the report.</div>
           </div>
         </div>
         <div class="call-grid">
@@ -518,7 +606,7 @@ else {
       <div class="row-2">
         <div class="field-group">
           <label class="field-label" for="incidentDate">Date <span class="req">*</span></label>
-          <input type="date" class="fld" id="incidentDate" max="<?= date('Y-m-d') ?>">
+          <input type="date" class="fld" id="incidentDate" max="<?= date('Y-m-d', strtotime('+8 hours', strtotime(gmdate('Y-m-d H:i:s')))) ?>" value="<?= date('Y-m-d', strtotime('+8 hours', strtotime(gmdate('Y-m-d H:i:s')))) ?>">
         </div>
         <div class="field-group">
           <label class="field-label" for="incidentTime">Time <span class="req">*</span></label>
@@ -570,12 +658,26 @@ else {
     </div>
     <div class="section-body">
       <div class="field-label">Vehicle types <span class="req">*</span></div>
-      <div class="chip-row" id="vehicleChips">
-        <?php foreach (['Car', 'Motorcycle', 'Van', 'Truck', 'Tricycle', 'E-bike/E-trike', 'Jeepney', 'Bus', 'Bicycle'] as $v): ?>
-          <span class="chip-opt" data-vehicle="<?= $v ?>" onclick="toggleVehicle(this)"><?= $v ?></span>
+      <div class="chip-group-ep" id="vehicleChipsEP">
+        <?php
+        $vehicleIconsEP = [
+          'Car'            => 'bi-car-front-fill',
+          'Motorcycle'     => 'bi-scooter',
+          'Van'            => 'bi-truck',
+          'Truck'          => 'bi-truck-front-fill',
+          'Tricycle'       => 'bi-bicycle',
+          'E-bike/E-trike' => 'bi-lightning-charge-fill',
+          'Jeepney'        => 'bi-bus-front-fill',
+          'Bus'            => 'bi-bus-front',
+          'Bicycle'        => 'bi-bicycle',
+        ];
+        foreach ($vehicleIconsEP as $v => $icon): ?>
+          <button class="chip-ep" data-vehicle="<?= $v ?>" data-icon="<?= $icon ?>" onclick="toggleChipEP(this)">
+            <i class="bi <?= $icon ?>"></i> <?= $v ?>
+          </button>
         <?php endforeach; ?>
       </div>
-      <div id="vehicleDetails" style="margin-top:0.25rem;"></div>
+      <div id="vehicleDetailFormsEP"></div>
     </div>
   </div>
 
@@ -615,11 +717,42 @@ else {
   </div>
 
   <!-- ══════════════════════════════════════════
-       SECTION 9 — INSURANCE
+       SECTION 6b — DAMAGE CATEGORY
   ═══════════════════════════════════════════════ -->
   <div class="form-section">
     <div class="section-header">
       <div class="sec-num">7</div>
+      <div>
+        <div class="section-title">Damage Assessment</div>
+        <div class="section-sub">What type of damage occurred?</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="field-group">
+        <label class="field-label" for="damageCategory">Damage Category</label>
+        <select class="fld" id="damageCategory">
+          <option value="">Select…</option>
+          <?php foreach ([
+            'Minor Vehicle Damage',
+            'Major Vehicle Damage',
+            'Total Loss / Write-off',
+            'Property / Infrastructure Damage',
+            'Multiple Vehicles Damaged',
+            'No Visible Damage',
+          ] as $d): ?>
+            <option><?= $d ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 9 — INSURANCE
+  ═══════════════════════════════════════════════ -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="sec-num">8</div>
       <div>
         <div class="section-title">Insurance Status</div>
         <div class="section-sub">For vehicle — select Unknown if unsure</div>
@@ -649,7 +782,7 @@ else {
   ═══════════════════════════════════════════════ -->
   <div class="form-section">
     <div class="section-header">
-      <div class="sec-num">8</div>
+      <div class="sec-num">9</div>
       <div>
         <div class="section-title">Photos & Videos</div>
         <div class="section-sub">Optional — visuals strengthen your report</div>
@@ -671,7 +804,7 @@ else {
   ═══════════════════════════════════════════════ -->
   <div class="form-section">
     <div class="section-header">
-      <div class="sec-num">9</div>
+      <div class="sec-num">10</div>
       <div>
         <div class="section-title">What Happened</div>
         <div class="section-sub">Describe the sequence of events in your own words</div>
@@ -717,12 +850,14 @@ else {
 const S = {
   parties: '',
   has_injury: null,
+  injured_count: '',   // 'none' | 'one' | 'multiple'
+  injury_severity: '', // 'minor' | 'major'
+  has_deceased: null,
   self_hurt: null,
   enforcer_present: null,
   settle: null,
   flow_type: 'standard',
   insurance_type: '',
-  
 };
 let mediaFiles = [];
 let map, mapMarker;
@@ -737,17 +872,32 @@ function selectParties(val, el) {
 
 // ── SECTION 2 — INJURY ──────────────────────────────
 function setInjury(val, el) {
-  document.querySelectorAll('[name=injury]').closest ? null : null;
   document.querySelectorAll('label[onclick^="setInjury"]').forEach(c => c.classList.remove('on'));
   el.classList.add('on');
   S.has_injury = val;
+  // Reset sub-fields when toggling injury
+  if (!val) { S.injured_count = 'none'; S.injury_severity = ''; S.has_deceased = null; }
   updateConditionals();
 }
 
-function setSelfHurt(val, el) {
-  document.querySelectorAll('label[onclick^="setSelfHurt"]').forEach(c => c.classList.remove('on'));
+function setInjuredCount(val, el) {
+  document.querySelectorAll('label[onclick^="setInjuredCount"]').forEach(c => c.classList.remove('on'));
   el.classList.add('on');
-  S.self_hurt = val;
+  S.injured_count = val;
+  updateConditionals();
+}
+
+function setSeverity(val, el) {
+  document.querySelectorAll('label[onclick^="setSeverity"]').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  S.injury_severity = val;
+  updateConditionals();
+}
+
+function setDeceased(val, el) {
+  document.querySelectorAll('label[onclick^="setDeceased"]').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  S.has_deceased = val;
   updateConditionals();
 }
 
@@ -767,7 +917,7 @@ function setSettle(val, el) {
   updateConditionals();
 }
 
-// ── SECTION 9 — INSURANCE ───────────────────────────
+// ── INSURANCE ────────────────────────────────────────
 function selectInsurance(val, el) {
   document.querySelectorAll('label[onclick^="selectInsurance"]').forEach(c => c.classList.remove('on'));
   el.classList.add('on');
@@ -779,56 +929,100 @@ function show(id) { document.getElementById(id)?.classList.add('visible'); }
 function hide(id) { document.getElementById(id)?.classList.remove('visible'); }
 
 function updateConditionals() {
-  const solo = S.parties === 'self';
-  const multi = S.parties === 'two' || S.parties === 'multiple';
-  const injured = S.has_injury === true;
-  const notInjured = S.has_injury === false;
+  const solo     = S.parties === 'self';
+  const multi    = S.parties === 'two' || S.parties === 'multiple';
+  const injured  = S.has_injury === true;
+  const notInj   = S.has_injury === false;
+  const hasCount = S.injured_count && S.injured_count !== 'none';
 
-  // Self-hurt question: only for solo parties with injury
-  solo && injured ? show('block-selfhurt') : hide('block-selfhurt');
+  // Injured count question: whenever there are injuries
+  injured ? show('block-injured-count') : hide('block-injured-count');
 
-  // Emergency dial: solo+hurt OR multi+injured
-  const showEmergency = (solo && injured && S.self_hurt === true) || (multi && injured);
-  showEmergency ? show('block-emergency') : hide('block-emergency');
+  // Severity: when at least 1 injured
+  (injured && hasCount) ? show('block-severity') : hide('block-severity');
+
+  // Deceased: when severity is set
+  (injured && hasCount && S.injury_severity) ? show('block-deceased') : hide('block-deceased');
+
+  // Emergency dial: when injuries present
+  injured ? show('block-emergency') : hide('block-emergency');
 
   S.flow_type = 'standard';
 
   // TMO call prompt: enforcer NOT present
   S.enforcer_present === false ? show('block-calltmo') : hide('block-calltmo');
-  S.enforcer_present === true ? show('block-enforcertips') : hide('block-enforcertips');
+  S.enforcer_present === true  ? show('block-enforcertips') : hide('block-enforcertips');
 
   // Settlement: multi-party with no injury
-  multi && notInjured ? show('block-settlement') : hide('block-settlement');
+  multi && notInj ? show('block-settlement') : hide('block-settlement');
 
   // Contract fields: settlement chosen
   S.settle === true ? show('block-contract') : hide('block-contract');
 }
 
 // ── VEHICLES ────────────────────────────────────────
-function toggleVehicle(el) {
-  el.classList.toggle('on');
-  renderVehicleDetails();
+function toggleChipEP(btn) {
+  btn.classList.toggle('active');
+  updateVehicleDetailsEP();
 }
 
-function renderVehicleDetails() {
-  const selected = [...document.querySelectorAll('.chip-opt.on')].map(c => c.dataset.vehicle);
-  const container = document.getElementById('vehicleDetails');
-  if (!selected.length) { container.innerHTML = ''; return; }
-  container.innerHTML = selected.map((v, i) => `
-    <div class="vehicle-detail-card">
-      <div class="vdc-label">${v}</div>
-      <div class="row-2">
-        <div>
-          <label class="field-label" style="font-size:0.7rem;">Count</label>
-          <input type="number" class="fld" id="vc_count_${i}" min="1" max="20" value="1" style="padding:0.5rem 0.65rem;font-size:0.82rem;">
+function updateVehicleDetailsEP() {
+  const chips = [...document.querySelectorAll('#vehicleChipsEP .chip-ep.active')];
+  const container = document.getElementById('vehicleDetailFormsEP');
+  if (!chips.length) { container.innerHTML = ''; return; }
+
+  // Preserve existing counts when re-rendering
+  const prevCounts = {};
+  document.querySelectorAll('.vd-card-ep').forEach(card => {
+    const v   = card.dataset.vehicleKey;
+    const cnt = parseInt(card.querySelector('.vd-count-val-ep')?.textContent) || 1;
+    prevCounts[v] = cnt;
+  });
+
+  container.innerHTML = chips.map((chip, i) => {
+    const v    = chip.dataset.vehicle;
+    const icon = chip.dataset.icon || 'bi-car-front-fill';
+    const cnt  = prevCounts[v] || 1;
+    const plates = Array.from({ length: cnt }, (_, j) => `
+      <div class="vd-plate-row-ep">
+        <div class="vd-plate-num-ep">${j + 1}</div>
+        <input class="vd-plate-input-ep" id="vp_ep_${i}_${j}" type="text" placeholder="e.g. ABC 1234" maxlength="12">
+      </div>`).join('');
+    return `
+      <div class="vd-card-ep" data-vehicle-key="${v}" data-chip-index="${i}">
+        <div class="vd-card-header-ep">
+          <div class="vd-card-label-ep">
+            <span class="vd-icon-ep"><i class="bi ${icon}"></i></span>
+            <span>${v}</span>
+          </div>
+          <div class="vd-stepper-ep">
+            <button type="button" onclick="stepCountEP(this, -1, ${i})" aria-label="Decrease">−</button>
+            <span class="vd-count-val-ep">${cnt}</span>
+            <button type="button" onclick="stepCountEP(this, 1, ${i})" aria-label="Increase">+</button>
+          </div>
         </div>
-        <div>
-          <label class="field-label" style="font-size:0.7rem;">Plate Number(s)</label>
-          <input type="text" class="fld" id="vc_plate_${i}" placeholder="e.g. ABC 1234" style="padding:0.5rem 0.65rem;font-size:0.82rem;">
-        </div>
-      </div>
-    </div>
-  `).join('');
+        <div class="vd-plates-ep" id="vd_plates_ep_${i}">${plates}</div>
+      </div>`;
+  }).join('');
+}
+
+function stepCountEP(btn, delta, chipIdx) {
+  const card     = btn.closest('.vd-card-ep');
+  const valEl    = card.querySelector('.vd-count-val-ep');
+  const platesEl = document.getElementById(`vd_plates_ep_${chipIdx}`);
+  const chip     = document.querySelectorAll('#vehicleChipsEP .chip-ep.active')[chipIdx];
+  const icon     = chip ? chip.dataset.icon : 'bi-car-front-fill';
+  let cnt = parseInt(valEl.textContent) + delta;
+  if (cnt < 1) cnt = 1;
+  if (cnt > 20) cnt = 20;
+  valEl.textContent = cnt;
+
+  const existingVals = [...platesEl.querySelectorAll('.vd-plate-input-ep')].map(el => el.value);
+  platesEl.innerHTML = Array.from({ length: cnt }, (_, j) => `
+    <div class="vd-plate-row-ep">
+      <div class="vd-plate-num-ep">${j + 1}</div>
+      <input class="vd-plate-input-ep" id="vp_ep_${chipIdx}_${j}" type="text" placeholder="e.g. ABC 1234" maxlength="12" value="${existingVals[j] || ''}">
+    </div>`).join('');
 }
 
 // ── MEDIA ────────────────────────────────────────────
@@ -989,7 +1183,7 @@ function validate() {
   if (!document.getElementById('incidentDate').value) errors.push('Please enter the incident date.');
   if (!document.getElementById('incidentTime').value) errors.push('Please enter the incident time.');
   if (!document.getElementById('locLat').value) errors.push('Please allow location access or drag the map pin.');
-  if (!document.querySelectorAll('.chip-opt.on').length) errors.push('Please select at least one vehicle type.');
+  if (!document.querySelectorAll('#vehicleChipsEP .chip-ep.active').length) errors.push('Please select at least one vehicle type.');
   if (!document.getElementById('weatherCond').value) errors.push('Please select a weather condition.');
   if (!document.getElementById('roadCond').value) errors.push('Please select a road condition.');
   if (!S.insurance_type) errors.push('Please select your insurance status.');
@@ -1013,24 +1207,37 @@ async function submitReport() {
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Submitting…';
 
-  // Standard report
-  const selected = [...document.querySelectorAll('.chip-opt.on')].map(c => c.dataset.vehicle);
+  // Standard report — collect active chips as DOM elements
+  const selected = [...document.querySelectorAll('#vehicleChipsEP .chip-ep.active')];
   const fd = new FormData();
   fd.append('flow_type', S.flow_type);
+  fd.append('reporter_role', 'driver');
   fd.append('parties', S.parties);
+  fd.append('has_other_parties', (S.parties === 'two' || S.parties === 'multiple') ? 1 : 0);
   fd.append('is_injured', S.has_injury ? 1 : 0);
+  fd.append('injured_count', S.injured_count || 'none');
+  fd.append('injury_severity', S.injury_severity || '');
+  fd.append('has_deceased', S.has_deceased === true ? 1 : (S.has_deceased === false ? 0 : ''));
   fd.append('self_hurt', S.self_hurt ?? '');
   fd.append('enforcer_present', S.enforcer_present ?? '');
+  fd.append('enforcer_type', 'TMO');
   fd.append('incident_date', document.getElementById('incidentDate').value);
   fd.append('incident_time', document.getElementById('incidentTime').value);
   fd.append('location_lat', document.getElementById('locLat').value);
   fd.append('location_lng', document.getElementById('locLng').value);
-  fd.append('enforcer_type', 'TMO');
   fd.append('location_address', document.getElementById('locAddress').value);
-  selected.forEach((v, i) => {
-    fd.append('vehicle_types[]', v);
-    fd.append('vehicle_counts[]', document.getElementById(`vc_count_${i}`)?.value || '1');
-    fd.append('plate_numbers[]', document.getElementById(`vc_plate_${i}`)?.value || '');
+  fd.append('damage_category', document.getElementById('damageCategory').value);
+  selected.forEach((chip, i) => {
+    const v    = chip.dataset.vehicle;
+    const card = document.querySelector(`.vd-card-ep[data-chip-index="${i}"]`);
+    const cnt  = card ? parseInt(card.querySelector('.vd-count-val-ep')?.textContent) || 1 : 1;
+    // Each vehicle gets its own row — collect individual plate inputs
+    Array.from({ length: cnt }, (_, j) => {
+      const plate = (document.getElementById(`vp_ep_${i}_${j}`)?.value || '').trim().toUpperCase();
+      fd.append('vehicle_types[]', v);
+      fd.append('vehicle_counts[]', 1);
+      fd.append('plate_numbers[]', plate);
+    });
   });
   fd.append('weather_condition', document.getElementById('weatherCond').value);
   fd.append('road_condition', document.getElementById('roadCond').value);
