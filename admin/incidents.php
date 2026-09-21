@@ -550,7 +550,17 @@ async function viewReport(rid) {
           ? '<span style="background:#fee2e2; border:1px solid #fca5a5; color:#ef4444; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700;"><i class="bi bi-exclamation-circle-fill me-1"></i> YES</span>' 
           : '<span style="background:#f1f5f9; border:1px solid #e2e8f0; color:#64748b; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:600;">NO</span>'}
       </div>
-      
+
+      ${r.injured_count ? `
+      <div class="col-md-4">
+        <p style="margin:0 0 2px 0; color:#64748b; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Injured Count</p>
+        ${r.injured_count === 'none'
+          ? '<span style="background:#f1f5f9; border:1px solid #e2e8f0; color:#64748b; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:600;"><i class="bi bi-check-circle me-1"></i> None</span>'
+          : r.injured_count === 'one'
+            ? '<span style="background:#fef3c7; border:1px solid #fde68a; color:#d97706; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700;"><i class="bi bi-person-fill-exclamation me-1"></i> 1 Person</span>'
+            : '<span style="background:#fee2e2; border:1px solid #fca5a5; color:#ef4444; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700;"><i class="bi bi-people-fill me-1"></i> 2 or More</span>'}
+      </div>` : ''}
+
       ${r.injury_severity ? `
       <div class="col-md-4">
         <p style="margin:0 0 2px 0; color:#64748b; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Severity</p>

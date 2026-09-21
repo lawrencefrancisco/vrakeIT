@@ -27,14 +27,14 @@ $refNum = generateReferenceNumber();
 $stmt = $db->prepare("
     INSERT INTO reports (
         user_id, reference_number, flow_type, reporter_role,
-        is_injured, injury_severity, has_deceased,
+        is_injured, injured_count, injury_severity, has_deceased,
         enforcer_type, enforcer_documented, emergency_services,
         is_safe, incident_date, incident_time,
         location_lat, location_lng, location_address,
         has_other_parties, other_parties_present,
         weather_condition, road_condition, insurance_type,
         event_details, damage_category, parties, status
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending')
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending')
 ");
 
 $emergencyServices = !empty($data['emergency_services']) ? json_encode((array)$data['emergency_services']) : null;
@@ -46,6 +46,7 @@ try {
         $flowType,
         in_array($data['reporter_role'] ?? '', ['driver','citizen']) ? $data['reporter_role'] : 'driver',
         (int)($data['is_injured'] ?? 0),
+        in_array($data['injured_count'] ?? '', ['none','one','multiple']) ? $data['injured_count'] : null,
         !empty($data['injury_severity']) ? $data['injury_severity'] : null,
         isset($data['has_deceased']) && $data['has_deceased'] !== '' ? (int)$data['has_deceased'] : null,
         sanitize($data['enforcer_type'] ?? null),
