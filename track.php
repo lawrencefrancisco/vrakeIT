@@ -269,6 +269,12 @@ function showDetail(r) {
     ['Role', roleLabel],
     ['Submitted', r.formatted_date],
     ['Injured?', r.is_injured ? 'Yes' : 'No'],
+    ...(r.is_injured && r.injured_count ? [['Injured Count', (() => {
+      if (r.injured_count === 'none')     return 'No injuries';
+      if (r.injured_count === 'one')      return '1 Person injured';
+      if (r.injured_count === 'multiple') return '2 or more injured';
+      return r.injured_count;
+    })()]] : []),
     ...(severityLabel  ? [['Injury Severity',  severityLabel]]  : []),
     ...(deceasedLabel  ? [['Deceased Status',  deceasedLabel]]  : []),
     ['Date of Incident', r.incident_date || '-'],

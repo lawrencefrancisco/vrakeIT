@@ -1262,24 +1262,24 @@ if (($user['role'] ?? 'user') !== 'user') {
              CITIZEN FLOW — Step C1: How many people involved?
         ═══════════════════════════════════════════════════════ -->
         <div class="wizard-step" id="step-c1">
-          <div class="step-title">How many people are involved in the accident?</div>
-          <p class="step-sub">Count all people at the scene — drivers, passengers, and bystanders.</p>
+          <div class="step-title">How many drivers are involved?</div>
+          <p class="step-sub">This helps us guide you through the right reporting process.</p>
 
           <div class="choice-card-grid">
             <button class="choice-card" onclick="setCitizenParties('self', this)">
               <span class="cc-icon"><i class="bi bi-person"></i></span>
-              <div class="cc-label">Just Me</div>
-              <div class="cc-sub">Only I was involved</div>
+              <div class="cc-label">One Driver</div>
+              <div class="cc-sub">Only me involved</div>
             </button>
             <button class="choice-card" onclick="setCitizenParties('two', this)">
               <span class="cc-icon"><i class="bi bi-people"></i></span>
-              <div class="cc-label">Two People</div>
-              <div class="cc-sub">Me and one other person</div>
+              <div class="cc-label">Two Drivers</div>
+              <div class="cc-sub">Me and another driver</div>
             </button>
             <button class="choice-card" onclick="setCitizenParties('multiple', this)">
               <span class="cc-icon"><i class="bi bi-people-fill"></i></span>
-              <div class="cc-label">Three or More</div>
-              <div class="cc-sub">Multiple people involved</div>
+              <div class="cc-label">Three or More Drivers</div>
+              <div class="cc-sub">Multiple drivers involved</div>
             </button>
           </div>
           <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
@@ -1289,10 +1289,15 @@ if (($user['role'] ?? 'user') !== 'user') {
              CITIZEN FLOW — Step C2: How many are injured?
         ═══════════════════════════════════════════════════════ -->
         <div class="wizard-step" id="step-c2">
-          <div class="step-title">How many people are injured?</div>
+          <div class="step-title">Are there any injuries?</div>
           <p class="step-sub">Include everyone at the scene who may be hurt.</p>
 
           <div class="choice-card-grid">
+            <button class="choice-card" onclick="setCitizenInjured('none', this)">
+              <span class="cc-icon"><i class="bi bi-check-circle-fill" style="color:#10b981;"></i></span>
+              <div class="cc-label">No Injuries</div>
+              <div class="cc-sub">No one is hurt</div>
+            </button>
             <button class="choice-card" onclick="setCitizenInjured('one', this)">
               <span class="cc-icon"><i class="bi bi-person-exclamation"></i></span>
               <div class="cc-label">1 Person</div>
@@ -1333,41 +1338,42 @@ if (($user['role'] ?? 'user') !== 'user') {
              CITIZEN FLOW — Step C-Hotline: Call Hotline
         ═══════════════════════════════════════════════════════ -->
         <div class="wizard-step" id="step-c-hotline">
-          <div class="center-screen">
+          <div class="alert-banner danger" style="margin-bottom:1.1rem; border-width:2px;">
+            <i class="bi bi-exclamation-octagon-fill" style="color:#E90101; font-size:1.4rem; flex-shrink:0;"></i>
+            <div>
+              <div class="ab-title" style="font-size:0.85rem; color:#E90101;">⚠ IMMEDIATE ACTION REQUIRED</div>
+              <div class="ab-body" style="font-weight:600; color:#7f1d1d;">There are injured people at the scene. Contact emergency services RIGHT NOW.</div>
+            </div>
+          </div>
+
+          <div class="center-screen" style="margin-bottom:0.75rem;">
             <div class="hero-icon red pulse"><i class="bi bi-telephone-fill"></i></div>
-            <div class="step-title">Please call for help first</div>
-            <p class="step-sub">There are injured people at the scene. Contact emergency services immediately before continuing.</p>
+            <div class="step-title" style="margin-bottom:0.3rem; line-height:1.3; color:#E90101;">Call Emergency Services Now</div>
+            <p class="step-sub" style="font-weight:600; color:#7f1d1d;">Every second counts. Do not delay — call immediately.</p>
           </div>
 
           <div class="call-grid">
-            <a href="tel:911" class="call-btn red">
+            <a href="tel:911" class="call-btn red" style="font-size:1rem;">
               <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
-              <strong>Call 911</strong>
-              <span class="ca-label">Emergency Hotline</span>
+              <strong>CALL 911</strong>
+              <span class="ca-label">National Emergency</span>
             </a>
-            <a href="tel:117" class="call-btn blue">
-              <span class="ca-icon"><i class="bi bi-truck-front"></i></span>
-              <strong>Call 117</strong>
-              <span class="ca-label">Philippine Red Cross</span>
-            </a>
-            <a href="tel:163" class="call-btn amber">
-              <span class="ca-icon"><i class="bi bi-fire"></i></span>
-              <strong>BFP 163</strong>
-              <span class="ca-label">Fire Bureau</span>
-            </a>
-            <a href="tel:7220650" class="call-btn green">
-              <span class="ca-icon"><i class="bi bi-shield-fill"></i></span>
-              <strong>PNP Hotline</strong>
-              <span class="ca-label">722-0650</span>
+            <a href="tel:136" class="call-btn amber">
+              <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
+              <strong>TMO 136</strong>
+              <span class="ca-label">Traffic Management</span>
             </a>
           </div>
 
           <hr class="divider">
-          <div class="step-title" style="font-size:1rem;margin-bottom:0.4rem;">Ready to document the incident?</div>
-          <p class="step-sub" style="margin-bottom:0.85rem;">You can still file a Good Citizen report and earn points for helping.</p>
-          <button class="btn-primary" onclick="goToFormFlow('good_citizen')"><i class="bi bi-star-fill" style="color:#fbbf24;"></i> Yes, file a report &amp; earn points</button>
-          <button class="btn-outline" onclick="goToStep('step-end-no-report')"><i class="bi bi-x-circle"></i> No, I'm done</button>
-          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+          <p style="font-size:0.75rem; color:var(--muted); text-align:center; margin-bottom:0.75rem; line-height:1.5;">
+            <i class="bi bi-exclamation-circle" style="color:#f59e0b;"></i>
+            Only skip if emergency services have <strong>already been called</strong> or are already on the way.
+          </p>
+          <div class="btn-row" style="margin-top:0;">
+            <button class="btn-outline" style="width:100%; margin-bottom:0;" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+            <button class="btn-outline" style="width:100%; margin-bottom:0; color:var(--muted); border-color:#d1d5db;" onclick="goToFormFlow('good_citizen')">Skip, File a Report Anyway <i class="bi bi-arrow-right"></i></button>
+          </div>
         </div>
 
         <!-- ══════════════════════════════════════════════════
@@ -1462,42 +1468,44 @@ if (($user['role'] ?? 'user') !== 'user') {
 
         <!-- S-SPEED-DIAL — Emergency contacts (self hurt) -->
         <div class="wizard-step" id="step-s-speed-dial">
-          <div class="center-screen">
-            <div class="hero-icon red pulse"><i class="bi bi-exclamation-triangle-fill"></i></div>
-            <div class="step-title" style="margin-bottom:0.4rem;">Please call for help first</div>
-            <p class="step-sub">Contact emergency services before proceeding with your report.</p>
+          <div class="alert-banner danger" style="margin-bottom:1.1rem; border-width:2px;">
+            <i class="bi bi-exclamation-octagon-fill" style="color:#E90101; font-size:1.4rem; flex-shrink:0;"></i>
+            <div>
+              <div class="ab-title" style="font-size:0.85rem; color:#E90101;">⚠ IMMEDIATE ACTION REQUIRED</div>
+              <div class="ab-body" style="font-weight:600; color:#7f1d1d;">You may be injured. Call for help RIGHT NOW before doing anything else.</div>
+            </div>
+          </div>
+
+          <div class="center-screen" style="margin-bottom:0.75rem;">
+            <div class="hero-icon red pulse"><i class="bi bi-telephone-fill"></i></div>
+            <div class="step-title" style="margin-bottom:0.3rem; line-height:1.3; color:#E90101;">Call Emergency Services Now</div>
+            <p class="step-sub" style="font-weight:600; color:#7f1d1d;">Every second counts. Do not delay — call immediately.</p>
           </div>
 
           <div class="call-grid">
-            <a href="tel:911" class="call-btn red">
+            <a href="tel:911" class="call-btn red" style="font-size:1rem;">
               <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
-              <strong>Call 911</strong>
-              <span class="ca-label">Emergency Hotline</span>
+              <strong>CALL 911</strong>
+              <span class="ca-label">National Emergency</span>
             </a>
-            <a href="tel:117" class="call-btn blue">
-              <span class="ca-icon"><i class="bi bi-truck-front"></i></span>
-              <strong>Call 117</strong>
-              <span class="ca-label">Philippine Red Cross</span>
-            </a>
-            <a href="tel:163" class="call-btn amber">
-              <span class="ca-icon"><i class="bi bi-fire"></i></span>
-              <strong>BFP 163</strong>
-              <span class="ca-label">Fire Bureau</span>
-            </a>
-            <a href="tel:7220650" class="call-btn green">
-              <span class="ca-icon"><i class="bi bi-car-front-fill"></i></span>
-              <strong>PNP Hotline</strong>
-              <span class="ca-label">722-0650</span>
+            <a href="tel:136" class="call-btn amber">
+              <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
+              <strong>TMO 136</strong>
+              <span class="ca-label">Traffic Management</span>
             </a>
           </div>
 
           <hr class="divider">
-          <div class="step-title" style="font-size:1rem; margin-bottom:0.4rem;">Do you still want to file a report?</div>
-          <p class="step-sub" style="margin-bottom:0.85rem;">You can still document the incident even after calling for help.</p>
-          <button class="btn-primary" onclick="goToFormFlow()"><i class="bi bi-file-earmark-text" style="color:#fbbf24;"></i> Yes, I want to file a report</button>
-          <button class="btn-outline" onclick="goToStep('step-end-no-report')"><i class="bi bi-x-circle"></i> No, I'm done</button>
-          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+          <p style="font-size:0.75rem; color:var(--muted); text-align:center; margin-bottom:0.75rem; line-height:1.5;">
+            <i class="bi bi-exclamation-circle" style="color:#f59e0b;"></i>
+            Only skip if emergency services have <strong>already been called</strong> or are already on the way.
+          </p>
+          <div class="btn-row" style="margin-top:0;">
+            <button class="btn-outline" style="width:100%; margin-bottom:0;" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+            <button class="btn-outline" style="width:100%; margin-bottom:0; color:var(--muted); border-color:#d1d5db;" onclick="goToFormFlow()">Skip, File a Report Anyway <i class="bi bi-arrow-right"></i></button>
+          </div>
         </div>
+
 
         <!-- S-ATTENDED — Are you attended by TMO/Police? (self, not hurt) -->
         <div class="wizard-step" id="step-s-attended">
@@ -1526,28 +1534,44 @@ if (($user['role'] ?? 'user') !== 'user') {
 
         <!-- S-CALL-TMO — prompt to call TMO (not attended) -->
         <div class="wizard-step" id="step-s-call-tmo">
-          <div class="center-screen">
-            <div class="hero-icon amber pulse"><i class="bi bi-stoplights"></i></div>
-            <div class="step-title">Please contact TMO first</div>
-            <p class="step-sub">Speed Dial your local Traffic Management Officer or the nearest authority before continuing.</p>
+          <div class="alert-banner danger" style="margin-bottom:1.1rem; border-width:2px;">
+            <i class="bi bi-exclamation-octagon-fill" style="color:#E90101; font-size:1.4rem; flex-shrink:0;"></i>
+            <div>
+              <div class="ab-title" style="font-size:0.85rem; color:#E90101;">⚠ IMMEDIATE ACTION REQUIRED</div>
+              <div class="ab-body" style="font-weight:600; color:#7f1d1d;">No enforcer is present. You must contact TMO or Police before proceeding.</div>
+            </div>
+          </div>
+
+          <div class="center-screen" style="margin-bottom:0.75rem;">
+            <div class="hero-icon red pulse"><i class="bi bi-telephone-fill"></i></div>
+            <div class="step-title" style="margin-bottom:0.3rem; line-height:1.3; color:#E90101;">Call Emergency Services Now</div>
+            <p class="step-sub" style="font-weight:600; color:#7f1d1d;">Every second counts. Do not delay — call immediately.</p>
           </div>
 
           <div class="call-grid">
-            <a href="tel:136" class="call-btn amber">
+            <a href="tel:136" class="call-btn amber" style="font-size:1rem;">
               <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
-              <strong>TMO Hotline</strong>
-              <span class="ca-label">Speed Dial</span>
+              <strong>TMO 136</strong>
+              <span class="ca-label">Traffic Management</span>
             </a>
             <a href="tel:911" class="call-btn red">
               <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
-              <strong>911</strong>
-              <span class="ca-label">Emergency</span>
+              <strong>CALL 911</strong>
+              <span class="ca-label">National Emergency</span>
             </a>
           </div>
 
-          <button class="btn-primary" onclick="goToStep('step-s-attended')"><i class="bi bi-check-circle"></i> I've contacted them — Continue</button>
-          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+          <hr class="divider">
+          <p style="font-size:0.75rem; color:var(--muted); text-align:center; margin-bottom:0.75rem; line-height:1.5;">
+            <i class="bi bi-exclamation-circle" style="color:#f59e0b;"></i>
+            Only skip if emergency services have <strong>already been called</strong> or are already on the way.
+          </p>
+          <div class="btn-row" style="margin-top:0;">
+            <button class="btn-outline" style="width:100%; margin-bottom:0;" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+            <button class="btn-outline" style="width:100%; margin-bottom:0; color:var(--muted); border-color:#d1d5db;" onclick="goToStep('step-s-attended')">I've Called — Continue <i class="bi bi-arrow-right"></i></button>
+          </div>
         </div>
+
 
         <!-- S-DOC-NOTE — Enforcer present, document the scene -->
         <div class="wizard-step" id="step-s-doc-note">
@@ -1671,36 +1695,44 @@ if (($user['role'] ?? 'user') !== 'user') {
 
         <!-- M-NONE-SPEED-DIAL — Three+ parties, no injury, no enforcer: speed dial + file report -->
         <div class="wizard-step" id="step-m-none-speed-dial">
-          <div class="center-screen">
-            <div class="hero-icon amber pulse"><i class="bi bi-stoplights"></i></div>
-            <div class="step-title" style="margin-bottom:0.4rem;">Please contact TMO or Police</div>
-            <p class="step-sub">With multiple vehicles involved and no enforcer present, you should contact authorities. You can still file a report afterwards.</p>
+          <div class="alert-banner danger" style="margin-bottom:1.1rem; border-width:2px;">
+            <i class="bi bi-exclamation-octagon-fill" style="color:#E90101; font-size:1.4rem; flex-shrink:0;"></i>
+            <div>
+              <div class="ab-title" style="font-size:0.85rem; color:#E90101;">⚠ IMMEDIATE ACTION REQUIRED</div>
+              <div class="ab-body" style="font-weight:600; color:#7f1d1d;">Multiple vehicles, no enforcer present. Contact TMO or Police RIGHT NOW.</div>
+            </div>
+          </div>
+
+          <div class="center-screen" style="margin-bottom:0.75rem;">
+            <div class="hero-icon red pulse"><i class="bi bi-telephone-fill"></i></div>
+            <div class="step-title" style="margin-bottom:0.3rem; line-height:1.3; color:#E90101;">Call Emergency Services Now</div>
+            <p class="step-sub" style="font-weight:600; color:#7f1d1d;">Every second counts. Do not delay — call immediately.</p>
           </div>
 
           <div class="call-grid">
-            <a href="tel:136" class="call-btn amber">
+            <a href="tel:136" class="call-btn amber" style="font-size:1rem;">
               <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
-              <strong>TMO Hotline</strong>
-              <span class="ca-label">Speed Dial 136</span>
+              <strong>TMO 136</strong>
+              <span class="ca-label">Traffic Management</span>
             </a>
             <a href="tel:911" class="call-btn red">
               <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
-              <strong>Call 911</strong>
-              <span class="ca-label">Emergency</span>
-            </a>
-            <a href="tel:7220650" class="call-btn green">
-              <span class="ca-icon"><i class="bi bi-car-front-fill"></i></span>
-              <strong>PNP Hotline</strong>
-              <span class="ca-label">722-0650</span>
+              <strong>CALL 911</strong>
+              <span class="ca-label">National Emergency</span>
             </a>
           </div>
 
           <hr class="divider">
-          <div class="step-title" style="font-size:1rem; margin-bottom:0.4rem;">Want to file a report now?</div>
-          <p class="step-sub" style="margin-bottom:0.85rem;">You can document the incident while waiting for the enforcer to arrive.</p>
-          <button class="btn-primary" onclick="goToFormFlow()"><i class="bi bi-file-earmark-text" style="color:#fbbf24;"></i> Just File a Report</button>
-          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+          <p style="font-size:0.75rem; color:var(--muted); text-align:center; margin-bottom:0.75rem; line-height:1.5;">
+            <i class="bi bi-exclamation-circle" style="color:#f59e0b;"></i>
+            Only skip if emergency services have <strong>already been called</strong> or are already on the way.
+          </p>
+          <div class="btn-row" style="margin-top:0;">
+            <button class="btn-outline" style="width:100%; margin-bottom:0;" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+            <button class="btn-outline" style="width:100%; margin-bottom:0; color:var(--muted); border-color:#d1d5db;" onclick="goToFormFlow()">Skip, File a Report Anyway <i class="bi bi-arrow-right"></i></button>
+          </div>
         </div>
+
 
         <!-- M-ATTENDED — Is TMO or police attending? -->
         <div class="wizard-step" id="step-m-attended">
@@ -1737,40 +1769,44 @@ if (($user['role'] ?? 'user') !== 'user') {
 
         <!-- M-SPEED-DIAL — Call TMO (not attended, injury present) -->
         <div class="wizard-step" id="step-m-speed-dial">
-          <div class="center-screen">
-            <div class="hero-icon red pulse"><i class="bi bi-exclamation-triangle-fill"></i></div>
-            <div class="step-title">Call for help immediately</div>
-            <p class="step-sub">There is an injury and no enforcer present. Please call emergency services now.</p>
+          <div class="alert-banner danger" style="margin-bottom:1.1rem; border-width:2px;">
+            <i class="bi bi-exclamation-octagon-fill" style="color:#E90101; font-size:1.4rem; flex-shrink:0;"></i>
+            <div>
+              <div class="ab-title" style="font-size:0.85rem; color:#E90101;">⚠ IMMEDIATE ACTION REQUIRED</div>
+              <div class="ab-body" style="font-weight:600; color:#7f1d1d;">There is an injury and no enforcer present. Call for help RIGHT NOW.</div>
+            </div>
+          </div>
+
+          <div class="center-screen" style="margin-bottom:0.75rem;">
+            <div class="hero-icon red pulse"><i class="bi bi-telephone-fill"></i></div>
+            <div class="step-title" style="margin-bottom:0.3rem; line-height:1.3; color:#E90101;">Call Emergency Services Now</div>
+            <p class="step-sub" style="font-weight:600; color:#7f1d1d;">Every second counts. Do not delay — call immediately.</p>
           </div>
 
           <div class="call-grid">
-            <a href="tel:911" class="call-btn red">
+            <a href="tel:911" class="call-btn red" style="font-size:1rem;">
               <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
-              <strong>Call 911</strong>
-              <span class="ca-label">Emergency Hotline</span>
+              <strong>CALL 911</strong>
+              <span class="ca-label">National Emergency</span>
             </a>
             <a href="tel:136" class="call-btn amber">
               <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
-              <strong>Speed Dial TMO</strong>
-              <span class="ca-label">Traffic Mgmt</span>
-            </a>
-            <a href="tel:117" class="call-btn blue">
-              <span class="ca-icon"><i class="bi bi-truck-front"></i></span>
-              <strong>Call 117</strong>
-              <span class="ca-label">Red Cross</span>
-            </a>
-            <a href="tel:7220650" class="call-btn green">
-              <span class="ca-icon"><i class="bi bi-car-front-fill"></i></span>
-              <strong>PNP Hotline</strong>
-              <span class="ca-label">722-0650</span>
+              <strong>TMO 136</strong>
+              <span class="ca-label">Traffic Management</span>
             </a>
           </div>
 
-          <div class="step-title" style="font-size:1rem; margin-bottom:0.4rem;">Do you still want to file a report?</div>
-          <p class="step-sub" style="margin-bottom:0.85rem;">You can still document the incident even after calling for help.</p>
-          <button class="btn-primary" onclick="goToFormFlow()"><i class="bi bi-file-earmark-text" style="color:#fbbf24;"></i> Yes, I want to file a report</button>
-          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+          <hr class="divider">
+          <p style="font-size:0.75rem; color:var(--muted); text-align:center; margin-bottom:0.75rem; line-height:1.5;">
+            <i class="bi bi-exclamation-circle" style="color:#f59e0b;"></i>
+            Only skip if emergency services have <strong>already been called</strong> or are already on the way.
+          </p>
+          <div class="btn-row" style="margin-top:0;">
+            <button class="btn-outline" style="width:100%; margin-bottom:0;" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+            <button class="btn-outline" style="width:100%; margin-bottom:0; color:var(--muted); border-color:#d1d5db;" onclick="goToFormFlow()">Skip, File a Report Anyway <i class="bi bi-arrow-right"></i></button>
+          </div>
         </div>
+
 
         <!-- ══════════════════════════════════════════════════
              INJURY SEVERITY BRANCH STEPS (shared for all flows with injury)
@@ -1846,29 +1882,44 @@ if (($user['role'] ?? 'user') !== 'user') {
 
         <!-- MINOR-CALL-TMO — Minor injury, user chose to call TMO first -->
         <div class="wizard-step" id="step-minor-call-tmo">
-          <div class="center-screen">
-            <div class="hero-icon amber pulse"><i class="bi bi-stoplights"></i></div>
-            <div class="step-title">Contact TMO</div>
-            <p class="step-sub">Please contact your local Traffic Management Officer. Once done, you can proceed to file your report.</p>
+          <div class="alert-banner danger" style="margin-bottom:1.1rem; border-width:2px;">
+            <i class="bi bi-exclamation-octagon-fill" style="color:#E90101; font-size:1.4rem; flex-shrink:0;"></i>
+            <div>
+              <div class="ab-title" style="font-size:0.85rem; color:#E90101;">⚠ IMMEDIATE ACTION REQUIRED</div>
+              <div class="ab-body" style="font-weight:600; color:#7f1d1d;">Minor injury detected. Contact TMO or emergency services RIGHT NOW.</div>
+            </div>
+          </div>
+
+          <div class="center-screen" style="margin-bottom:0.75rem;">
+            <div class="hero-icon red pulse"><i class="bi bi-telephone-fill"></i></div>
+            <div class="step-title" style="margin-bottom:0.3rem; line-height:1.3; color:#E90101;">Call Emergency Services Now</div>
+            <p class="step-sub" style="font-weight:600; color:#7f1d1d;">Every second counts. Do not delay — call immediately.</p>
           </div>
 
           <div class="call-grid">
-            <a href="tel:136" class="call-btn amber">
+            <a href="tel:136" class="call-btn amber" style="font-size:1rem;">
               <span class="ca-icon"><i class="bi bi-stoplights"></i></span>
-              <strong>TMO Hotline</strong>
-              <span class="ca-label">Speed Dial 136</span>
+              <strong>TMO 136</strong>
+              <span class="ca-label">Traffic Management</span>
             </a>
             <a href="tel:911" class="call-btn red">
               <span class="ca-icon"><i class="bi bi-telephone-fill" style="color:#fbbf24;"></i></span>
-              <strong>Call 911</strong>
-              <span class="ca-label">Emergency</span>
+              <strong>CALL 911</strong>
+              <span class="ca-label">National Emergency</span>
             </a>
           </div>
 
           <hr class="divider">
-          <button class="btn-primary" onclick="goToFormFlow()"><i class="bi bi-arrow-right"></i> Continue to Report</button>
-          <button class="btn-outline" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+          <p style="font-size:0.75rem; color:var(--muted); text-align:center; margin-bottom:0.75rem; line-height:1.5;">
+            <i class="bi bi-exclamation-circle" style="color:#f59e0b;"></i>
+            Only skip if emergency services have <strong>already been called</strong> or are already on the way.
+          </p>
+          <div class="btn-row" style="margin-top:0;">
+            <button class="btn-outline" style="width:100%; margin-bottom:0;" onclick="goBack()"><i class="bi bi-arrow-left"></i> Back</button>
+            <button class="btn-outline" style="width:100%; margin-bottom:0; color:var(--muted); border-color:#d1d5db;" onclick="goToFormFlow()">Skip, File a Report Anyway <i class="bi bi-arrow-right"></i></button>
+          </div>
         </div>
+
 
         <!-- INJURY-DECEASED — Are there any deceased? -->
         <div class="wizard-step" id="step-injury-deceased">
@@ -2790,28 +2841,28 @@ if (($user['role'] ?? 'user') !== 'user') {
         tl: 'Tinutulungan nito kaming gabayan kayo sa tamang proseso ng pag-uulat.'
       },
       's1-just-me': {
-        en: 'Just Me',
-        tl: 'Ako Lang'
+        en: 'One Driver',
+        tl: 'Isang Drayber'
       },
       's1-just-me-sub': {
-        en: 'Solo incident',
-        tl: 'Nag-iisang insidente'
+        en: 'Only me involved',
+        tl: 'Ako lang ang sangkot'
       },
       's1-two': {
-        en: 'Two People',
-        tl: 'Dalawang Tao'
+        en: 'Two Drivers',
+        tl: 'Dalawang Drayber'
       },
       's1-two-sub': {
-        en: 'Me + Another',
-        tl: 'Ako + Isa Pa'
+        en: 'Me + Another driver',
+        tl: 'Ako + Isang Drayber Pa'
       },
       's1-multi': {
-        en: 'Three or More',
-        tl: 'Tatlo o Higit Pa'
+        en: 'Three or More Drivers',
+        tl: 'Tatlo o Higit Pang Drayber'
       },
       's1-multi-sub': {
-        en: 'Multi-party',
-        tl: 'Maraming partido'
+        en: 'Multiple drivers involved',
+        tl: 'Maraming drayber ang sangkot'
       },
 
       // S2 — How many injured?
@@ -3583,15 +3634,8 @@ if (($user['role'] ?? 'user') !== 'user') {
       state.citizen_party_count = count;
       syncSidebar();
       setTimeout(() => {
-        if (count === 'self') {
-          // Just Me → Good Citizen report directly (no injury path)
-          state.has_injury = false;
-          state.injured_count = 'none';
-          goToFormFlow('good_citizen');
-        } else {
-          // Two or More → ask how many are injured
-          goToStep('step-c2');
-        }
+        // All choices → ask how many are injured, same flow for 1, 2, or 3+ drivers
+        goToStep('step-c2');
       }, 180);
     }
 
@@ -3602,10 +3646,16 @@ if (($user['role'] ?? 'user') !== 'user') {
       document.querySelectorAll('#step-c2 .choice-card').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       state.injured_count = count;
-      state.has_injury = true;
+      state.has_injury = (count !== 'none');
       syncSidebar();
       setTimeout(() => {
-        goToStep('step-c-severity');
+        if (count === 'none') {
+          // No injuries → go directly to good-citizen report
+          goToFormFlow('good_citizen');
+        } else {
+          // Injuries present → ask severity
+          goToStep('step-c-severity');
+        }
       }, 180);
     }
 
@@ -3618,8 +3668,8 @@ if (($user['role'] ?? 'user') !== 'user') {
       state.injury_severity = severity;
       syncSidebar();
       setTimeout(() => {
-        // Both major and minor → call hotline screen, then report form
-        goToStep('step-c-hotline');
+        // Use the same emergency hotline screen as the driver flow
+        goToStep('step-injury-hotline');
       }, 180);
     }
 
@@ -4285,8 +4335,11 @@ if (($user['role'] ?? 'user') !== 'user') {
     //  ROUTE TO FORM FLOW
     // ══════════════════════════════════════════════════════════
     function goToFormFlow(overrideFlow) {
-      state.flow_type = overrideFlow || 'standard';
-      document.getElementById('flowLabel').textContent = overrideFlow === 'good_citizen' ? 'Good Citizen 🌟' : 'Filing Report';
+      // Citizens/witnesses ALWAYS get good citizen flow (eligible for points)
+      // regardless of whether there were injuries or not.
+      const effectiveFlow = (state.role === 'citizen') ? 'good_citizen' : (overrideFlow || 'standard');
+      state.flow_type = effectiveFlow;
+      document.getElementById('flowLabel').textContent = effectiveFlow === 'good_citizen' ? 'Good Citizen 🌟' : 'Filing Report';
       syncSidebar();
       goToStep('step-form-datetime');
     }
@@ -4416,7 +4469,13 @@ if (($user['role'] ?? 'user') !== 'user') {
       state.weather_condition = w;
       state.road_condition = r;
       syncSidebar();
-      goToStep('step-form-insurance');
+      // Citizens/witnesses don't need to declare insurance — skip that step
+      if (state.role === 'citizen') {
+        state.insurance_type = '';
+        goToStep('step-form-media');
+      } else {
+        goToStep('step-form-insurance');
+      }
     }
 
     function selectInsurance(val, btn) {
@@ -4455,9 +4514,9 @@ if (($user['role'] ?? 'user') !== 'user') {
       state.event_details = desc;
 
       const partyLabels = {
-        self: 'Solo (Just Me)',
-        two: 'Two People',
-        multiple: 'Three or More'
+        self: 'Solo (One Driver)',
+        two: 'Two Drivers',
+        multiple: 'Three or More Drivers'
       };
       document.getElementById('ov-type').innerHTML = state.flow_type === 'good_citizen' ? '<i class="bi bi-star-fill" style="color:#fbbf24;"></i> Good Citizen' : '📋 Standard Report';
       document.getElementById('ov-parties').textContent = partyLabels[state.parties] || '—';
@@ -4514,6 +4573,7 @@ if (($user['role'] ?? 'user') !== 'user') {
       // Derive has_other_parties from state.parties
       fd.append('has_other_parties', (state.parties === 'two' || state.parties === 'multiple') ? 1 : 0);
       fd.append('is_injured', state.has_injury ? 1 : 0);
+      fd.append('injured_count', state.injured_count || 'none');
       fd.append('injury_severity', state.injury_severity || '');
       fd.append('has_deceased', state.has_deceased === true ? 1 : (state.has_deceased === false ? 0 : ''));
       fd.append('self_hurt', state.self_hurt ?? '');
@@ -4742,8 +4802,8 @@ if (($user['role'] ?? 'user') !== 'user') {
     function syncSidebar() {
       const partyLabels = {
         self: 'Solo',
-        two: 'Two Parties',
-        multiple: 'Three or More'
+        two: 'Two Drivers',
+        multiple: 'Three or More Drivers'
       };
       const flowLabels = {
         standard: 'Standard Report',
