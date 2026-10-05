@@ -22,11 +22,11 @@ if (file_exists($_envFile)) {
 // ==========================================
 
 // --- Database ---
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'vrakeit');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_CHARSET', 'utf8mb4');
+define('DB_HOST',    $_ENV['DB_HOST']    ?? 'localhost');
+define('DB_NAME',    $_ENV['DB_NAME']    ?? 'vrakeit');
+define('DB_USER',    $_ENV['DB_USER']    ?? 'root');
+define('DB_PASS',    $_ENV['DB_PASS']    ?? '');
+define('DB_CHARSET', $_ENV['DB_CHARSET'] ?? 'utf8mb4');
 
 // --- App Settings ---
 define('APP_NAME', 'VrakeIT');
@@ -63,17 +63,17 @@ define('OCR_NAME_MATCH_THRESHOLD', 0.72);       // Fuzzy name match minimum
 define('OTP_EXPIRY_MINUTES', 5);
 define('OTP_LENGTH', 6);
 
-// --- philSMS API ---
-define('PHILSMS_TOKEN', '2780|rU9yZFm5NVaDk2lCQU0EkrxxNRcCwJUgHcMGkFuZ44ff09d3');
-define('PHILSMS_URL', 'https://dashboard.philsms.com/api/v3/sms/send');
-define('PHILSMS_SENDER_ID', 'PhilSMS');
+// --- PhilSMS API ---
+define('PHILSMS_TOKEN',     $_ENV['PHILSMS_TOKEN']     ?? '');
+define('PHILSMS_URL',       $_ENV['PHILSMS_URL']       ?? 'https://dashboard.philsms.com/api/v3/sms/send');
+define('PHILSMS_SENDER_ID', $_ENV['PHILSMS_SENDER_ID'] ?? 'PhilSMS');
 
 // --- Email (Gmail SMTP) ---
-define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_PORT', 587);
-define('SMTP_USER', 'vrakeit@gmail.com');
-define('SMTP_PASS', 'tyfu izuw ixpo azrt');
-define('SMTP_FROM_NAME', 'VrakeIT System');
+define('SMTP_HOST',      $_ENV['SMTP_HOST']      ?? 'smtp.gmail.com');
+define('SMTP_PORT',      (int)($_ENV['SMTP_PORT'] ?? 587));
+define('SMTP_USER',      $_ENV['SMTP_USER']      ?? '');
+define('SMTP_PASS',      $_ENV['SMTP_PASS']      ?? '');
+define('SMTP_FROM_NAME', $_ENV['SMTP_FROM_NAME'] ?? 'VrakeIT System');
 
 // --- Good Citizen Points ---
 define('GOOD_CITIZEN_POINTS', 50);
@@ -84,6 +84,6 @@ define('ALLOWED_VIDEO_TYPES', ['video/mp4', 'video/quicktime', 'video/x-msvideo'
 define('MAX_UPLOAD_SIZE', 20 * 1024 * 1024); // 20MB
 
 // --- Web Push VAPID Keys ---
-define('VAPID_PUBLIC_KEY',  'BGx5bgsN878EpSt0QdBcdDz6neaJ4swg-tKb0bCcPH7S-jJ33S9X0iOkj8iZ-_yMhPYMgrMNQKSpQw5arpFCXmM');
-define('VAPID_PRIVATE_KEY', 'q2UlpgpfDGErDO_lw84IAofy-sRwMIkUl3kfT1rLgoQ');
-define('VAPID_SUBJECT',     'mailto:vrakeit@gmail.com');
+define('VAPID_PUBLIC_KEY',  $_ENV['VAPID_PUBLIC_KEY']  ?? '');
+define('VAPID_PRIVATE_KEY', $_ENV['VAPID_PRIVATE_KEY'] ?? '');
+define('VAPID_SUBJECT',     $_ENV['VAPID_SUBJECT']     ?? '');
