@@ -33,16 +33,7 @@ if (!$contract) {
 }
 
 // Get API Key
-$apiKey = null;
-$envPath = dirname(__DIR__) . '/.env';
-if (file_exists($envPath)) {
-    $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($lines as $line) {
-        if (strpos($line, 'GEMINI_API_KEY=') === 0) {
-            $apiKey = trim(trim(str_replace('GEMINI_API_KEY=', '', $line)), '"\'');
-        }
-    }
-}
+$apiKey = $_ENV['GEMINI_API_KEY'] ?? null;
 
 if (!$apiKey) jsonResponse(false, 'AI API Key is not configured.');
 

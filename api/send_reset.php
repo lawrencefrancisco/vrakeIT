@@ -1,4 +1,5 @@
 <?php
+require_once '../config/config.php';
 require_once '../includes/db.php';
 require_once '../vendor/autoload.php';
 
@@ -36,17 +37,17 @@ if ($user) {
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com'; // Replace with your SMTP host
+        $mail->Host       = SMTP_HOST;
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'vrakeit@gmail.com'; // Replace with your email
-        $mail->Password   = 'tyfu izuw ixpo azrt';          // Replace with your app password
+        $mail->Username   = SMTP_USER;
+        $mail->Password   = SMTP_PASS;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
+        $mail->Port       = SMTP_PORT;
 
         $mail->setFrom('noreply@vrakeit.com', 'VrakeIT Support');
         $mail->addAddress($email, $user['first_name']);
 
-        $resetLink = "http://localhost/vrakeIT/reset_password.php?token=" . $token;
+        $resetLink = rtrim(BASE_URL, '/') . '/reset_password.php?token=' . $token;
 
         $mail->isHTML(true);
         $mail->Subject = 'Password Reset Request - VrakeIT';

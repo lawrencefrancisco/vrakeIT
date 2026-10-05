@@ -3,7 +3,7 @@ require 'includes/db.php';
 $db = getDB();
 
 try {
-    // Your existing column addition
+    // Your existing column additionn
     $db->exec("ALTER TABLE users ADD COLUMN role VARCHAR(20) DEFAULT 'user'");
     
     // New columns required for the Forgot Password feature
